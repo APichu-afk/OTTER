@@ -90,6 +90,8 @@ int main()
 	camera->LookAt(glm::vec3(0.0f)); // Sets where its looking
 	camera->SetFovDegrees(90.0f); // Set the FOV
 	
+	double lastFrame = glfwGetTime();
+
 	//Game loop/makes the window//
 	while (!glfwWindowShouldClose(firstWindow))
 	{
@@ -98,8 +100,23 @@ int main()
 
 		double thisFrame = glfwGetTime();
 
+		float dt = static_cast<float>(thisFrame - lastFrame);
+
+		if (glfwGetKey(firstWindow, GLFW_KEY_A) == GLFW_PRESS) {
+			transform = glm::translate(transform, glm::vec3(0.01f, 0.0f, 0.0f));//gains speed for some reason when using dt
+		}
+		if (glfwGetKey(firstWindow, GLFW_KEY_D) == GLFW_PRESS) {
+			transform = glm::translate(transform, glm::vec3(-0.01f, 0.0f, 0.0f));//gains speed for some reason when using dt
+		}
+		if (glfwGetKey(firstWindow, GLFW_KEY_W) == GLFW_PRESS) {
+			transform = glm::translate(transform, glm::vec3(0.0f, -0.01f, 0.0f));//gains speed for some reason when using dt
+		}
+		if (glfwGetKey(firstWindow, GLFW_KEY_S) == GLFW_PRESS) {
+			transform = glm::translate(transform, glm::vec3(0.0f, 0.01f, 0.0f));//gains speed for some reason when using dt
+		}
+
 		//Changes Colour of our background
-		glClearColor(0.5f, 0.0f, 0.5f, 1.0f);//RGB, Alpha?
+		glClearColor(0.1f, 0.0f, 0.1f, 1.0f);//RGB, Alpha? dark purple right now 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shader->Bind();

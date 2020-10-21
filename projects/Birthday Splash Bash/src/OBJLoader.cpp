@@ -114,7 +114,7 @@ VertexArrayObject::sptr OBJLoader::LoadFile(const std::string& filename)
 		glm::vec2 uv = temp_vt[uvIndex - 1];
 		glm::vec3 normal = temp_vn[normalIndex - 1];
 
-		object.AddVertex(vertex, normal, uv, glm::vec4(5));
+		object.AddVertex(vertex, normal, uv, glm::vec4(2));
 		object.AddIndex(i);
 	}
 	return object.Bake();
