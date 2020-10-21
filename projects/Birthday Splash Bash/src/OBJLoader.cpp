@@ -33,13 +33,13 @@ static inline void trim(std::string& s) {
 
 VertexArrayObject::sptr OBJLoader::LoadFile(const std::string& filename)
 {
+	std::ifstream fileName;
+	fileName.open(filename, std::ios::binary);
+
 	std::vector< unsigned int > verIndices, uvIndices, normIndices;
 	std::vector< glm::vec3 > temp_ver;
 	std::vector< glm::vec2 > temp_vt;
 	std::vector< glm::vec3 > temp_vn;
-
-	std::ifstream fileName;
-	fileName.open(filename, std::ios::binary);
 
 	// If our file fails to open, we will throw an error
 	if (!fileName) {
@@ -109,12 +109,12 @@ VertexArrayObject::sptr OBJLoader::LoadFile(const std::string& filename)
 	for (unsigned int i = 0; i < verIndices.size(); i++) {
 		unsigned int vertexIndex = verIndices[i];
 		unsigned int uvIndex = uvIndices[i];
-		unsigned int normIndex = normIndices[i];
+		unsigned int normalIndex = normIndices[i];
 		glm::vec3 vertex = temp_ver[vertexIndex - 1];
 		glm::vec2 uv = temp_vt[uvIndex - 1];
-		glm::vec3 normal = temp_vn[normIndex - 1];
-		
-		object.AddVertex(vertex, normal, uv, glm::vec4(1));
+		glm::vec3 normal = temp_vn[normalIndex - 1];
+
+		object.AddVertex(vertex, normal, uv, glm::vec4(5));
 		object.AddIndex(i);
 	}
 	return object.Bake();
