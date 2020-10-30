@@ -3,7 +3,7 @@
 layout(location = 0) in vec3 inPos;
 layout(location = 1) in vec3 inColor;
 layout(location = 2) in vec3 inNormal;
-//lecture 7
+//LECTURE 7
 layout(location = 3) in vec2 UV;
 
 uniform sampler2D textureSampler;
@@ -16,18 +16,21 @@ out vec4 frag_color;
 
 void main() {
 	
+	vec3 textureColor = texture(textureSampler, UV).xyz;
+
+
 	// Lecture 5
 	vec3 lightColor = vec3(1.0, 1.0, 1.0);
 
 	float ambientStrength = 0.1;
-	vec3 ambient = ambientStrength * lightColor * inColor;
+	vec3 ambient = ambientStrength * lightColor * textureColor;//inColor;
 
 	// Diffuse
 	vec3 N = normalize(inNormal);
 	vec3 lightDir = normalize(LightPos - inPos);
 	
 	float dif = max(dot(N, lightDir), 0.0);
-	vec3 diffuse = dif * inColor;// add diffuse intensity
+	vec3 diffuse = dif * textureColor;//inColor;// add diffuse intensity
 
 	//Attenuation
 	float dist = length(LightPos - inPos);
@@ -43,5 +46,5 @@ void main() {
 
 	vec3 result = (ambient + diffuse + specular);
 
-	frag_color = vec4(result, 1.0) * texture(textureSampler, UV);
+	frag_color = texture(textureSampler, UV) * vec4(result, 1.0);
 }

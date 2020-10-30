@@ -7,28 +7,25 @@
 #include <GLM/glm.hpp> //04
 #include <glm/gtc/matrix_transform.hpp> //04
 
-//Lecture 07
+// LECTURE 7
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 unsigned char* image;
 int width, height;
 
-void loadImage() {//pass te filepath as an argument
+void loadImage() { // pass the filepath string as an argument
 	int channels;
 	stbi_set_flip_vertically_on_load(true);
 
-	image = stbi_load("box.bmp", &width, &height, &channels, 0);
+	image = stbi_load("dumb-texture-thing-for-cg.jpg", &width, &height, &channels, 0);
 
 	if (image)
-	{
-		std::cout << "Image Loaded: " << width << " x " << height << std::endl;
-	}
-	else
-	{
-		std::cout << "Failed to load image" << std::endl;
-	}
+		std::cout << "Image loaded: " << width << " x " << height << std::endl;
+	else std::cout << "FAiled to load image!!!" << std::endl;
+	
 }
+
 
 GLFWwindow* window;
 
@@ -39,7 +36,7 @@ bool initGLFW() {
 	}
 
 	//Create a new GLFW window
-	window = glfwCreateWindow(1000, 800, "INFR2670", nullptr, nullptr);
+	window = glfwCreateWindow(1000, 800, "Chow_Alexander_100749034", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
 	return true;
@@ -102,18 +99,20 @@ bool loadShaders() {
 
 // Lecture 04
 GLfloat rotY = 0.0f;
-GLfloat transZ = 0.0f;
+GLfloat tranZ = 0.0f;
 
 void keyboard() {
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		rotY += 0.1;
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 		rotY -= 0.1;
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		transZ -= 0.1;
+		tranZ -= 0.01;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		transZ += 0.1;
+		tranZ += 0.01;
+
 }
+
 
 int main() {
 	//Initialize GLFW
@@ -195,14 +194,23 @@ int main() {
 		-1.0f, 0.0f, 0.0f
 	};
 	
-	//Lecture 7
+	// LECTURE 7
 	static const GLfloat uv[] = {
 		0.0f, 0.0f,
-		1.0f, 0.0f,
+		0.5f, 0.0f,
 		0.0f, 1.0f,
+		0.5f, 0.0f,
+		0.5f, 1.0f,
+		0.0f, 1.0f,
+
+		0.5f, 0.0f,
+		1.0f, 0.0f,
+		0.5f, 1.0f,
 		1.0f, 0.0f,
 		1.0f, 1.0f,
-		0.0f, 1.0f
+		0.5f, 1.0f,
+
+
 	};
 
 	// Lecture 5
@@ -244,14 +252,15 @@ int main() {
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2); // Lecture 5
-
-	//Lecture 7
+	
+	// LECTURE 7
 	GLuint uv_vbo = 3;
 	glGenBuffers(1, &uv_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, uv_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uv), uv, GL_STATIC_DRAW);
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-	glDisableVertexAttribArray(3);
+	glEnableVertexAttribArray(3);
+
 
 	loadImage();
 
@@ -260,15 +269,16 @@ int main() {
 	glBindTexture(GL_TEXTURE_2D, textureHandle);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-	//Texture paramters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //gl linear
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //gl linear
+	// Texture parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // GL_LINEAR
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // GL_LINEAR
 
 	//free image space
 	stbi_image_free(image);
+	///////////////////////////// 07
+	
 
-
-
+	
 	// Load your shaders
 	if (!loadShaders())
 		return 1;
@@ -330,7 +340,7 @@ int main() {
 		Model = glm::mat4(1.0f);
 		keyboard();												//X	    Y     Z
 		Model = glm::rotate(Model, glm::radians(rotY), glm::vec3(0.0f, 1.0f, 0.0f));
-		Model = glm::translate(Model, glm::vec3(0.0f, 0.0f, transZ));
+		Model = glm::translate(Model, glm::vec3(0.0f, 0.0f, tranZ));
 		mvp = Projection * View * Model;
 		
 		//Lecture 04
@@ -349,7 +359,12 @@ int main() {
 
 		
 		// draw points 0-18 
+		//Bind texture 1
 		glDrawArrays(GL_TRIANGLES, 0, 18);//36
+		// bind texture 2
+		// draw (6, 6)
+
+
 		
 		
 		glfwSwapBuffers(window);

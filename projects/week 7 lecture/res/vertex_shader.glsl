@@ -4,12 +4,13 @@ layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec3 inColor;
 // Lecture 5
 layout(location = 2) in vec3 inNormal;
-//lecture 7
+//LECTURE 7
 layout(location = 3) in vec2 inUV;
+
 layout(location = 0) out vec3 outPos;
 layout(location = 1) out vec3 outColor;
 layout(location = 2) out vec3 outNormal;
-//lecture 7
+//LECTURE 7
 layout(location = 3) out vec2 outUV;
 
 uniform mat4 MVP;
@@ -34,7 +35,7 @@ void main() {
 
 	outColor = inColor;
 
-	//lecture 7
+	// LECTURE 7
 	outUV = inUV;
 
 }
