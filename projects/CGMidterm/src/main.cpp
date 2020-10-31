@@ -59,7 +59,7 @@ int main()
 		return -1;
 
 	//Loads in the obj
-	VertexArrayObject::sptr MainCharacter = OBJLoader::LoadFile("PaddleButWithTriangles.obj");
+	VertexArrayObject::sptr MainCharacter = OBJLoader::LoadFile("Paddle.obj");
 
 	//Load shaders
 	Shader::sptr shader = Shader::Create();
@@ -92,7 +92,7 @@ int main()
 
 	//camera stuff
 	camera = Camera::Create();//camera initialized
-	camera->SetPosition(glm::vec3(0, -3, 3)); // Sets the position
+	camera->SetPosition(glm::vec3(0, 3, 6)); // Sets the position
 	camera->SetUp(glm::vec3(0, 0, 1)); // Use a z-up coordinate system
 	camera->LookAt(glm::vec3(0.0f)); // Sets where its looking
 	camera->SetFovDegrees(90.0f); // Set the FOV
@@ -100,7 +100,7 @@ int main()
 	double lastFrame = glfwGetTime();
 	glm::vec3 l;
 
-	transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
+	//transform = glm::translate(transform, glm::vec3(0.0f, -2.0f, 0.0f));
 
 	//Game loop/makes the window//
 	while (!glfwWindowShouldClose(firstWindow))
@@ -113,7 +113,7 @@ int main()
 		//if we want deltatime
 		float dt = static_cast<float>(thisFrame - lastFrame);
 
-	//	transform = glm::rotate(glm::mat4(1.0f), static_cast<float>(thisFrame), glm::vec3(0, 0, 1));
+		transform = glm::rotate(glm::mat4(1.0f), static_cast<float>(thisFrame), glm::vec3(0, 0, 1));
 
 		if (glfwGetKey(firstWindow, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			transform = glm::translate(transform, glm::vec3(-0.001f, 0.0f, 0.0f));//gains speed for some reason when using dt
@@ -121,7 +121,7 @@ int main()
 		if (glfwGetKey(firstWindow, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 			transform = glm::translate(transform, glm::vec3(0.001f, 0.0f, 0.0f));//gains speed for some reason when using dt
 		}
-	//	transform = glm::scale(transform, glm::vec3(2.0f, 2.0f, 2.0f));
+		
 
 		//Changes Colour of our background
 		glClearColor(0.0f, 0.5f, 0.0f, 1.0f);//RGB, Alpha? dark purple right now 
