@@ -83,7 +83,7 @@ bool initGLFW() {
 #endif
 	
 	//Create a new GLFW window
-	window = glfwCreateWindow(800, 800, "Breaker Brick", nullptr, nullptr);
+	window = glfwCreateWindow(800, 800, "Birthday Splash Bash", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
 	// Set our window resized callback
@@ -113,11 +113,32 @@ void RenderVAO(
 }
 
 void ManipulateTransformWithInput(const Transform::sptr& transform, const Transform::sptr& transform1, float dt) {
+	//first player
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		transform->MoveLocal(-9.0f * dt, 0.0f, 0.0f);
+		transform->RotateLocal(0.0f, 0.3f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		transform->MoveLocal( 9.0f * dt, 0.0f,  0.0f); 
+		transform->RotateLocal(0.0f, -0.3f, 0.0f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		transform->MoveLocal(0.0f, 0.0f, -9.0f * dt);
+	}
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		transform->MoveLocal(0.0f, 0.0f, 9.0f * dt); 
+	}
+
+	//second player
+	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
+		transform1->RotateLocal(0.0f, 0.3f, 0.0f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+		transform1->RotateLocal(0.0f, -0.3f, 0.0f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+		transform1->MoveLocal(0.0f, 0.0f, -9.0f * dt);
+	}
+	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+		transform1->MoveLocal(0.0f, 0.0f, 9.0f * dt); 
 	}
 }
 
@@ -182,9 +203,9 @@ int main() {
 	glEnable(GL_TEXTURE_2D);
 	
 	//Vaos
-	VertexArrayObject::sptr vaoplayer = ObjLoader::LoadFromFile("models/Paddle.obj");//player
-	VertexArrayObject::sptr vaobackground = ObjLoader::LoadFromFile("models/BorderBack.obj");//Background
-	VertexArrayObject::sptr vaoball = ObjLoader::LoadFromFile("models/Ball.obj");//ball
+	VertexArrayObject::sptr vaoplayer = ObjLoader::LoadFromFile("models/Dunce.obj");//player
+	VertexArrayObject::sptr vaobackground = ObjLoader::LoadFromFile("models/Ground.obj");//Background
+	VertexArrayObject::sptr vaoball = ObjLoader::LoadFromFile("models/MonkeyBar.obj");//MonkeyBars
 	VertexArrayObject::sptr vaoleft = ObjLoader::LoadFromFile("models/LeftSide.obj");//wall left
 	VertexArrayObject::sptr vaoup = ObjLoader::LoadFromFile("models/TopSide.obj");//wall top
 	VertexArrayObject::sptr vaoright = ObjLoader::LoadFromFile("models/RightSide.obj");//wall right
@@ -199,6 +220,11 @@ int main() {
 	VertexArrayObject::sptr vaoscore = ObjLoader::LoadFromFile("models/ScoreWord.obj");//score
 	VertexArrayObject::sptr vaowin = ObjLoader::LoadFromFile("models/Win.obj");//win
 	VertexArrayObject::sptr vaolose = ObjLoader::LoadFromFile("models/Lose.obj");//lose
+	VertexArrayObject::sptr vaosandbox = ObjLoader::LoadFromFile("models/SandBox.obj");//SandBox
+	VertexArrayObject::sptr vaoslide = ObjLoader::LoadFromFile("models/Slide.obj");//Slide
+	VertexArrayObject::sptr vaoround = ObjLoader::LoadFromFile("models/RoundAbout.obj");//roundabout
+	//VertexArrayObject::sptr vaoswing = ObjLoader::LoadFromFile("models/Swing.obj");//swing
+	VertexArrayObject::sptr vaoplayer2 = ObjLoader::LoadFromFile("models/Duncet.obj");//Second player
 		
 	// Load our shaders
 	Shader::sptr shader = Shader::Create();
@@ -206,9 +232,9 @@ int main() {
 	shader->LoadShaderPartFromFile("shaders/frag_blinn_phong_textured.glsl", GL_FRAGMENT_SHADER);  
 	shader->Link();  
 
-	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 5.0f);
+	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 30.0f);
 	glm::vec3 lightCol = glm::vec3(1.0f, 1.0f, 1.0f);
-	float     lightAmbientPow = 3.0f;
+	float     lightAmbientPow = 25.0f;
 	float     lightSpecularPow = 1.0f;
 	glm::vec3 ambientCol = glm::vec3(1.0f);
 	float     ambientPow = 0.1f;
@@ -269,17 +295,17 @@ int main() {
 	transforms[29] = Transform::Create();
 
 	// We can use operator chaining, since our Set* methods return a pointer to the instance, neat!
-	transforms[0]->SetLocalPosition(0.0f, -8.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//Player
-	transforms[1]->SetLocalPosition(0.0f, 1.0f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(2.0f, 1.0f, 2.0f);//Background
-	transforms[2]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(00.0f, 0.0f, 0.0f)->SetLocalScale(.75f, 0.75f, .75f);//Ball
+	transforms[0]->SetLocalPosition(0.0f, -8.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Player
+	transforms[1]->SetLocalPosition(15.0f, 20.0f, -5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Background
+	transforms[2]->SetLocalPosition(10.0f, 20.0f, -0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Ball
 	transforms[3]->SetLocalPosition(-11.0f, -9.0f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.5f, 2.0f);//left wall hitbox
 	transforms[4]->SetLocalPosition(-11.0f, 12.5f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.8f, 1.5f, 2.0f);//top wall hitbox
 	transforms[5]->SetLocalPosition(10.0f, -9.0f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.5f, 2.0f);//right wall hitbox
-	transforms[6]->SetLocalPosition(0.5f, 6.0f, 0.0f)->SetLocalRotation(00.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//Brick 1
-	transforms[7]->SetLocalPosition(0.5f, 9.0f, 0.0f)->SetLocalRotation(00.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//Brick 2
-	transforms[8]->SetLocalPosition(-6.0f, 9.0f, 0.0f)->SetLocalRotation(00.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//Brick 3
-	transforms[9]->SetLocalPosition(7.0f, 9.0f, 0.0f)->SetLocalRotation(00.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//Brick 4
-	transforms[10]->SetLocalPosition(-6.0f, 6.0f, 0.0f)->SetLocalRotation(00.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//Brick 5
+	transforms[6]->SetLocalPosition(10.0f, 12.0f, -3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//SandBox
+	transforms[7]->SetLocalPosition(-25.0f, 5.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 90.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Slide
+	transforms[8]->SetLocalPosition(-6.0f, 9.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Roundabout
+	transforms[9]->SetLocalPosition(7.0f, 9.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//Swing
+	transforms[10]->SetLocalPosition(0.0f,-6.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(2.5f, 2.5f, 2.5f);//player 2
 	transforms[11]->SetLocalPosition(7.0f, 6.0f, 0.0f)->SetLocalRotation(00.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//Brick 6
 	transforms[12]->SetLocalPosition(-4.7f, 5.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//0 score
 	transforms[13]->SetLocalPosition(-4.85f, 5.8f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//1 score
@@ -301,7 +327,7 @@ int main() {
 	transforms[29]->SetLocalPosition(-5.1f, 5.6f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//lives 0
 
 	// We'll store all our VAOs into a nice array for easy access
-	VertexArrayObject::sptr vaos[17];
+	VertexArrayObject::sptr vaos[21];
 	vaos[0] = vaoplayer;
 	vaos[1] = vaobackground;
 	vaos[2] = vaoball;
@@ -319,15 +345,20 @@ int main() {
 	vaos[14] = vaoscore;
 	vaos[15] = vaowin;
 	vaos[16] = vaolose;
+	vaos[17] = vaosandbox;
+	vaos[18] = vaoslide;
+	vaos[19] = vaoround;
+	vaos[20] = vaoplayer2;
+	//vaos[20] = vaoswing;
 
 	// TODO: load textures
 	//need to somehow make this thing make multiple textures(hard for some reason)
 	// Load our texture data from a file
-	Texture2DData::sptr diffuseMap = Texture2DData::LoadFromFile("images/NewGalaxy.jpg");
-	Texture2DData::sptr diffuseMap2 = Texture2DData::LoadFromFile("images/white.png");
-	Texture2DData::sptr diffuseMapbrick = Texture2DData::LoadFromFile("images/Brick.png");
+	Texture2DData::sptr diffuseMap = Texture2DData::LoadFromFile("images/Green.jpg");
+	Texture2DData::sptr diffuseMap2 = Texture2DData::LoadFromFile("images/box.bmp");
+	Texture2DData::sptr diffuseMapbrick = Texture2DData::LoadFromFile("images/Sand.jpg");
 	Texture2DData::sptr diffuseMapbrickstrong = Texture2DData::LoadFromFile("images/box.bmp");
-	Texture2DData::sptr diffuseBall = Texture2DData::LoadFromFile("images/STARS.jpg");
+	Texture2DData::sptr diffuseBall = Texture2DData::LoadFromFile("images/Green.jpg");
 	Texture2DData::sptr specularMap = Texture2DData::LoadFromFile("images/Stone_001_Specular.png");
 
 	// Create a texture from the data
@@ -367,7 +398,7 @@ int main() {
 	materials[0].Albedo2 = diffuse2;
 	materials[0].Specular = specular;
 	materials[0].Shininess = 4.0f;
-	materials[0].TextureMix = 1.0f;
+	materials[0].TextureMix = 0.0f;
 
 	//Background
 	materials[1].Albedo = diffuse;
@@ -376,21 +407,22 @@ int main() {
 	materials[1].Shininess = 16.0f;
 	materials[1].TextureMix = 0.0f;
 
-	//Ball
+	//MonkeyBar
 	materials[2].Albedo = diffuse;
 	materials[2].Albedo2 = diffusellab;
 	materials[2].Specular = specular;
 	materials[2].Shininess = 32.0f;
 	materials[2].TextureMix = 1.0f;
 	
-	//Brick
+	//SandBox
 	materials[3].Albedo = diffuseBrick;
 	materials[3].Albedo2 = diffuseBrickstrong;
 	materials[3].Specular = specular;
 	materials[3].Shininess = 32.0f;
 	materials[3].TextureMix = 0.5f;
 
-	materials[4].Albedo = diffuseBrick;
+	//Slide
+	materials[4].Albedo = diffuse;
 	materials[4].Albedo2 = diffuseBrickstrong;
 	materials[4].Specular = specular;
 	materials[4].Shininess = 32.0f;
@@ -402,8 +434,9 @@ int main() {
 	materials[5].Shininess = 32.0f;
 	materials[5].TextureMix = 1.0f;
 
+	//Camera
 	camera = Camera::Create();
-	camera->SetPosition(glm::vec3(0, -3, 13)); // Set initial position
+	camera->SetPosition(glm::vec3(0, -3, 40)); // Set initial position
 	camera->SetUp(glm::vec3(0, 0, 1)); // Use a z-up coordinate system
 	camera->LookAt(glm::vec3(0.0f)); // Look at center of the screen
 	camera->SetFovDegrees(90.0f); // Set an initial FOV
@@ -432,7 +465,7 @@ int main() {
 		double thisFrame = glfwGetTime();
 		float dt = static_cast<float>(thisFrame - lastFrame);
 
-		ManipulateTransformWithInput(transforms[0], transforms[2], dt);
+		ManipulateTransformWithInput(transforms[0], transforms[10], dt);
 
 		//colour of the background
 		glClearColor(0.08f, 0.17f, 0.31f, 1.0f);//rgb
@@ -451,7 +484,7 @@ int main() {
 		int r = (rand() % 2 + 1) - 1;
 
 		// Render all VAOs in our scene
-		for (int ix = 0; ix < 6; ix++) {
+		for (int ix = 0; ix < 3; ix++) {
 			// TODO: Apply materials
 			materials[ix].Albedo->Bind(0);
 			materials[ix].Albedo2->Bind(1);
@@ -470,11 +503,11 @@ int main() {
 		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[28]->LocalTransform()));
 
 		//ball movement
-		transforms[2]->MoveLocal(-8.0f * dt, -6.0f * dt, 0);
+		//transforms[2]->MoveLocal(-8.0f * dt, -6.0f * dt, 0);
 		//collision of kind of works(hopefully usable in our GDW)
 		{
 			//paddle and ball collison
-			if (Collision(transforms[0], transforms[2]))
+			/*if (Collision(transforms[0], transforms[2]))
 			{
 				if (r) {
 					transforms[2]->RotateLocal(0, 0, 90);
@@ -499,101 +532,93 @@ int main() {
 			if (Collision_right_left(transforms[5], transforms[2]))
 			{
 				transforms[2]->RotateLocal(0, 0, 90);
-			}
+			}*/
 			//rendering like this to control when a brick gets deleted
-			if (Collision(transforms[6], transforms[2]) == false) {
-				if (norender == false) {
-					materials[3].Albedo->Bind(0);
-					materials[3].Albedo2->Bind(1);
-					materials[3].Specular->Bind(2);
-					shader->SetUniform("u_Shininess", materials[3].Shininess);
-					shader->SetUniform("u_TextureMix", materials[3].TextureMix);
-					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[6]->LocalTransform());
-					shader->SetUniformMatrix("u_Model", transforms[6]->LocalTransform());
-					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[6]->LocalTransform()));
-					vaoplayer->Render();
-				}
-			}
-			else {
-				norender = true;
-				score = score + 1;
-				transforms[2]->RotateLocal(0, 0, -90);
-				transforms[6]->MoveLocal(0, 100, 0);
-			}
+				materials[3].Albedo->Bind(0);
+				materials[3].Albedo2->Bind(1);
+				materials[3].Specular->Bind(2);
+				shader->SetUniform("u_Shininess", materials[3].Shininess);
+				shader->SetUniform("u_TextureMix", materials[3].TextureMix);
+				shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[6]->LocalTransform());
+				shader->SetUniformMatrix("u_Model", transforms[6]->LocalTransform());
+				shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[6]->LocalTransform()));
+				vaosandbox->Render();
+			
 
-			if (Collision(transforms[7], transforms[2]) == false) {
-				if (norender2 == false) {
-					materials[3].Albedo->Bind(0);
-					materials[3].Albedo2->Bind(1);
-					materials[3].Specular->Bind(2);
-					shader->SetUniform("u_Shininess", materials[3].Shininess);
-					shader->SetUniform("u_TextureMix", materials[3].TextureMix);
+			//if (Collision(transforms[7], transforms[2]) == false) {
+				//if (norender2 == false) {
+					materials[4].Albedo->Bind(0);
+					materials[4].Albedo2->Bind(1);
+					materials[4].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[4].Shininess);
+					shader->SetUniform("u_TextureMix", materials[4].TextureMix);
 					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[7]->LocalTransform());
 					shader->SetUniformMatrix("u_Model", transforms[7]->LocalTransform());
 					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[7]->LocalTransform()));
-					vaoplayer->Render();
-				}
-			}
-			else {
+					vaoslide->Render();
+				//}
+			//}
+			/*else {
 				norender2 = true;
 				score = score + 1;
 				transforms[2]->RotateLocal(0, 0, -90);
 				transforms[7]->MoveLocal(0, 100, 0);
-			}
+			}*/
 
-			if (Collision(transforms[8], transforms[2]) == false) {
-				if (norender3 == false) {
-					materials[3].Albedo->Bind(0);
-					materials[3].Albedo2->Bind(1);
-					materials[3].Specular->Bind(2);
-					shader->SetUniform("u_Shininess", materials[3].Shininess);
-					shader->SetUniform("u_TextureMix", materials[3].TextureMix);
+			//if (Collision(transforms[8], transforms[2]) == false) {
+				//if (norender3 == false) {
+					materials[4].Albedo->Bind(0);
+					materials[4].Albedo2->Bind(1);
+					materials[4].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[4].Shininess);
+					shader->SetUniform("u_TextureMix", materials[4].TextureMix);
 					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[8]->LocalTransform());
 					shader->SetUniformMatrix("u_Model", transforms[8]->LocalTransform());
 					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[8]->LocalTransform()));
-					vaoplayer->Render();
-				}
-			}
-			else {
+					vaoround->Render();
+				//}
+			//}
+			/*else {
 				norender3 = true;
 				score = score + 1;
 				transforms[2]->RotateLocal(0, 0, -90);
 				transforms[8]->MoveLocal(0, 100, 0);
-			}
+			}*/
 
-			if (Collision(transforms[9], transforms[2]) == false) {
-				if (norender4 == false) {
-					materials[3].Albedo->Bind(0);
-					materials[3].Albedo2->Bind(1);
-					materials[3].Specular->Bind(2);
-					shader->SetUniform("u_Shininess", materials[3].Shininess);
-					shader->SetUniform("u_TextureMix", materials[3].TextureMix);
+			//if (Collision(transforms[9], transforms[2]) == false) {
+				//if (norender4 == false) {
+					/*materials[4].Albedo->Bind(0);
+					materials[4].Albedo2->Bind(1);
+					materials[4].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[4].Shininess);
+					shader->SetUniform("u_TextureMix", materials[4].TextureMix);
 					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[9]->LocalTransform());
 					shader->SetUniformMatrix("u_Model", transforms[9]->LocalTransform());
 					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[9]->LocalTransform()));
-					vaoplayer->Render();
-				}
-			}
-			else {
+					vaoswing->Render();*/
+				//}
+			//}
+			/*else {
 				norender4 = true;
 				score = score + 1;
 				transforms[2]->RotateLocal(0, 0, 90);
 				transforms[9]->MoveLocal(0, 100, 0);
-			}
+			}*/
 
-			if (Collision(transforms[10], transforms[2]) == false) {
-				if (norender5 == false) {
-					materials[3].Albedo->Bind(0);
-					materials[3].Albedo2->Bind(1);
-					materials[3].Specular->Bind(2);
-					shader->SetUniform("u_Shininess", materials[3].Shininess);
-					shader->SetUniform("u_TextureMix", materials[3].TextureMix);
+			//if (Collision(transforms[10], transforms[2]) == false) {
+				//if (norender5 == false) {
+					materials[1].Albedo->Bind(0);
+					materials[1].Albedo2->Bind(1);
+					materials[1].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[1].Shininess);
+					shader->SetUniform("u_TextureMix", materials[1].TextureMix);
 					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[10]->LocalTransform());
 					shader->SetUniformMatrix("u_Model", transforms[10]->LocalTransform());
 					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[10]->LocalTransform()));
-					vaoplayer->Render();
-				}
-			}
+					vaoplayer2->Render();
+				//}
+			//}
+			/*
 			else {
 				norender5 = true;
 				score = score + 1;
@@ -619,9 +644,9 @@ int main() {
 				score = score + 1;
 				transforms[2]->RotateLocal(0, 0, -90);
 				transforms[11]->MoveLocal(0, 100, 0);
-			}
+			}*/
 		}
-		//score numbers
+		/*//score numbers
 		//00
 		materials[4].Albedo->Bind(0);
 		materials[4].Albedo2->Bind(1);
@@ -843,7 +868,7 @@ int main() {
 			if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 				transforms[0]->MoveLocal(-9.0f * dt, 0.0f, 0.0f);
 			}
-		}
+		}*/
 		glfwSwapBuffers(window);
 		lastFrame = thisFrame;
 	}

@@ -7,18 +7,14 @@
 #include <GLM/glm.hpp> //04
 #include <glm/gtc/matrix_transform.hpp> //04
 
-<<<<<<< HEAD
 // LECTURE 7
-=======
 //Lecture 07
->>>>>>> parent of b0dabbb... CGMidtermstart
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 unsigned char* image;
 int width, height;
 
-<<<<<<< HEAD
 void loadImage() { // pass the filepath string as an argument
 	int channels;
 	stbi_set_flip_vertically_on_load(true);
@@ -31,8 +27,6 @@ void loadImage() { // pass the filepath string as an argument
 	
 }
 
-
-=======
 void loadImage() {//pass te filepath as an argument
 	int channels;
 	stbi_set_flip_vertically_on_load(true);
@@ -49,7 +43,6 @@ void loadImage() {//pass te filepath as an argument
 	}
 }
 
->>>>>>> parent of b0dabbb... CGMidtermstart
 GLFWwindow* window;
 
 bool initGLFW() {
@@ -59,11 +52,8 @@ bool initGLFW() {
 	}
 
 	//Create a new GLFW window
-<<<<<<< HEAD
-	window = glfwCreateWindow(1000, 800, "Chow_Alexander_100749034", nullptr, nullptr);
-=======
 	window = glfwCreateWindow(1000, 800, "INFR2670", nullptr, nullptr);
->>>>>>> parent of b0dabbb... CGMidtermstart
+
 	glfwMakeContextCurrent(window);
 
 	return true;
@@ -126,7 +116,6 @@ bool loadShaders() {
 
 // Lecture 04
 GLfloat rotY = 0.0f;
-<<<<<<< HEAD
 GLfloat tranZ = 0.0f;
 
 void keyboard() {
@@ -141,22 +130,6 @@ void keyboard() {
 
 }
 
-
-=======
-GLfloat transZ = 0.0f;
-
-void keyboard() {
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		rotY += 0.1;
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		rotY -= 0.1;
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		transZ -= 0.1;
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		transZ += 0.1;
-}
-
->>>>>>> parent of b0dabbb... CGMidtermstart
 int main() {
 	//Initialize GLFW
 	if (!initGLFW())
@@ -237,7 +210,6 @@ int main() {
 		-1.0f, 0.0f, 0.0f
 	};
 	
-<<<<<<< HEAD
 	// LECTURE 7
 	static const GLfloat uv[] = {
 		0.0f, 0.0f,
@@ -253,18 +225,6 @@ int main() {
 		1.0f, 0.0f,
 		1.0f, 1.0f,
 		0.5f, 1.0f,
-
-
-=======
-	//Lecture 7
-	static const GLfloat uv[] = {
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		0.0f, 1.0f,
-		1.0f, 0.0f,
-		1.0f, 1.0f,
-		0.0f, 1.0f
->>>>>>> parent of b0dabbb... CGMidtermstart
 	};
 
 	// Lecture 5
@@ -306,24 +266,16 @@ int main() {
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2); // Lecture 5
-<<<<<<< HEAD
 	
 	// LECTURE 7
-=======
 
-	//Lecture 7
->>>>>>> parent of b0dabbb... CGMidtermstart
 	GLuint uv_vbo = 3;
 	glGenBuffers(1, &uv_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, uv_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uv), uv, GL_STATIC_DRAW);
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-<<<<<<< HEAD
 	glEnableVertexAttribArray(3);
 
-=======
-	glDisableVertexAttribArray(3);
->>>>>>> parent of b0dabbb... CGMidtermstart
 
 	loadImage();
 
@@ -332,7 +284,6 @@ int main() {
 	glBindTexture(GL_TEXTURE_2D, textureHandle);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
-<<<<<<< HEAD
 	// Texture parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // GL_LINEAR
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // GL_LINEAR
@@ -340,20 +291,7 @@ int main() {
 	//free image space
 	stbi_image_free(image);
 	///////////////////////////// 07
-	
 
-	
-=======
-	//Texture paramters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //gl linear
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //gl linear
-
-	//free image space
-	stbi_image_free(image);
-
-
-
->>>>>>> parent of b0dabbb... CGMidtermstart
 	// Load your shaders
 	if (!loadShaders())
 		return 1;
@@ -415,11 +353,7 @@ int main() {
 		Model = glm::mat4(1.0f);
 		keyboard();												//X	    Y     Z
 		Model = glm::rotate(Model, glm::radians(rotY), glm::vec3(0.0f, 1.0f, 0.0f));
-<<<<<<< HEAD
 		Model = glm::translate(Model, glm::vec3(0.0f, 0.0f, tranZ));
-=======
-		Model = glm::translate(Model, glm::vec3(0.0f, 0.0f, transZ));
->>>>>>> parent of b0dabbb... CGMidtermstart
 		mvp = Projection * View * Model;
 		
 		//Lecture 04
@@ -438,16 +372,10 @@ int main() {
 
 		
 		// draw points 0-18 
-<<<<<<< HEAD
 		//Bind texture 1
 		glDrawArrays(GL_TRIANGLES, 0, 18);//36
 		// bind texture 2
 		// draw (6, 6)
-
-
-=======
-		glDrawArrays(GL_TRIANGLES, 0, 18);//36
->>>>>>> parent of b0dabbb... CGMidtermstart
 		
 		
 		glfwSwapBuffers(window);
