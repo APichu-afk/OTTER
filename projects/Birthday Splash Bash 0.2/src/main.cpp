@@ -223,7 +223,7 @@ int main() {
 	VertexArrayObject::sptr vaosandbox = ObjLoader::LoadFromFile("models/SandBox.obj");//SandBox
 	VertexArrayObject::sptr vaoslide = ObjLoader::LoadFromFile("models/Slide.obj");//Slide
 	VertexArrayObject::sptr vaoround = ObjLoader::LoadFromFile("models/RoundAbout.obj");//roundabout
-	//VertexArrayObject::sptr vaoswing = ObjLoader::LoadFromFile("models/Swing.obj");//swing
+	VertexArrayObject::sptr vaoswing = ObjLoader::LoadFromFile("models/Swing.obj");//swing
 	VertexArrayObject::sptr vaoplayer2 = ObjLoader::LoadFromFile("models/Duncet.obj");//Second player
 		
 	// Load our shaders
@@ -327,7 +327,7 @@ int main() {
 	transforms[29]->SetLocalPosition(-5.1f, 5.6f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//lives 0
 
 	// We'll store all our VAOs into a nice array for easy access
-	VertexArrayObject::sptr vaos[21];
+	VertexArrayObject::sptr vaos[22];
 	vaos[0] = vaoplayer;
 	vaos[1] = vaobackground;
 	vaos[2] = vaoball;
@@ -349,7 +349,7 @@ int main() {
 	vaos[18] = vaoslide;
 	vaos[19] = vaoround;
 	vaos[20] = vaoplayer2;
-	//vaos[20] = vaoswing;
+	vaos[21] = vaoswing;
 
 	// TODO: load textures
 	//need to somehow make this thing make multiple textures(hard for some reason)
@@ -587,7 +587,7 @@ int main() {
 
 			//if (Collision(transforms[9], transforms[2]) == false) {
 				//if (norender4 == false) {
-					/*materials[4].Albedo->Bind(0);
+					materials[4].Albedo->Bind(0);
 					materials[4].Albedo2->Bind(1);
 					materials[4].Specular->Bind(2);
 					shader->SetUniform("u_Shininess", materials[4].Shininess);
@@ -595,7 +595,7 @@ int main() {
 					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[9]->LocalTransform());
 					shader->SetUniformMatrix("u_Model", transforms[9]->LocalTransform());
 					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[9]->LocalTransform()));
-					vaoswing->Render();*/
+					vaoswing->Render();
 				//}
 			//}
 			/*else {
