@@ -56,7 +56,11 @@ int main()
 		return -1;
 
 	//Loads in the obj
+<<<<<<< HEAD:projects/CGMidterm/src/main.cpp
+	VertexArrayObject::sptr MainCharacter = OBJLoader::LoadFile("Paddle.obj");
+=======
 	VertexArrayObject::sptr MainCharacter = OBJLoader::LoadFile("monkey.obj");
+>>>>>>> master:projects/Birthday Splash Bash/src/main.cpp
 
 	Shader::sptr shader = Shader::Create();
 	shader->LoadShaderPartFromFile("vertex_shader.glsl", GL_VERTEX_SHADER);
@@ -85,12 +89,22 @@ int main()
 	glm::mat4 transform = glm::mat4(1.0f);
 
 	camera = Camera::Create();//camera initialized
+<<<<<<< HEAD:projects/CGMidterm/src/main.cpp
+	camera->SetPosition(glm::vec3(0, 3, 6)); // Sets the position
+=======
 	camera->SetPosition(glm::vec3(0, 3, 3)); // Sets the position
+>>>>>>> master:projects/Birthday Splash Bash/src/main.cpp
 	camera->SetUp(glm::vec3(0, 0, 1)); // Use a z-up coordinate system
 	camera->LookAt(glm::vec3(0.0f)); // Sets where its looking
 	camera->SetFovDegrees(90.0f); // Set the FOV
 	
 	double lastFrame = glfwGetTime();
+<<<<<<< HEAD:projects/CGMidterm/src/main.cpp
+	glm::vec3 l;
+
+	//transform = glm::translate(transform, glm::vec3(0.0f, -2.0f, 0.0f));
+=======
+>>>>>>> master:projects/Birthday Splash Bash/src/main.cpp
 
 	//Game loop/makes the window//
 	while (!glfwWindowShouldClose(firstWindow))
@@ -102,6 +116,12 @@ int main()
 
 		float dt = static_cast<float>(thisFrame - lastFrame);
 
+<<<<<<< HEAD:projects/CGMidterm/src/main.cpp
+		transform = glm::rotate(glm::mat4(1.0f), static_cast<float>(thisFrame), glm::vec3(0, 0, 1));
+
+		if (glfwGetKey(firstWindow, GLFW_KEY_LEFT) == GLFW_PRESS) {
+			transform = glm::translate(transform, glm::vec3(-0.001f, 0.0f, 0.0f));//gains speed for some reason when using dt
+=======
 		if (glfwGetKey(firstWindow, GLFW_KEY_A) == GLFW_PRESS) {
 			transform = glm::translate(transform, glm::vec3(0.01f, 0.0f, 0.0f));//gains speed for some reason when using dt
 		}
@@ -110,10 +130,15 @@ int main()
 		}
 		if (glfwGetKey(firstWindow, GLFW_KEY_W) == GLFW_PRESS) {
 			transform = glm::translate(transform, glm::vec3(0.0f, -0.01f, 0.0f));//gains speed for some reason when using dt
+>>>>>>> master:projects/Birthday Splash Bash/src/main.cpp
 		}
 		if (glfwGetKey(firstWindow, GLFW_KEY_S) == GLFW_PRESS) {
 			transform = glm::translate(transform, glm::vec3(0.0f, 0.01f, 0.0f));//gains speed for some reason when using dt
 		}
+<<<<<<< HEAD:projects/CGMidterm/src/main.cpp
+		
+=======
+>>>>>>> master:projects/Birthday Splash Bash/src/main.cpp
 
 		//Changes Colour of our background
 		glClearColor(0.1f, 0.0f, 0.1f, 1.0f);//RGB, Alpha? dark purple right now 
