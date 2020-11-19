@@ -223,7 +223,7 @@ int main() {
 	VertexArrayObject::sptr vaosandbox = ObjLoader::LoadFromFile("models/SandBox.obj");//SandBox
 	VertexArrayObject::sptr vaoslide = ObjLoader::LoadFromFile("models/Slide.obj");//Slide
 	VertexArrayObject::sptr vaoround = ObjLoader::LoadFromFile("models/RoundAbout.obj");//roundabout
-	VertexArrayObject::sptr vaoswing = ObjLoader::LoadFromFile("models/Swing.obj");//swing
+	//VertexArrayObject::sptr vaoswing = ObjLoader::LoadFromFile("models/Swing.obj");//swing
 	VertexArrayObject::sptr vaoplayer2 = ObjLoader::LoadFromFile("models/Duncet.obj");//Second player
 		
 	// Load our shaders
@@ -349,7 +349,7 @@ int main() {
 	vaos[18] = vaoslide;
 	vaos[19] = vaoround;
 	vaos[20] = vaoplayer2;
-	vaos[21] = vaoswing;
+	//vaos[21] = vaoswing;
 
 	// TODO: load textures
 	//need to somehow make this thing make multiple textures(hard for some reason)
@@ -357,8 +357,8 @@ int main() {
 	Texture2DData::sptr diffuseMap = Texture2DData::LoadFromFile("images/Green.jpg");
 	Texture2DData::sptr diffuseMap2 = Texture2DData::LoadFromFile("images/box.bmp");
 	Texture2DData::sptr diffuseMapbrick = Texture2DData::LoadFromFile("images/Sand.jpg");
-	Texture2DData::sptr diffuseMapbrickstrong = Texture2DData::LoadFromFile("images/box.bmp");
-	Texture2DData::sptr diffuseBall = Texture2DData::LoadFromFile("images/Green.jpg");
+	Texture2DData::sptr diffuseMapbrickstrong = Texture2DData::LoadFromFile("images/Slide.png");
+	Texture2DData::sptr diffuseBall = Texture2DData::LoadFromFile("images/MonkeyBar.png");
 	Texture2DData::sptr specularMap = Texture2DData::LoadFromFile("images/Stone_001_Specular.png");
 
 	// Create a texture from the data
@@ -419,14 +419,14 @@ int main() {
 	materials[3].Albedo2 = diffuseBrickstrong;
 	materials[3].Specular = specular;
 	materials[3].Shininess = 32.0f;
-	materials[3].TextureMix = 0.5f;
+	materials[3].TextureMix = 0.0f;
 
 	//Slide
 	materials[4].Albedo = diffuse;
 	materials[4].Albedo2 = diffuseBrickstrong;
 	materials[4].Specular = specular;
 	materials[4].Shininess = 32.0f;
-	materials[4].TextureMix = 0.0f;
+	materials[4].TextureMix = 1.0f;
 	
 	materials[5].Albedo = diffuse;
 	materials[5].Albedo2 = diffuse2;
@@ -595,7 +595,7 @@ int main() {
 					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[9]->LocalTransform());
 					shader->SetUniformMatrix("u_Model", transforms[9]->LocalTransform());
 					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[9]->LocalTransform()));
-					vaoswing->Render();
+					//vaoswing->Render();
 				//}
 			//}
 			/*else {

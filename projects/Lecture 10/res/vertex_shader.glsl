@@ -14,7 +14,7 @@ void main() {
 
 	//Lecture 10
 	vec3 vert = vertex_pos;
-	vert.y = 0.0; //flaten the object
+	//vert.y = 0.0; //flaten the object
 	gl_Position = MVP * vec4(vert, 1.0);
 
 	//gl_Position = MVP * vec4(vertex_pos, 1.0);

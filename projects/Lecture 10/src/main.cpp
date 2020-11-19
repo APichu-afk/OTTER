@@ -18,7 +18,7 @@ int width, height;
 void loadImage() {
 	int channels;
 	stbi_set_flip_vertically_on_load(true);
-	image = stbi_load("fence.png",
+	image = stbi_load("box2.bmp",
 		&width,
 		&height,
 		&channels,
@@ -29,7 +29,7 @@ void loadImage() {
 	else {
 		std::cout << "Failed to load image!" << std::endl;
 	}
-
+	
 }
 
 
@@ -387,7 +387,7 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		
-		glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(shader_program);
