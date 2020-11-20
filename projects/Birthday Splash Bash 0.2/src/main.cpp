@@ -204,7 +204,7 @@ int main() {
 	
 	//Vaos
 	VertexArrayObject::sptr vaoplayer = ObjLoader::LoadFromFile("models/Dunce.obj");//player
-	VertexArrayObject::sptr vaobackground = ObjLoader::LoadFromFile("models/Ground.obj");//Background
+	VertexArrayObject::sptr vaobackground = ObjLoader::LoadFromFile("models/Ground.obj");//Ground
 	VertexArrayObject::sptr vaoball = ObjLoader::LoadFromFile("models/MonkeyBar.obj");//MonkeyBars
 	VertexArrayObject::sptr vaoleft = ObjLoader::LoadFromFile("models/LeftSide.obj");//wall left
 	VertexArrayObject::sptr vaoup = ObjLoader::LoadFromFile("models/TopSide.obj");//wall top
@@ -222,10 +222,10 @@ int main() {
 	VertexArrayObject::sptr vaolose = ObjLoader::LoadFromFile("models/Lose.obj");//lose
 	VertexArrayObject::sptr vaosandbox = ObjLoader::LoadFromFile("models/SandBox.obj");//SandBox
 	VertexArrayObject::sptr vaoslide = ObjLoader::LoadFromFile("models/Slide.obj");//Slide
-	VertexArrayObject::sptr vaoround = ObjLoader::LoadFromFile("models/RoundAbout.obj");//roundabout
-	VertexArrayObject::sptr vaobottle = ObjLoader::LoadFromFile("models/waterBottle.obj");//roundabout
-	//VertexArrayObject::sptr vaoswing = ObjLoader::LoadFromFile("models/Swing.obj");//swing
-	VertexArrayObject::sptr vaoplayer2 = ObjLoader::LoadFromFile("models/Duncet.obj");//Water Bottle 1
+	VertexArrayObject::sptr vaoround = ObjLoader::LoadFromFile("models/RA.obj");//roundabout
+	VertexArrayObject::sptr vaobottle = ObjLoader::LoadFromFile("models/waterBottle.obj");//Waterbottle
+	VertexArrayObject::sptr vaoswing = ObjLoader::LoadFromFile("models/Swing.obj");//swing
+	VertexArrayObject::sptr vaoplayer2 = ObjLoader::LoadFromFile("models/Duncet.obj");//Player 2
 		
 	// Load our shaders
 	Shader::sptr shader = Shader::Create();
@@ -268,38 +268,6 @@ int main() {
 	{
 		transforms[x] = Transform::Create();
 	}
-	/*
-	transforms[0] = Transform::Create();
-	transforms[1] = Transform::Create();
-	transforms[2] = Transform::Create();
-	transforms[3] = Transform::Create();
-	transforms[4] = Transform::Create();
-	transforms[5] = Transform::Create();
-	transforms[6] = Transform::Create();
-	transforms[7] = Transform::Create();
-	transforms[8] = Transform::Create();
-	transforms[9] = Transform::Create();
-	transforms[10] = Transform::Create();
-	transforms[11] = Transform::Create();
-	transforms[12] = Transform::Create();
-	transforms[13] = Transform::Create();
-	transforms[14] = Transform::Create();
-	transforms[15] = Transform::Create();
-	transforms[16] = Transform::Create();
-	transforms[17] = Transform::Create();
-	transforms[18] = Transform::Create();
-	transforms[19] = Transform::Create();
-	transforms[20] = Transform::Create();
-	transforms[21] = Transform::Create();
-	transforms[22] = Transform::Create();
-	transforms[23] = Transform::Create();
-	transforms[24] = Transform::Create();
-	transforms[25] = Transform::Create();
-	transforms[26] = Transform::Create();
-	transforms[27] = Transform::Create();
-	transforms[28] = Transform::Create();
-	transforms[29] = Transform::Create();
-	*/
 
 	// We can use operator chaining, since our Set* methods return a pointer to the instance, neat!
 	transforms[0]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Player
@@ -331,10 +299,10 @@ int main() {
 	transforms[26]->SetLocalPosition(-3.9f, 5.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//0 for hundred
 	transforms[27]->SetLocalPosition(-4.3f, 5.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//0 for hundred
 	transforms[28]->SetLocalPosition(-11.0f, -11.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.8f, 1.5f, 2.0f);//bottom wall hitbox
-	transforms[29]->SetLocalPosition(-5.1f, 5.6f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//lives 0
+	transforms[29]->SetLocalPosition(35.0f, 20.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Swing
 
 	// We'll store all our VAOs into a nice array for easy access
-	VertexArrayObject::sptr vaos[22];
+	VertexArrayObject::sptr vaos[23];
 	vaos[0] = vaoplayer;
 	vaos[1] = vaobackground;
 	vaos[2] = vaoball;
@@ -356,45 +324,57 @@ int main() {
 	vaos[18] = vaoslide;
 	vaos[19] = vaoround;
 	vaos[20] = vaoplayer2;
-	//vaos[21] = vaoswing;
-	vaos[21] = vaoplayer2;
+	vaos[21] = vaoswing;
+	vaos[22] = vaoplayer2;
 
 	// TODO: load textures
 	//need to somehow make this thing make multiple textures(hard for some reason)
 	// Load our texture data from a file
-	Texture2DData::sptr diffuseMap = Texture2DData::LoadFromFile("images/Green.jpg");
+	Texture2DData::sptr diffuseMapGround = Texture2DData::LoadFromFile("images/Ground.png");
 	Texture2DData::sptr diffuseMap2 = Texture2DData::LoadFromFile("images/box.bmp");
-	Texture2DData::sptr diffuseMapbrick = Texture2DData::LoadFromFile("images/Sand.jpg");
-	Texture2DData::sptr diffuseMapbrickstrong = Texture2DData::LoadFromFile("images/Slide.png");
+	Texture2DData::sptr diffuseMapSandBox = Texture2DData::LoadFromFile("images/SandBox.png");
+	Texture2DData::sptr diffuseMapSlide = Texture2DData::LoadFromFile("images/Slide.png");
 	Texture2DData::sptr diffuseBottleMap = Texture2DData::LoadFromFile("images/BottleTex.png");
-	Texture2DData::sptr diffuseBall = Texture2DData::LoadFromFile("images/MonkeyBar.png");
+	Texture2DData::sptr diffuseMapMonkeyBar = Texture2DData::LoadFromFile("images/MonkeyBar.png");
+	Texture2DData::sptr diffuseMapRA = Texture2DData::LoadFromFile("images/RoundAbout.png");
+	Texture2DData::sptr diffuseMapSwing = Texture2DData::LoadFromFile("images/Swing.png");
 	Texture2DData::sptr specularMap = Texture2DData::LoadFromFile("images/Stone_001_Specular.png");
 
 	// Create a texture from the data
-	Texture2D::sptr diffuse = Texture2D::Create();
-	diffuse->LoadData(diffuseMap);
+	//Ground texture
+	Texture2D::sptr diffuseGround = Texture2D::Create();
+	diffuseGround->LoadData(diffuseMapGround);
 
 	Texture2D::sptr specular = Texture2D::Create();
 	specular->LoadData(specularMap);
 
+	//testing texture
 	Texture2D::sptr diffuse2 = Texture2D::Create();
 	diffuse2->LoadData(diffuseMap2);
 
-	//brick texture
-	Texture2D::sptr diffuseBrick = Texture2D::Create();
-	diffuseBrick->LoadData(diffuseMapbrick);
+	//Slide texture
+	Texture2D::sptr diffuseSlide = Texture2D::Create();
+	diffuseSlide->LoadData(diffuseMapSlide);
 	
-	//strong brick texture
-	Texture2D::sptr diffuseBrickstrong = Texture2D::Create();
-	diffuseBrickstrong->LoadData(diffuseMapbrickstrong);
+	//SandBox texture
+	Texture2D::sptr diffuseSandBox = Texture2D::Create();
+	diffuseSandBox->LoadData(diffuseMapSandBox);
 
-	//bottle
+	//bottle texture
 	Texture2D::sptr diffuseBottle = Texture2D::Create();
 	diffuseBottle->LoadData(diffuseBottleMap);
 
-	//ball texture
-	Texture2D::sptr diffusellab = Texture2D::Create();
-	diffusellab->LoadData(diffuseBall);
+	//MonkeyBar texture
+	Texture2D::sptr diffuseMonkeyBar = Texture2D::Create();
+	diffuseMonkeyBar->LoadData(diffuseMapMonkeyBar);
+	
+	//RoundAbout texture
+	Texture2D::sptr diffuseRA = Texture2D::Create();
+	diffuseRA->LoadData(diffuseMapRA);
+	
+	//Swing texture
+	Texture2D::sptr diffuseSwing = Texture2D::Create();
+	diffuseSwing->LoadData(diffuseMapSwing);
 
 	// Creating an empty texture
 	Texture2DDescription desc = Texture2DDescription();
@@ -407,46 +387,60 @@ int main() {
 	// TODO: store some info about our materials for each object
 	Material materials[9];
 	//player
-	materials[0].Albedo = diffuse;
+	materials[0].Albedo = diffuseGround;
 	materials[0].Albedo2 = diffuse2;
 	materials[0].Specular = specular;
 	materials[0].Shininess = 4.0f;
 	materials[0].TextureMix = 0.0f;
 
 	//Background
-	materials[1].Albedo = diffuse;
+	materials[1].Albedo = diffuseGround;
 	materials[1].Albedo2 = diffuse2;
 	materials[1].Specular = specular;
 	materials[1].Shininess = 16.0f;
 	materials[1].TextureMix = 0.0f;
 
 	//MonkeyBar
-	materials[2].Albedo = diffuse;
-	materials[2].Albedo2 = diffusellab;
+	materials[2].Albedo = diffuseGround;
+	materials[2].Albedo2 = diffuseMonkeyBar;
 	materials[2].Specular = specular;
 	materials[2].Shininess = 32.0f;
 	materials[2].TextureMix = 1.0f;
 	
 	//SandBox
-	materials[3].Albedo = diffuseBrick;
-	materials[3].Albedo2 = diffuseBrickstrong;
+	materials[3].Albedo = diffuseSlide;
+	materials[3].Albedo2 = diffuseSandBox;
 	materials[3].Specular = specular;
 	materials[3].Shininess = 32.0f;
-	materials[3].TextureMix = 0.0f;
+	materials[3].TextureMix = 1.0f;
 
 	//Slide
-	materials[4].Albedo = diffuse;
-	materials[4].Albedo2 = diffuseBrickstrong;
+	materials[4].Albedo = diffuseGround;
+	materials[4].Albedo2 = diffuseSlide;
 	materials[4].Specular = specular;
 	materials[4].Shininess = 32.0f;
 	materials[4].TextureMix = 1.0f;
 	
 	//Bottle
-	materials[5].Albedo = diffuse;
+	materials[5].Albedo = diffuseGround;
 	materials[5].Albedo2 = diffuseBottle;
 	materials[5].Specular = specular;
 	materials[5].Shininess = 32.0f;
 	materials[5].TextureMix = 1.0f;
+
+	//RoundAbout
+	materials[6].Albedo = diffuseGround;
+	materials[6].Albedo2 = diffuseRA;
+	materials[6].Specular = specular;
+	materials[6].Shininess = 32.0f;
+	materials[6].TextureMix = 1.0f;
+	
+	//Swing
+	materials[7].Albedo = diffuseGround;
+	materials[7].Albedo2 = diffuseSwing;
+	materials[7].Specular = specular;
+	materials[7].Shininess = 32.0f;
+	materials[7].TextureMix = 1.0f;
 
 	//Camera
 	camera = Camera::Create();
@@ -581,11 +575,12 @@ int main() {
 
 			//if (Collision(transforms[8], transforms[2]) == false) {
 				//if (norender3 == false) {
-					materials[4].Albedo->Bind(0);
-					materials[4].Albedo2->Bind(1);
-					materials[4].Specular->Bind(2);
-					shader->SetUniform("u_Shininess", materials[4].Shininess);
-					shader->SetUniform("u_TextureMix", materials[4].TextureMix);
+					//roundabout
+					materials[6].Albedo->Bind(0);
+					materials[6].Albedo2->Bind(1);
+					materials[6].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[6].Shininess);
+					shader->SetUniform("u_TextureMix", materials[6].TextureMix);
 					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[8]->LocalTransform());
 					shader->SetUniformMatrix("u_Model", transforms[8]->LocalTransform());
 					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[8]->LocalTransform()));
@@ -601,14 +596,16 @@ int main() {
 
 			//if (Collision(transforms[9], transforms[2]) == false) {
 				//if (norender4 == false) {
-					materials[4].Albedo->Bind(0);
-					materials[4].Albedo2->Bind(1);
-					materials[4].Specular->Bind(2);
-					shader->SetUniform("u_Shininess", materials[4].Shininess);
-					shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[9]->LocalTransform());
-					shader->SetUniformMatrix("u_Model", transforms[9]->LocalTransform());
-					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[9]->LocalTransform()));
+					//Swing
+					materials[7].Albedo->Bind(0);
+					materials[7].Albedo2->Bind(1);
+					materials[7].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[7].Shininess);
+					shader->SetUniform("u_TextureMix", materials[7].TextureMix);
+					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[29]->LocalTransform());
+					shader->SetUniformMatrix("u_Model", transforms[29]->LocalTransform());
+					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[29]->LocalTransform()));
+					vaoswing->Render();
 
 					//bottle
 					materials[5].Albedo->Bind(0);
@@ -653,7 +650,6 @@ int main() {
 					shader->SetUniformMatrix("u_Model", transforms[18]->LocalTransform());
 					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[18]->LocalTransform()));
 					vaobottle->Render();
-					//vaoswing->Render();
 				//}
 			//}
 			/*else {
@@ -665,6 +661,7 @@ int main() {
 
 			//if (Collision(transforms[10], transforms[2]) == false) {
 				//if (norender5 == false) {
+					//Player2
 					materials[1].Albedo->Bind(0);
 					materials[1].Albedo2->Bind(1);
 					materials[1].Specular->Bind(2);
