@@ -115,10 +115,10 @@ void RenderVAO(
 void ManipulateTransformWithInput(const Transform::sptr& transform, const Transform::sptr& transform1, float dt) {
 	//first player
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		transform->RotateLocal(0.0f, 0.3f, 0.0f);
+		transform->RotateLocal(0.0f, 1.3f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		transform->RotateLocal(0.0f, -0.3f, 0.0f);
+		transform->RotateLocal(0.0f, -1.3f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		transform->MoveLocal(0.0f, 0.0f, -9.0f * dt);
@@ -129,10 +129,10 @@ void ManipulateTransformWithInput(const Transform::sptr& transform, const Transf
 
 	//second player
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-		transform1->RotateLocal(0.0f, 0.3f, 0.0f);
+		transform1->RotateLocal(0.0f, 1.3f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-		transform1->RotateLocal(0.0f, -0.3f, 0.0f);
+		transform1->RotateLocal(0.0f, -1.3f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
 		transform1->MoveLocal(0.0f, 0.0f, -9.0f * dt);
@@ -223,8 +223,9 @@ int main() {
 	VertexArrayObject::sptr vaosandbox = ObjLoader::LoadFromFile("models/SandBox.obj");//SandBox
 	VertexArrayObject::sptr vaoslide = ObjLoader::LoadFromFile("models/Slide.obj");//Slide
 	VertexArrayObject::sptr vaoround = ObjLoader::LoadFromFile("models/RoundAbout.obj");//roundabout
+	VertexArrayObject::sptr vaobottle = ObjLoader::LoadFromFile("models/waterBottle.obj");//roundabout
 	//VertexArrayObject::sptr vaoswing = ObjLoader::LoadFromFile("models/Swing.obj");//swing
-	VertexArrayObject::sptr vaoplayer2 = ObjLoader::LoadFromFile("models/Duncet.obj");//Second player
+	VertexArrayObject::sptr vaoplayer2 = ObjLoader::LoadFromFile("models/Duncet.obj");//Water Bottle 1
 		
 	// Load our shaders
 	Shader::sptr shader = Shader::Create();
@@ -263,6 +264,11 @@ int main() {
 
 	// Create some transforms and initialize them
 	Transform::sptr transforms[33];
+	for (int x = 0; x < 33; x++)
+	{
+		transforms[x] = Transform::Create();
+	}
+	/*
 	transforms[0] = Transform::Create();
 	transforms[1] = Transform::Create();
 	transforms[2] = Transform::Create();
@@ -293,27 +299,28 @@ int main() {
 	transforms[27] = Transform::Create();
 	transforms[28] = Transform::Create();
 	transforms[29] = Transform::Create();
+	*/
 
 	// We can use operator chaining, since our Set* methods return a pointer to the instance, neat!
-	transforms[0]->SetLocalPosition(0.0f, -8.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Player
+	transforms[0]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Player
 	transforms[1]->SetLocalPosition(15.0f, 20.0f, -5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Background
-	transforms[2]->SetLocalPosition(10.0f, 20.0f, -0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Ball
+	transforms[2]->SetLocalPosition(-21.0f, 7.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 90.0f)->SetLocalScale(0.8f, 1.0f, 1.0f);//MonkeyBar
 	transforms[3]->SetLocalPosition(-11.0f, -9.0f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.5f, 2.0f);//left wall hitbox
 	transforms[4]->SetLocalPosition(-11.0f, 12.5f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.8f, 1.5f, 2.0f);//top wall hitbox
 	transforms[5]->SetLocalPosition(10.0f, -9.0f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.5f, 2.0f);//right wall hitbox
-	transforms[6]->SetLocalPosition(10.0f, 12.0f, -3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//SandBox
-	transforms[7]->SetLocalPosition(-25.0f, 5.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 90.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Slide
-	transforms[8]->SetLocalPosition(-6.0f, 9.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Roundabout
-	transforms[9]->SetLocalPosition(7.0f, 9.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//Swing
-	transforms[10]->SetLocalPosition(0.0f,-6.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(2.5f, 2.5f, 2.5f);//player 2
+	transforms[6]->SetLocalPosition(14.0f, 18.0f, -3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//SandBox
+	transforms[7]->SetLocalPosition(20.0f, 0.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 270.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Slide
+	transforms[8]->SetLocalPosition(0.0f, 2.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Roundabout
+	transforms[9]->SetLocalPosition(-3.0f, -20.0f, 2.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 1 Bot Mid Sandbox
+	transforms[10]->SetLocalPosition(30.0f,-20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(2.5f, 2.5f, 2.5f);//player 2
 	transforms[11]->SetLocalPosition(7.0f, 6.0f, 0.0f)->SetLocalRotation(00.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//Brick 6
-	transforms[12]->SetLocalPosition(-4.7f, 5.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//0 score
+	transforms[12]->SetLocalPosition(25.0f, 10.0f, 1.0f)->SetLocalRotation(0.0f, 90.0f, 90.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 2 Top Right Field
 	transforms[13]->SetLocalPosition(-4.85f, 5.8f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//1 score
 	transforms[14]->SetLocalPosition(-5.0f, 6.55f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//2 score
 	transforms[15]->SetLocalPosition(-5.15f, 7.3f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//3 score
 	transforms[16]->SetLocalPosition(-5.3f, 8.1f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//4 score
-	transforms[17]->SetLocalPosition(-5.45f, 8.9f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//5 score
-	transforms[18]->SetLocalPosition(-5.6f, 9.7f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//6 score
+	transforms[17]->SetLocalPosition(2.0f, 6.0f, 2.0f)->SetLocalRotation(0.0f, 0.0f, 125.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 3 Top Mid Sandbox
+	transforms[18]->SetLocalPosition(-25.0f, 15.0f, 1.0f)->SetLocalRotation(0.0f, 180.0f, 45.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 4 Top Left Field
 	transforms[19]->SetLocalPosition(-8.0f, 8.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//balls
 	transforms[20]->SetLocalPosition(-8.0f, 8.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//score
 	transforms[21]->SetLocalPosition(-8.0f, -5.0f, 7.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(4.0f, 4.0f, 4.0f);//win
@@ -350,6 +357,7 @@ int main() {
 	vaos[19] = vaoround;
 	vaos[20] = vaoplayer2;
 	//vaos[21] = vaoswing;
+	vaos[21] = vaoplayer2;
 
 	// TODO: load textures
 	//need to somehow make this thing make multiple textures(hard for some reason)
@@ -358,6 +366,7 @@ int main() {
 	Texture2DData::sptr diffuseMap2 = Texture2DData::LoadFromFile("images/box.bmp");
 	Texture2DData::sptr diffuseMapbrick = Texture2DData::LoadFromFile("images/Sand.jpg");
 	Texture2DData::sptr diffuseMapbrickstrong = Texture2DData::LoadFromFile("images/Slide.png");
+	Texture2DData::sptr diffuseBottleMap = Texture2DData::LoadFromFile("images/BottleTex.png");
 	Texture2DData::sptr diffuseBall = Texture2DData::LoadFromFile("images/MonkeyBar.png");
 	Texture2DData::sptr specularMap = Texture2DData::LoadFromFile("images/Stone_001_Specular.png");
 
@@ -378,6 +387,10 @@ int main() {
 	//strong brick texture
 	Texture2D::sptr diffuseBrickstrong = Texture2D::Create();
 	diffuseBrickstrong->LoadData(diffuseMapbrickstrong);
+
+	//bottle
+	Texture2D::sptr diffuseBottle = Texture2D::Create();
+	diffuseBottle->LoadData(diffuseBottleMap);
 
 	//ball texture
 	Texture2D::sptr diffusellab = Texture2D::Create();
@@ -428,8 +441,9 @@ int main() {
 	materials[4].Shininess = 32.0f;
 	materials[4].TextureMix = 1.0f;
 	
+	//Bottle
 	materials[5].Albedo = diffuse;
-	materials[5].Albedo2 = diffuse2;
+	materials[5].Albedo2 = diffuseBottle;
 	materials[5].Specular = specular;
 	materials[5].Shininess = 32.0f;
 	materials[5].TextureMix = 1.0f;
@@ -595,6 +609,50 @@ int main() {
 					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[9]->LocalTransform());
 					shader->SetUniformMatrix("u_Model", transforms[9]->LocalTransform());
 					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[9]->LocalTransform()));
+
+					//bottle
+					materials[5].Albedo->Bind(0);
+					materials[5].Albedo2->Bind(1);
+					materials[5].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[5].Shininess);
+					shader->SetUniform("u_TextureMix", materials[5].TextureMix);
+					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[9]->LocalTransform());
+					shader->SetUniformMatrix("u_Model", transforms[9]->LocalTransform());
+					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[9]->LocalTransform()));
+					vaobottle->Render();
+
+					//bottle 2
+					materials[5].Albedo->Bind(0);
+					materials[5].Albedo2->Bind(1);
+					materials[5].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[5].Shininess);
+					shader->SetUniform("u_TextureMix", materials[5].TextureMix);
+					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[12]->LocalTransform());
+					shader->SetUniformMatrix("u_Model", transforms[12]->LocalTransform());
+					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[12]->LocalTransform()));
+					vaobottle->Render();
+
+					//bottle 3
+					materials[5].Albedo->Bind(0);
+					materials[5].Albedo2->Bind(1);
+					materials[5].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[5].Shininess);
+					shader->SetUniform("u_TextureMix", materials[5].TextureMix);
+					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[17]->LocalTransform());
+					shader->SetUniformMatrix("u_Model", transforms[17]->LocalTransform());
+					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[17]->LocalTransform()));
+					vaobottle->Render();
+
+					//bottle 4
+					materials[5].Albedo->Bind(0);
+					materials[5].Albedo2->Bind(1);
+					materials[5].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[5].Shininess);
+					shader->SetUniform("u_TextureMix", materials[5].TextureMix);
+					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[18]->LocalTransform());
+					shader->SetUniformMatrix("u_Model", transforms[18]->LocalTransform());
+					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[18]->LocalTransform()));
+					vaobottle->Render();
 					//vaoswing->Render();
 				//}
 			//}
