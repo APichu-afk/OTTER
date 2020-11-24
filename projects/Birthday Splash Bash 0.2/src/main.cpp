@@ -115,10 +115,10 @@ void RenderVAO(
 void ManipulateTransformWithInput(const Transform::sptr& transform, const Transform::sptr& transform1, float dt) {
 	//first player
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		transform->RotateLocal(0.0f, 1.3f, 0.0f);
+		transform->RotateLocal(0.0f, 0.25f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		transform->RotateLocal(0.0f, -1.3f, 0.0f);
+		transform->RotateLocal(0.0f, -0.25, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		transform->MoveLocal(0.0f, 0.0f, -9.0f * dt);
@@ -129,10 +129,10 @@ void ManipulateTransformWithInput(const Transform::sptr& transform, const Transf
 
 	//second player
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-		transform1->RotateLocal(0.0f, 1.3f, 0.0f);
+		transform1->RotateLocal(0.0f, 0.25f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-		transform1->RotateLocal(0.0f, -1.3f, 0.0f);
+		transform1->RotateLocal(0.0f, -0.25f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
 		transform1->MoveLocal(0.0f, 0.0f, -9.0f * dt);
@@ -270,24 +270,24 @@ int main() {
 	}
 
 	// We can use operator chaining, since our Set* methods return a pointer to the instance, neat!
-	transforms[0]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Player
+	transforms[0]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 135.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Player
 	transforms[1]->SetLocalPosition(15.0f, 20.0f, -5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Background
-	transforms[2]->SetLocalPosition(-21.0f, 7.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 90.0f)->SetLocalScale(0.8f, 1.0f, 1.0f);//MonkeyBar
+	transforms[2]->SetLocalPosition(-19.0f, 6.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 90.0f)->SetLocalScale(0.8f, 1.0f, 1.0f);//MonkeyBar
 	transforms[3]->SetLocalPosition(-11.0f, -9.0f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.5f, 2.0f);//left wall hitbox
 	transforms[4]->SetLocalPosition(-11.0f, 12.5f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.8f, 1.5f, 2.0f);//top wall hitbox
 	transforms[5]->SetLocalPosition(10.0f, -9.0f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.5f, 2.0f);//right wall hitbox
 	transforms[6]->SetLocalPosition(14.0f, 18.0f, -3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//SandBox
 	transforms[7]->SetLocalPosition(20.0f, 0.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 270.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Slide
-	transforms[8]->SetLocalPosition(0.0f, 2.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Roundabout
-	transforms[9]->SetLocalPosition(-3.0f, -20.0f, 2.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 1 Bot Mid Sandbox
-	transforms[10]->SetLocalPosition(30.0f,-20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(2.5f, 2.5f, 2.5f);//player 2
+	transforms[8]->SetLocalPosition(0.75f, 3.5f, -4.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.2f, 1.2f, 1.2f);//Roundabout
+	transforms[9]->SetLocalPosition(-3.0f, -23.0f, 2.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 1 Bot Mid Sandbox
+	transforms[10]->SetLocalPosition(30.0f,-20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 225.0f)->SetLocalScale(2.5f, 2.5f, 2.5f);//player 2
 	transforms[11]->SetLocalPosition(7.0f, 6.0f, 0.0f)->SetLocalRotation(00.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//Brick 6
 	transforms[12]->SetLocalPosition(25.0f, 10.0f, 1.0f)->SetLocalRotation(0.0f, 90.0f, 90.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 2 Top Right Field
 	transforms[13]->SetLocalPosition(-4.85f, 5.8f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//1 score
 	transforms[14]->SetLocalPosition(-5.0f, 6.55f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//2 score
 	transforms[15]->SetLocalPosition(-5.15f, 7.3f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//3 score
 	transforms[16]->SetLocalPosition(-5.3f, 8.1f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//4 score
-	transforms[17]->SetLocalPosition(2.0f, 6.0f, 2.0f)->SetLocalRotation(0.0f, 0.0f, 125.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 3 Top Mid Sandbox
+	transforms[17]->SetLocalPosition(2.0f, -1.0f, 2.0f)->SetLocalRotation(0.0f, 0.0f, 125.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 3 Top Mid Sandbox
 	transforms[18]->SetLocalPosition(-25.0f, 15.0f, 1.0f)->SetLocalRotation(0.0f, 180.0f, 45.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 4 Top Left Field
 	transforms[19]->SetLocalPosition(-8.0f, 8.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//balls
 	transforms[20]->SetLocalPosition(-8.0f, 8.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//score
@@ -299,7 +299,7 @@ int main() {
 	transforms[26]->SetLocalPosition(-3.9f, 5.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//0 for hundred
 	transforms[27]->SetLocalPosition(-4.3f, 5.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//0 for hundred
 	transforms[28]->SetLocalPosition(-11.0f, -11.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.8f, 1.5f, 2.0f);//bottom wall hitbox
-	transforms[29]->SetLocalPosition(35.0f, 20.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Swing
+	transforms[29]->SetLocalPosition(35.0f, 21.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Swing
 
 	// We'll store all our VAOs into a nice array for easy access
 	VertexArrayObject::sptr vaos[23];
