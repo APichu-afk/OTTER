@@ -112,33 +112,37 @@ void RenderVAO(
 	vao->Render();
 }
 
-void ManipulateTransformWithInput(const Transform::sptr& transform, const Transform::sptr& transform1, float dt) {
+void ManipulateTransformWithInput(const Transform::sptr& transformPlayer, const Transform::sptr& transformPlayer2, const Transform::sptr& transformPlayerHitbox, float dt) {
 	//first player
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		transform->RotateLocal(0.0f, 0.25f, 0.0f);
+		transformPlayer->RotateLocal(0.0f, 0.25f, 0.0f);
+		transformPlayerHitbox->RotateLocal(0.0f, 0.25f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		transform->RotateLocal(0.0f, -0.25, 0.0f);
+		transformPlayer->RotateLocal(0.0f, -0.25, 0.0f);
+		transformPlayerHitbox->RotateLocal(0.0f, -0.25, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		transform->MoveLocal(0.0f, 0.0f, -9.0f * dt);
+		transformPlayer->MoveLocal(0.0f, 0.0f, -9.0f * dt);
+		transformPlayerHitbox->MoveLocal(0.0f, 0.0f, -9.0f * dt);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		transform->MoveLocal(0.0f, 0.0f, 9.0f * dt); 
+		transformPlayer->MoveLocal(0.0f, 0.0f, 9.0f * dt); 
+		transformPlayerHitbox->MoveLocal(0.0f, 0.0f, 9.0f * dt); 
 	}
 
 	//second player
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-		transform1->RotateLocal(0.0f, 0.25f, 0.0f);
+		transformPlayer2->RotateLocal(0.0f, 0.25f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-		transform1->RotateLocal(0.0f, -0.25f, 0.0f);
+		transformPlayer2->RotateLocal(0.0f, -0.25f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-		transform1->MoveLocal(0.0f, 0.0f, -9.0f * dt);
+		transformPlayer2->MoveLocal(0.0f, 0.0f, -9.0f * dt);
 	}
 	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-		transform1->MoveLocal(0.0f, 0.0f, 9.0f * dt); 
+		transformPlayer2->MoveLocal(0.0f, 0.0f, 9.0f * dt); 
 	}
 }
 
@@ -146,28 +150,6 @@ void ManipulateTransformWithInput(const Transform::sptr& transform, const Transf
 bool Collision(const Transform::sptr& transform1, const Transform::sptr& transform2)
 {
 	bool colX = transform1->GetLocalPosition().x  + transform1->GetLocalScale().x  >= transform2->GetLocalPosition().x
-		&& transform2->GetLocalPosition().x + transform2->GetLocalScale().x *5>= transform1->GetLocalPosition().x;
-
-	bool colY = transform1->GetLocalPosition().y + transform1->GetLocalScale().y >= transform2->GetLocalPosition().y
-		&& transform2->GetLocalPosition().y + transform2->GetLocalScale().y >= transform1->GetLocalPosition().y;
-	return colX && colY;
-}
-
-// Borrowed collision from https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-detection
-bool Collision_right_left(const Transform::sptr& transform1, const Transform::sptr& transform2)
-{
-	bool colX = transform1->GetLocalPosition().x + transform1->GetLocalScale().x >= transform2->GetLocalPosition().x
-		&& transform2->GetLocalPosition().x + transform2->GetLocalScale().x >= transform1->GetLocalPosition().x;
-
-	bool colY = transform1->GetLocalPosition().y + transform1->GetLocalScale().y +20 >= transform2->GetLocalPosition().y
-		&& transform2->GetLocalPosition().y + transform2->GetLocalScale().y >= transform1->GetLocalPosition().y;
-	return colX && colY;
-}
-
-// Borrowed collision from https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-detection
-bool Collision_top_wall(const Transform::sptr& transform1, const Transform::sptr& transform2)
-{
-	bool colX = transform1->GetLocalPosition().x + transform1->GetLocalScale().x +20 >= transform2->GetLocalPosition().x
 		&& transform2->GetLocalPosition().x + transform2->GetLocalScale().x >= transform1->GetLocalPosition().x;
 
 	bool colY = transform1->GetLocalPosition().y + transform1->GetLocalScale().y >= transform2->GetLocalPosition().y
@@ -226,6 +208,7 @@ int main() {
 	VertexArrayObject::sptr vaobottle = ObjLoader::LoadFromFile("models/waterBottle.obj");//Waterbottle
 	VertexArrayObject::sptr vaoswing = ObjLoader::LoadFromFile("models/Swing.obj");//swing
 	VertexArrayObject::sptr vaoplayer2 = ObjLoader::LoadFromFile("models/Duncet.obj");//Player 2
+	VertexArrayObject::sptr vaoHitbox = ObjLoader::LoadFromFile("models/HitBox.obj");//Hitbox
 		
 	// Load our shaders
 	Shader::sptr shader = Shader::Create();
@@ -271,15 +254,15 @@ int main() {
 
 	// We can use operator chaining, since our Set* methods return a pointer to the instance, neat!
 	transforms[0]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 135.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Player
-	transforms[1]->SetLocalPosition(15.0f, 20.0f, -5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Background
+	transforms[1]->SetLocalPosition(0.0f, 0.0f, -5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Background
 	transforms[2]->SetLocalPosition(-19.0f, 6.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 90.0f)->SetLocalScale(0.8f, 1.0f, 1.0f);//MonkeyBar
 	transforms[3]->SetLocalPosition(-11.0f, -9.0f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.5f, 2.0f);//left wall hitbox
 	transforms[4]->SetLocalPosition(-11.0f, 12.5f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.8f, 1.5f, 2.0f);//top wall hitbox
 	transforms[5]->SetLocalPosition(10.0f, -9.0f, -1.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.5f, 2.0f);//right wall hitbox
-	transforms[6]->SetLocalPosition(14.0f, 18.0f, -3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//SandBox
-	transforms[7]->SetLocalPosition(20.0f, 0.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 270.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Slide
+	transforms[6]->SetLocalPosition(0.0f, 0.0f, -3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//SandBox
+	transforms[7]->SetLocalPosition(-8.0f, 8.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 270.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Slide
 	transforms[8]->SetLocalPosition(0.75f, 3.5f, -4.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.2f, 1.2f, 1.2f);//Roundabout
-	transforms[9]->SetLocalPosition(-3.0f, -23.0f, 2.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 1 Bot Mid Sandbox
+	transforms[9]->SetLocalPosition(0.0f, -20.0f, 2.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 1 Bot Mid Sandbox
 	transforms[10]->SetLocalPosition(30.0f,-20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 225.0f)->SetLocalScale(2.5f, 2.5f, 2.5f);//player 2
 	transforms[11]->SetLocalPosition(7.0f, 6.0f, 0.0f)->SetLocalRotation(00.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//Brick 6
 	transforms[12]->SetLocalPosition(25.0f, 10.0f, 1.0f)->SetLocalRotation(0.0f, 90.0f, 90.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 2 Top Right Field
@@ -287,7 +270,7 @@ int main() {
 	transforms[14]->SetLocalPosition(-5.0f, 6.55f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//2 score
 	transforms[15]->SetLocalPosition(-5.15f, 7.3f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//3 score
 	transforms[16]->SetLocalPosition(-5.3f, 8.1f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//4 score
-	transforms[17]->SetLocalPosition(2.0f, -1.0f, 2.0f)->SetLocalRotation(0.0f, 0.0f, 125.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 3 Top Mid Sandbox
+	transforms[17]->SetLocalPosition(0.0f, 0.0f, 2.0f)->SetLocalRotation(0.0f, 0.0f, 125.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 3 Mid Sandbox
 	transforms[18]->SetLocalPosition(-25.0f, 15.0f, 1.0f)->SetLocalRotation(0.0f, 180.0f, 45.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//BOTTLE 4 Top Left Field
 	transforms[19]->SetLocalPosition(-8.0f, 8.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//balls
 	transforms[20]->SetLocalPosition(-8.0f, 8.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(.75f, .5f, .5f);//score
@@ -296,13 +279,13 @@ int main() {
 	transforms[23]->SetLocalPosition(-5.28f, 6.4f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, 0.5f, 0.5f);//1 lives
 	transforms[24]->SetLocalPosition(-5.4f, 7.2f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, 0.5f, 0.5f);//2 lives
 	transforms[25]->SetLocalPosition(-5.5f, 8.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, 0.5f, 0.5f);//3 lives
-	transforms[26]->SetLocalPosition(-3.9f, 5.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//0 for hundred
-	transforms[27]->SetLocalPosition(-4.3f, 5.0f, 5.0f)->SetLocalRotation(120.0f, 0.0f, 0.0f)->SetLocalScale(0.75f, .5f, .5f);//0 for hundred
+	transforms[26]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//HitboxBottle1
+	transforms[27]->SetLocalPosition(-30.0f, -20.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 135.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//HitboxPlayer1
 	transforms[28]->SetLocalPosition(-11.0f, -11.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.8f, 1.5f, 2.0f);//bottom wall hitbox
 	transforms[29]->SetLocalPosition(35.0f, 21.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Swing
 
 	// We'll store all our VAOs into a nice array for easy access
-	VertexArrayObject::sptr vaos[23];
+	VertexArrayObject::sptr vaos[24];
 	vaos[0] = vaoplayer;
 	vaos[1] = vaobackground;
 	vaos[2] = vaoball;
@@ -325,7 +308,8 @@ int main() {
 	vaos[19] = vaoround;
 	vaos[20] = vaoplayer2;
 	vaos[21] = vaoswing;
-	vaos[22] = vaoplayer2;
+	vaos[22] = vaobottle;
+	vaos[23] = vaoHitbox;
 
 	// TODO: load textures
 	//need to somehow make this thing make multiple textures(hard for some reason)
@@ -473,7 +457,7 @@ int main() {
 		double thisFrame = glfwGetTime();
 		float dt = static_cast<float>(thisFrame - lastFrame);
 
-		ManipulateTransformWithInput(transforms[0], transforms[10], dt);
+		ManipulateTransformWithInput(transforms[0], transforms[10], transforms[27], dt);
 
 		//colour of the background
 		glClearColor(0.08f, 0.17f, 0.31f, 1.0f);//rgb
@@ -491,6 +475,23 @@ int main() {
 
 		int r = (rand() % 2 + 1) - 1;
 
+		/*
+		for (int ix = 0; ix < 90; ix++){
+		Test:if (ix == variable)
+		     {
+		        //do not render and do not check hitbox
+		     }
+		     else
+		     {
+		    materials[ix].Albedo->Bind(0);
+			materials[ix].Albedo2->Bind(1);
+			materials[ix].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[ix].Shininess);
+			shader->SetUniform("u_TextureMix", materials[ix].TextureMix);
+			RenderVAO(shader, vaos[ix], camera, transforms[ix]);
+		     }
+		  }
+		*/
 		// Render all VAOs in our scene
 		for (int ix = 0; ix < 3; ix++) {
 			// TODO: Apply materials
@@ -501,7 +502,8 @@ int main() {
 			shader->SetUniform("u_TextureMix", materials[ix].TextureMix);
 			RenderVAO(shader, vaos[ix], camera, transforms[ix]);
 		}
-		materials[3].Albedo->Bind(0);
+		//bottom wall
+		/*materials[3].Albedo->Bind(0);
 		materials[3].Albedo2->Bind(1);
 		materials[3].Specular->Bind(2);
 		shader->SetUniform("u_Shininess", materials[3].Shininess);
@@ -509,7 +511,7 @@ int main() {
 		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[28]->LocalTransform());
 		shader->SetUniformMatrix("u_Model", transforms[28]->LocalTransform());
 		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[28]->LocalTransform()));
-
+		*/
 		//ball movement
 		//transforms[2]->MoveLocal(-8.0f * dt, -6.0f * dt, 0);
 		//collision of kind of works(hopefully usable in our GDW)
@@ -542,6 +544,8 @@ int main() {
 				transforms[2]->RotateLocal(0, 0, 90);
 			}*/
 			//rendering like this to control when a brick gets deleted
+
+			//SandBox
 				materials[3].Albedo->Bind(0);
 				materials[3].Albedo2->Bind(1);
 				materials[3].Specular->Bind(2);
@@ -555,7 +559,9 @@ int main() {
 
 			//if (Collision(transforms[7], transforms[2]) == false) {
 				//if (norender2 == false) {
-					materials[4].Albedo->Bind(0);
+				
+				//Slide
+				materials[4].Albedo->Bind(0);
 					materials[4].Albedo2->Bind(1);
 					materials[4].Specular->Bind(2);
 					shader->SetUniform("u_Shininess", materials[4].Shininess);
@@ -618,6 +624,18 @@ int main() {
 					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[9]->LocalTransform()));
 					vaobottle->Render();
 
+					//Hitboxbottle1
+					materials[1].Albedo->Bind(0);
+					materials[1].Albedo2->Bind(1);
+					materials[1].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[1].Shininess);
+					shader->SetUniform("u_TextureMix", materials[1].TextureMix);
+					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[26]->LocalTransform());
+					shader->SetUniformMatrix("u_Model", transforms[26]->LocalTransform());
+					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[26]->LocalTransform()));
+					vaoHitbox->Render();
+
+
 					//bottle 2
 					materials[5].Albedo->Bind(0);
 					materials[5].Albedo2->Bind(1);
@@ -671,6 +689,23 @@ int main() {
 					shader->SetUniformMatrix("u_Model", transforms[10]->LocalTransform());
 					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[10]->LocalTransform()));
 					vaoplayer2->Render();
+					
+					//Hitboxplayer 1
+					materials[1].Albedo->Bind(0);
+					materials[1].Albedo2->Bind(1);
+					materials[1].Specular->Bind(2);
+					shader->SetUniform("u_Shininess", materials[1].Shininess);
+					shader->SetUniform("u_TextureMix", materials[1].TextureMix);
+					shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[27]->LocalTransform());
+					shader->SetUniformMatrix("u_Model", transforms[27]->LocalTransform());
+					shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[27]->LocalTransform()));
+					vaoHitbox->Render();
+
+				
+					if (Collision(transforms[26], transforms[27]))
+					{
+						std::cout << "yes" << std::endl;//checking if hit boxes are working
+					}
 				//}
 			//}
 			/*
@@ -701,191 +736,7 @@ int main() {
 				transforms[11]->MoveLocal(0, 100, 0);
 			}*/
 		}
-		/*//score numbers
-		//00
-		materials[4].Albedo->Bind(0);
-		materials[4].Albedo2->Bind(1);
-		materials[4].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[4].Shininess);
-		shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[26]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[26]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[26]->LocalTransform()));
-		vao0->Render();
-		
-		materials[4].Albedo->Bind(0);
-		materials[4].Albedo2->Bind(1);
-		materials[4].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[4].Shininess);
-		shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[27]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[27]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[27]->LocalTransform()));
-		vao0->Render();
-		//0 score
-		if (score == 0) {
-			materials[4].Albedo->Bind(0);
-			materials[4].Albedo2->Bind(1);
-			materials[4].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[4].Shininess);
-			shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[12]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[12]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[12]->LocalTransform()));
-			vao0->Render();
-		}
-
-		//1 score
-		if (score == 1) {
-			materials[4].Albedo->Bind(0);
-			materials[4].Albedo2->Bind(1);
-			materials[4].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[4].Shininess);
-			shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[13]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[13]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[13]->LocalTransform()));
-			vao1->Render();
-		}
-
-		//2 score
-		if (score == 2) {
-			materials[4].Albedo->Bind(0);
-			materials[4].Albedo2->Bind(1);
-			materials[4].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[4].Shininess);
-			shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[14]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[14]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[14]->LocalTransform()));
-			vao2->Render();
-		}
-
-		//3 score
-		if (score == 3) {
-			materials[4].Albedo->Bind(0);
-			materials[4].Albedo2->Bind(1);
-			materials[4].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[4].Shininess);
-			shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[15]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[15]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[15]->LocalTransform()));
-			vao3->Render();
-		}
-
-		//4 score
-		if (score == 4) {
-			materials[4].Albedo->Bind(0);
-			materials[4].Albedo2->Bind(1);
-			materials[4].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[4].Shininess);
-			shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[16]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[16]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[16]->LocalTransform()));
-			vao4->Render();
-		}
-
-		//5 score
-		if (score == 5) {
-			materials[4].Albedo->Bind(0);
-			materials[4].Albedo2->Bind(1);
-			materials[4].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[4].Shininess);
-			shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[17]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[17]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[17]->LocalTransform()));
-			vao5->Render();
-		}
-
-		//6 score
-		if (score == 6) {
-			materials[4].Albedo->Bind(0);
-			materials[4].Albedo2->Bind(1);
-			materials[4].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[4].Shininess);
-			shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[18]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[18]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[18]->LocalTransform()));
-			vao6->Render();
-		}
-		
-		//1 life
-		if (lives == 1) {
-			materials[4].Albedo->Bind(0);
-			materials[4].Albedo2->Bind(1);
-			materials[4].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[4].Shininess);
-			shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[23]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[23]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[23]->LocalTransform()));
-			vao1->Render();
-		}
-
-		//2 lives
-		if (lives == 2) {
-			materials[4].Albedo->Bind(0);
-			materials[4].Albedo2->Bind(1);
-			materials[4].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[4].Shininess);
-			shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[24]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[24]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[24]->LocalTransform()));
-			vao2->Render();
-		}
-
-		//3 lives
-		if (lives == 3) {
-			materials[4].Albedo->Bind(0);
-			materials[4].Albedo2->Bind(1);
-			materials[4].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[4].Shininess);
-			shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[25]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[25]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[25]->LocalTransform()));
-			vao3->Render();
-		}
-		//0 lives
-		if (lives == 0) {
-			materials[4].Albedo->Bind(0);
-			materials[4].Albedo2->Bind(1);
-			materials[4].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[4].Shininess);
-			shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[29]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[29]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[29]->LocalTransform()));
-			vao0->Render();
-		}
-
-		//balls
-		materials[4].Albedo->Bind(0);
-		materials[4].Albedo2->Bind(1);
-		materials[4].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[4].Shininess);
-		shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[19]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[19]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[19]->LocalTransform()));
-		vaoballword->Render();
-
-		//score
-		materials[4].Albedo->Bind(0);
-		materials[4].Albedo2->Bind(1);
-		materials[4].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[4].Shininess);
-		shader->SetUniform("u_TextureMix", materials[4].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[20]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[20]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[20]->LocalTransform()));
-		vaoscore->Render();
-
+		/*
 		//win screen
 		if (norender == true && norender2 == true && norender3 == true && norender4 == true && norender5 == true && norender6 == true){
 			materials[4].Albedo->Bind(0);
