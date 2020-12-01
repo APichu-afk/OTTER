@@ -1058,7 +1058,7 @@ int main() {
 			vaobottle->Render();
 		}
 
-		if (countduncet == 1) {
+		if (countduncet >= 1) {
 			//first right icon
 			materials[20].Albedo->Bind(0);
 			materials[20].Albedo2->Bind(1);
@@ -1071,7 +1071,7 @@ int main() {
 			vaoballoonicon->Render();
 		}
 
-		if (countduncet == 2) {
+		if (countduncet >= 2) {
 			//second right icon
 			materials[20].Albedo->Bind(0);
 			materials[20].Albedo2->Bind(1);
@@ -1082,19 +1082,9 @@ int main() {
 			shader->SetUniformMatrix("u_Model", transforms[68]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[68]->LocalTransform()));
 			vaoballoonicon->Render();
-
-			materials[20].Albedo->Bind(0);
-			materials[20].Albedo2->Bind(1);
-			materials[20].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[20].Shininess);
-			shader->SetUniform("u_TextureMix", materials[20].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[20]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[20]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[20]->LocalTransform()));
-			vaoballoonicon->Render();
 		}
 
-		if (countduncet == 3) {
+		if (countduncet >= 3) {
 			//third right icon
 			materials[20].Albedo->Bind(0);
 			materials[20].Albedo2->Bind(1);
@@ -1105,29 +1095,9 @@ int main() {
 			shader->SetUniformMatrix("u_Model", transforms[69]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[69]->LocalTransform()));
 			vaoballoonicon->Render();
-
-			materials[20].Albedo->Bind(0);
-			materials[20].Albedo2->Bind(1);
-			materials[20].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[20].Shininess);
-			shader->SetUniform("u_TextureMix", materials[20].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[68]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[68]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[68]->LocalTransform()));
-			vaoballoonicon->Render();
-
-			materials[20].Albedo->Bind(0);
-			materials[20].Albedo2->Bind(1);
-			materials[20].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[20].Shininess);
-			shader->SetUniform("u_TextureMix", materials[20].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[20]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[20]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[20]->LocalTransform()));
-			vaoballoonicon->Render();
 		}
 
-		if (countdunce == 1) {
+		if (countdunce >= 1) {
 			//first left icon
 			materials[28].Albedo->Bind(0);
 			materials[28].Albedo2->Bind(1);
@@ -1140,7 +1110,7 @@ int main() {
 			vaoballoonicon->Render();
 		}
 
-		if (countdunce == 2) {
+		if (countdunce >= 2) {
 			//second left icon
 			materials[28].Albedo->Bind(0);
 			materials[28].Albedo2->Bind(1);
@@ -1151,49 +1121,19 @@ int main() {
 			shader->SetUniformMatrix("u_Model", transforms[71]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[71]->LocalTransform()));
 			vaoballoonicon->Render();
+		}
 
+		if (countdunce >= 3) {
+			//third left icon
 			materials[28].Albedo->Bind(0);
 			materials[28].Albedo2->Bind(1);
 			materials[28].Specular->Bind(2);
 			shader->SetUniform("u_Shininess", materials[28].Shininess);
 			shader->SetUniform("u_TextureMix", materials[28].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[70]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[70]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[70]->LocalTransform()));
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[72]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[72]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[72]->LocalTransform()));
 			vaoballoonicon->Render();
-		}
-
-		if (countdunce == 3) {
-//third left icon
-materials[28].Albedo->Bind(0);
-materials[28].Albedo2->Bind(1);
-materials[28].Specular->Bind(2);
-shader->SetUniform("u_Shininess", materials[28].Shininess);
-shader->SetUniform("u_TextureMix", materials[28].TextureMix);
-shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[72]->LocalTransform());
-shader->SetUniformMatrix("u_Model", transforms[72]->LocalTransform());
-shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[72]->LocalTransform()));
-vaoballoonicon->Render();
-
-materials[28].Albedo->Bind(0);
-materials[28].Albedo2->Bind(1);
-materials[28].Specular->Bind(2);
-shader->SetUniform("u_Shininess", materials[28].Shininess);
-shader->SetUniform("u_TextureMix", materials[28].TextureMix);
-shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[71]->LocalTransform());
-shader->SetUniformMatrix("u_Model", transforms[71]->LocalTransform());
-shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[71]->LocalTransform()));
-vaoballoonicon->Render();
-
-materials[28].Albedo->Bind(0);
-materials[28].Albedo2->Bind(1);
-materials[28].Specular->Bind(2);
-shader->SetUniform("u_Shininess", materials[28].Shininess);
-shader->SetUniform("u_TextureMix", materials[28].TextureMix);
-shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[70]->LocalTransform());
-shader->SetUniformMatrix("u_Model", transforms[70]->LocalTransform());
-shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[70]->LocalTransform()));
-vaoballoonicon->Render();
 		}
 
 		//ill put these into a for loop later doesnt work well fix later
@@ -1707,13 +1647,15 @@ vaoballoonicon->Render();
 		}
 
 		//Player 1 collision with bullet
-		if (Collision(transforms[0], transforms[26]))
-		{
-			transforms[26]->SetLocalPosition(transforms[1]->GetLocalPosition());
-			transforms[26]->SetLocalRotation(transforms[1]->GetLocalRotation());
-			shoot2 = false;
-			ammo2 = false;
-			countduncet += 1;
+		if (shoot2) {
+			if (Collision(transforms[0], transforms[26]))
+			{
+				transforms[26]->SetLocalPosition(transforms[1]->GetLocalPosition());
+				transforms[26]->SetLocalRotation(transforms[1]->GetLocalRotation());
+				shoot2 = false;
+				ammo2 = false;
+				countduncet += 1;
+			}
 		}
 
 		//render UI
@@ -1731,6 +1673,24 @@ vaoballoonicon->Render();
 			vaobottle->Render();
 		}
 		////////////////////////////////////////////////////////////////
+
+		if (Collision(transforms[0], transforms[1])) {
+			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+				transforms[0]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+			}
+			
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+				transforms[0]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+			}
+			
+			if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+				transforms[1]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+			}
+			
+			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+				transforms[1]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+			}
+		}
 
 		/////////////////////player 2 stuff
 		//player 2 shooting
@@ -1842,13 +1802,15 @@ vaoballoonicon->Render();
 		}
 
 		//p2 collision with bullet
-		if (Collision(transforms[1], transforms[25]))
-		{
-			transforms[25]->SetLocalPosition(transforms[0]->GetLocalPosition());
-			transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
-			shoot = false;
-			ammo = false;
-			countdunce += 1;
+		if (shoot) {
+			if (Collision(transforms[1], transforms[25]))
+			{
+				transforms[25]->SetLocalPosition(transforms[0]->GetLocalPosition());
+				transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
+				shoot = false;
+				ammo = false;
+				countdunce += 1;
+			}
 		}
 
 		if (renderammo2) {
