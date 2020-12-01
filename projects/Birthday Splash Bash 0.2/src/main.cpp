@@ -117,33 +117,45 @@ void RenderVAO(
 	vao->Render();
 }
 
+void positionVAO(
+	const Shader::sptr& shader,
+	//const VertexArrayObject::sptr& vao,
+	const Camera::sptr& camera,
+	const Transform::sptr& transform)
+{
+	shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transform->LocalTransform());
+	shader->SetUniformMatrix("u_Model", transform->LocalTransform());
+	shader->SetUniformMatrix("u_NormalMatrix", transform->NormalMatrix());
+	//vao->Render();
+}
+
 void ManipulateTransformWithInput(const Transform::sptr& transformPlayer, const Transform::sptr& transformPlayer2, float dt) {
 	//first player
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		transformPlayer->RotateLocal(0.0f, 0.25f, 0.0f);
+		transformPlayer->RotateLocal(0.0f, 0.5f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		transformPlayer->RotateLocal(0.0f, -0.25, 0.0f);
+		transformPlayer->RotateLocal(0.0f, -0.5, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		transformPlayer->MoveLocal(0.0f, 0.0f, 9.0f * dt);
+		transformPlayer->MoveLocal(0.0f, 0.0f, 18.0f * dt);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		transformPlayer->MoveLocal(0.0f, 0.0f, -9.0f * dt); 
+		transformPlayer->MoveLocal(0.0f, 0.0f, -18.0f * dt); 
 	}
 
 	//second player
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-		transformPlayer2->RotateLocal(0.0f, 0.25f, 0.0f);
+		transformPlayer2->RotateLocal(0.0f, 0.5f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-		transformPlayer2->RotateLocal(0.0f, -0.25f, 0.0f);
+		transformPlayer2->RotateLocal(0.0f, -0.5f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-		transformPlayer2->MoveLocal(0.0f, 0.0f, 9.0f * dt);
+		transformPlayer2->MoveLocal(0.0f, 0.0f, 18.0f * dt);
 	}
 	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-		transformPlayer2->MoveLocal(0.0f, 0.0f, -9.0f * dt); 
+		transformPlayer2->MoveLocal(0.0f, 0.0f, -18.0f * dt); 
 	}
 }
 
@@ -198,7 +210,7 @@ int main() {
 
 	// Enable texturing
 	glEnable(GL_TEXTURE_2D);
-	
+
 	//Vaos
 	VertexArrayObject::sptr vaoplayer = ObjLoader::LoadFromFile("models/Dunce.obj");//player 1
 	VertexArrayObject::sptr vaobackground = ObjLoader::LoadFromFile("models/Ground.obj");//Ground
@@ -226,12 +238,12 @@ int main() {
 	VertexArrayObject::sptr vaobigtree = ObjLoader::LoadFromFile("models/TreeBig.obj");//bigtree
 	VertexArrayObject::sptr vaosmalltree = ObjLoader::LoadFromFile("models/TreeSmall.obj");//smalltree
 	VertexArrayObject::sptr vaoHitbox = ObjLoader::LoadFromFile("models/HitBox.obj");//Hitbox
-		
+
 	// Load our shaders
 	Shader::sptr shader = Shader::Create();
 	shader->LoadShaderPartFromFile("shaders/vertex_shader.glsl", GL_VERTEX_SHADER);
-	shader->LoadShaderPartFromFile("shaders/frag_blinn_phong_textured.glsl", GL_FRAGMENT_SHADER);  
-	shader->Link();  
+	shader->LoadShaderPartFromFile("shaders/frag_blinn_phong_textured.glsl", GL_FRAGMENT_SHADER);
+	shader->Link();
 
 	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 50.0f);
 	glm::vec3 lightCol = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -242,7 +254,7 @@ int main() {
 	float     shininess = 4.0f;
 	float     lightLinearFalloff = 0.09f;
 	float     lightQuadraticFalloff = 0.032f;
-	
+
 	// These are our application / scene level uniforms that don't necessarily update
 	// every frame
 	shader->SetUniform("u_LightPos", lightPos);
@@ -261,8 +273,8 @@ int main() {
 	glEnable(GL_CULL_FACE);
 
 	// Create some transforms and initialize them
-	Transform::sptr transforms[100];
-	for (int x = 0; x < 73; x++)
+	Transform::sptr transforms[108];
+	for (int x = 0; x < 108; x++)
 	{
 		transforms[x] = Transform::Create();
 	}
@@ -271,7 +283,7 @@ int main() {
 	//duplicate these to make more
 	transforms[0]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//Player1
 	transforms[1]->SetLocalPosition(30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//Player2
-	transforms[2]->SetLocalPosition(0.0f, 0.0f, -5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Background
+	transforms[2]->SetLocalPosition(0.0f, 0.0f, -5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(2.0f, 1.0f, 2.5f);//Background
 	transforms[3]->SetLocalPosition(0.0f, 0.0f, -3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Sandbox
 	transforms[4]->SetLocalPosition(-8.0f, 8.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//slide
 	transforms[5]->SetLocalPosition(10.0f, -7.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//swing
@@ -296,10 +308,6 @@ int main() {
 	transforms[24]->SetLocalPosition(-35.0f, 20.0f, 1.0f)->SetLocalRotation(0.0f, 180.0f, 45.0f)->SetLocalScale(2.0f, 2.0f, 2.0f);//BOTTLE 4 Top Left Field
 	transforms[25]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 135.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bullethitboxplayer1
 	transforms[26]->SetLocalPosition(30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 225.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bullethitboxplayer2
-	transforms[27]->SetLocalPosition(-45.0f, -30.0f, 1.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 70.0f, 1.0f);//hitbox left wall
-	transforms[28]->SetLocalPosition(47.0f, -30.0f, 1.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 70.0f, 1.0f);//hitbox right wall
-	transforms[29]->SetLocalPosition(-45.0f, -33.0f, 1.0f)->SetLocalRotation(1.0f, 1.0f, 0.0f)->SetLocalScale(100.0f, 1.0f, 1.0f);//hitbox bottom wall
-	transforms[30]->SetLocalPosition(-45.0f, 33.0f, 1.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(100.0f, 1.0f, 1.0f);//hitbox top wall
 	transforms[31]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test hitbox
 	transforms[32]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test start
 	transforms[33]->SetLocalPosition(10.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test end
@@ -343,8 +351,49 @@ int main() {
 	transforms[71]->SetLocalPosition(-20.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon second left
 	transforms[72]->SetLocalPosition(-26.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon third left
 
+	//hitboxes
+	transforms[27]->SetLocalPosition(-45.0f, -30.0f, 1.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 70.0f, 1.0f);//left wall
+	transforms[28]->SetLocalPosition(47.0f, -30.0f, 1.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 70.0f, 1.0f);//right wall
+	transforms[29]->SetLocalPosition(-45.0f, -33.0f, 1.0f)->SetLocalRotation(1.0f, 1.0f, 0.0f)->SetLocalScale(100.0f, 1.0f, 1.0f);//bottom wall
+	transforms[30]->SetLocalPosition(-45.0f, 33.0f, 1.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(100.0f, 1.0f, 1.0f);//top wall
+	transforms[73]->SetLocalPosition(0.7f, 0.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Middle water bottle
+	transforms[74]->SetLocalPosition(1.0f, -26.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bottom water bottle
+	transforms[75]->SetLocalPosition(-35.0f, 20.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//left water bottle
+	transforms[76]->SetLocalPosition(35.0f, 19.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//right water bottle 
+	transforms[77]->SetLocalPosition(-31.0f, 3.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(7.0f, 7.0f, 7.0f);//left up table
+	transforms[78]->SetLocalPosition(-31.0f, -9.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(7.0f, 7.0f, 7.0f);//left down table
+	transforms[79]->SetLocalPosition(27.0f, -2.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(7.0f, 7.0f, 7.0f);//right table
+	transforms[80]->SetLocalPosition(-10.0f, 28.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(4.0f, 4.0f, 4.0f);//top left bench
+	transforms[81]->SetLocalPosition(9.0f, 28.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(4.0f, 4.0f, 4.0f);//top right bench
+	transforms[82]->SetLocalPosition(-10.0f, -29.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(4.0f, 4.0f, 4.0f);//bottom left bench
+	transforms[83]->SetLocalPosition(9.0f, -29.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(4.0f, 4.0f, 4.0f);//bottom right bench
+	transforms[84]->SetLocalPosition(-6.0f, -8.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(5.0f, 5.0f, 5.0f);//roundabout
+	transforms[85]->SetLocalPosition(-7.5f, 5.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 10.0f, 1.0f);//slide
+	transforms[86]->SetLocalPosition(2.0f, 10.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 2.5f, 1.0f);//monkeybar left
+	transforms[87]->SetLocalPosition(12.0f, 10.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 2.5f, 1.0f);//monkey bar right
+	transforms[88]->SetLocalPosition(10.0f, 0.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 0.7f, 1.0f);//swing top left pole
+	transforms[89]->SetLocalPosition(13.0f, 0.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 0.7f, 1.0f);//swing top right pole 
+	transforms[90]->SetLocalPosition(10.0f, -12.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 0.7f, 1.0f);//swing bot left pole
+	transforms[91]->SetLocalPosition(13.0f, -12.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 0.7f, 1.0f);//swing bot right pole
+	transforms[92]->SetLocalPosition(11.5f, -3.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//swing tire top
+	transforms[93]->SetLocalPosition(11.5f, -9.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//swing tire bottom
+	transforms[94]->SetLocalPosition(1.5f, 26.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//top mid tree
+	transforms[95]->SetLocalPosition(-19.0f, 25.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//top mid left tree
+	transforms[96]->SetLocalPosition(19.0f, 26.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//top mid right tree
+	transforms[97]->SetLocalPosition(-40.0f, 26.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//top left tree
+	transforms[98]->SetLocalPosition(-40.0f, -24.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bottom left up tree
+	transforms[99]->SetLocalPosition(-35.0f, -27.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bottom left tree
+	transforms[100]->SetLocalPosition(-26.0f, -28.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bottom left right tree
+	transforms[101]->SetLocalPosition(-16.0f, -28.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bottom left mid tree
+	transforms[102]->SetLocalPosition(17.0f, -28.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bottom right mid tree
+	transforms[103]->SetLocalPosition(36.0f, -28.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bottom right tree
+	transforms[104]->SetLocalPosition(41.0f, -20.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bottom right up tree
+	transforms[105]->SetLocalPosition(37.0f, 26.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//top right tree
+	transforms[106]->SetLocalPosition(40.0f, 15.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//top right down tree
+	transforms[107]->SetLocalPosition(30.0f, 26.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//top right left tree
+
 	// We'll store all our VAOs into a nice array for easy access
-	VertexArrayObject::sptr vaos[21];
+	VertexArrayObject::sptr vaos[22];
 	vaos[0] = vaoplayer;
 	vaos[1] = vaoplayer2;
 	vaos[2] = vaobackground;
@@ -366,6 +415,7 @@ int main() {
 	vaos[18] = vaobigtree;
 	vaos[19] = vaosmalltree;
 	vaos[20] = vaoballoonicon;
+	vaos[21] = vaoHitbox;
 
 	//need to somehow make this thing make multiple textures(hard for some reason)
 	// Load our texture data from a file
@@ -410,161 +460,161 @@ int main() {
 	Texture2DData::sptr specularMap = Texture2DData::LoadFromFile("images/Stone_001_Specular.png");
 
 	// Create a texture from the data
-	//Ground texture
-	Texture2D::sptr diffuseGround = Texture2D::Create();
-	diffuseGround->LoadData(diffuseMapGround);
-	
-	//Player1 texture
-	Texture2D::sptr diffuseDunce = Texture2D::Create();
-	diffuseDunce->LoadData(diffuseMapDunce);
-	
-	//Player2 texture
-	Texture2D::sptr diffuseDuncet = Texture2D::Create();
-	diffuseDuncet->LoadData(diffuseMapDuncet);
+		//Ground texture
+		Texture2D::sptr diffuseGround = Texture2D::Create();
+		diffuseGround->LoadData(diffuseMapGround);
 
-	Texture2D::sptr specular = Texture2D::Create();
-	specular->LoadData(specularMap);
+		//Player1 texture
+		Texture2D::sptr diffuseDunce = Texture2D::Create();
+		diffuseDunce->LoadData(diffuseMapDunce);
 
-	//testing texture
-	Texture2D::sptr diffuse2 = Texture2D::Create();
-	diffuse2->LoadData(diffuseMap2);
+		//Player2 texture
+		Texture2D::sptr diffuseDuncet = Texture2D::Create();
+		diffuseDuncet->LoadData(diffuseMapDuncet);
 
-	//Slide texture
-	Texture2D::sptr diffuseSlide = Texture2D::Create();
-	diffuseSlide->LoadData(diffuseMapSlide);
-	
-	//SandBox texture
-	Texture2D::sptr diffuseSandBox = Texture2D::Create();
-	diffuseSandBox->LoadData(diffuseMapSandBox);
+		Texture2D::sptr specular = Texture2D::Create();
+		specular->LoadData(specularMap);
 
-	//bottle texture
-	Texture2D::sptr diffuseBottle = Texture2D::Create();
-	diffuseBottle->LoadData(diffuseBottleMap);
+		//testing texture
+		Texture2D::sptr diffuse2 = Texture2D::Create();
+		diffuse2->LoadData(diffuseMap2);
 
-	//MonkeyBar texture
-	Texture2D::sptr diffuseMonkeyBar = Texture2D::Create();
-	diffuseMonkeyBar->LoadData(diffuseMapMonkeyBar);
-	
-	//RoundAbout texture
-	Texture2D::sptr diffuseRA = Texture2D::Create();
-	diffuseRA->LoadData(diffuseMapRA);
-	
-	//Swing texture
-	Texture2D::sptr diffuseSwing = Texture2D::Create();
-	diffuseSwing->LoadData(diffuseMapSwing);
+		//Slide texture
+		Texture2D::sptr diffuseSlide = Texture2D::Create();
+		diffuseSlide->LoadData(diffuseMapSlide);
 
-	//bench texture
-	Texture2D::sptr diffuseBench = Texture2D::Create();
-	diffuseBench->LoadData(diffuseMapBench);
-	
-	//Table texture
-	Texture2D::sptr diffuseTable = Texture2D::Create();
-	diffuseTable->LoadData(diffuseMapTable);
-	
-	//Flower texture
-	Texture2D::sptr diffuseFlower = Texture2D::Create();
-	diffuseFlower->LoadData(diffuseMapFlower);
-	
-	//grass1 texture
-	Texture2D::sptr diffusegrass = Texture2D::Create();
-	diffusegrass->LoadData(diffuseMapGrass);
-	
-	//grass2 texture
-	Texture2D::sptr diffusegrass2 = Texture2D::Create();
-	diffusegrass2->LoadData(diffuseMapGrass2);
-	
-	//hedge texture
-	Texture2D::sptr diffusehedge = Texture2D::Create();
-	diffusehedge->LoadData(diffuseMapHedge);
-	
-	//sliceofcake texture
-	Texture2D::sptr diffuseslice = Texture2D::Create();
-	diffuseslice->LoadData(diffuseMapSliceofcake);
-	
-	//treebig texture
-	Texture2D::sptr diffusebigtree = Texture2D::Create();
-	diffusebigtree->LoadData(diffuseMapTreeBig);
-	
-	//treesmall texture
-	Texture2D::sptr diffusesmalltree = Texture2D::Create();
-	diffusesmalltree->LoadData(diffuseMapTreeSmall);
-	
-	//Blueballoon texture
-	Texture2D::sptr diffuseBlueBalloon = Texture2D::Create();
-	diffuseBlueBalloon->LoadData(diffuseMapBlueBalloon);
-	
-	//DarkBlueballoon texture
-	Texture2D::sptr diffuseDarkBlueBalloon = Texture2D::Create();
-	diffuseDarkBlueBalloon->LoadData(diffuseMapDarkBlueBalloon);
-	
-	//LightBlueballoon texture
-	Texture2D::sptr diffuseLightBlueBalloon = Texture2D::Create();
-	diffuseLightBlueBalloon->LoadData(diffuseMapLightBlueBalloon);
-	
-	//Greenballoon texture
-	Texture2D::sptr diffuseGreenBalloon = Texture2D::Create();
-	diffuseGreenBalloon->LoadData(diffuseMapGreenBalloon);
-	
-	//Limeballoon texture
-	Texture2D::sptr diffuseLimeBalloon = Texture2D::Create();
-	diffuseLimeBalloon->LoadData(diffuseMapLimeBalloon);
-	
-	//Orangeballoon texture
-	Texture2D::sptr diffuseOrangeBalloon = Texture2D::Create();
-	diffuseOrangeBalloon->LoadData(diffuseMapOrangeBalloon);
-	
-	//Pinkballoon texture
-	Texture2D::sptr diffusePinkBalloon = Texture2D::Create();
-	diffusePinkBalloon->LoadData(diffuseMapPinkBalloon);
-	
-	//Purpleballoon texture
-	Texture2D::sptr diffusePurpleBalloon = Texture2D::Create();
-	diffusePurpleBalloon->LoadData(diffuseMapPurpleBalloon);
-	
-	//Redballoon texture
-	Texture2D::sptr diffuseRedBalloon = Texture2D::Create();
-	diffuseRedBalloon->LoadData(diffuseMapRedBalloon);
-	
-	//Yellowballoon texture
-	Texture2D::sptr diffuseYellowBalloon = Texture2D::Create();
-	diffuseYellowBalloon->LoadData(diffuseMapYellowBalloon);
-	
-	//Ballooniconbunce texture
-	Texture2D::sptr diffuseDunceballoon = Texture2D::Create();
-	diffuseDunceballoon->LoadData(diffuseMapYellowBalloonicon);
-	
-	//Ballooniconbuncet texture
-	Texture2D::sptr diffuseDuncetballoon = Texture2D::Create();
-	diffuseDuncetballoon->LoadData(diffuseMapPinkBalloonicon);
-	
-	//PinWheelrainbow texture
-	Texture2D::sptr diffusePinwheel = Texture2D::Create();
-	diffusePinwheel->LoadData(diffuseMapPinwheel);
-	
-	//Pinwheelblackandwhite texture
-	Texture2D::sptr diffusePinwheelblackandwhite = Texture2D::Create();
-	diffusePinwheelblackandwhite->LoadData(diffuseMapPinwheelblackandwhite);
-	
-	//PinwheelBlue texture
-	Texture2D::sptr diffusePinwheelBlue = Texture2D::Create();
-	diffusePinwheelBlue->LoadData(diffuseMapPinwheelblue);
-	
-	//PinwheelLightblue texture
-	Texture2D::sptr diffusePinwheellightblue = Texture2D::Create();
-	diffusePinwheellightblue->LoadData(diffuseMapPinwheellightblue);
-	
-	//PinwheelPink texture
-	Texture2D::sptr diffusePinwheelpink = Texture2D::Create();
-	diffusePinwheelpink->LoadData(diffuseMapPinwheelpink);
-	
-	//Pinwheelred texture
-	Texture2D::sptr diffusePinwheelred = Texture2D::Create();
-	diffusePinwheelred->LoadData(diffuseMapPinwheelred);
-	
-	//Pinwheelyellow texture
-	Texture2D::sptr diffusePinwheelyellow = Texture2D::Create();
-	diffusePinwheelyellow->LoadData(diffuseMapPinwheelyellow);
+		//SandBox texture
+		Texture2D::sptr diffuseSandBox = Texture2D::Create();
+		diffuseSandBox->LoadData(diffuseMapSandBox);
 
+		//bottle texture
+		Texture2D::sptr diffuseBottle = Texture2D::Create();
+		diffuseBottle->LoadData(diffuseBottleMap);
+
+		//MonkeyBar texture
+		Texture2D::sptr diffuseMonkeyBar = Texture2D::Create();
+		diffuseMonkeyBar->LoadData(diffuseMapMonkeyBar);
+
+		//RoundAbout texture
+		Texture2D::sptr diffuseRA = Texture2D::Create();
+		diffuseRA->LoadData(diffuseMapRA);
+
+		//Swing texture
+		Texture2D::sptr diffuseSwing = Texture2D::Create();
+		diffuseSwing->LoadData(diffuseMapSwing);
+
+		//bench texture
+		Texture2D::sptr diffuseBench = Texture2D::Create();
+		diffuseBench->LoadData(diffuseMapBench);
+
+		//Table texture
+		Texture2D::sptr diffuseTable = Texture2D::Create();
+		diffuseTable->LoadData(diffuseMapTable);
+
+		//Flower texture
+		Texture2D::sptr diffuseFlower = Texture2D::Create();
+		diffuseFlower->LoadData(diffuseMapFlower);
+
+		//grass1 texture
+		Texture2D::sptr diffusegrass = Texture2D::Create();
+		diffusegrass->LoadData(diffuseMapGrass);
+
+		//grass2 texture
+		Texture2D::sptr diffusegrass2 = Texture2D::Create();
+		diffusegrass2->LoadData(diffuseMapGrass2);
+
+		//hedge texture
+		Texture2D::sptr diffusehedge = Texture2D::Create();
+		diffusehedge->LoadData(diffuseMapHedge);
+
+		//sliceofcake texture
+		Texture2D::sptr diffuseslice = Texture2D::Create();
+		diffuseslice->LoadData(diffuseMapSliceofcake);
+
+		//treebig texture
+		Texture2D::sptr diffusebigtree = Texture2D::Create();
+		diffusebigtree->LoadData(diffuseMapTreeBig);
+
+		//treesmall texture
+		Texture2D::sptr diffusesmalltree = Texture2D::Create();
+		diffusesmalltree->LoadData(diffuseMapTreeSmall);
+
+		//Blueballoon texture
+		Texture2D::sptr diffuseBlueBalloon = Texture2D::Create();
+		diffuseBlueBalloon->LoadData(diffuseMapBlueBalloon);
+
+		//DarkBlueballoon texture
+		Texture2D::sptr diffuseDarkBlueBalloon = Texture2D::Create();
+		diffuseDarkBlueBalloon->LoadData(diffuseMapDarkBlueBalloon);
+
+		//LightBlueballoon texture
+		Texture2D::sptr diffuseLightBlueBalloon = Texture2D::Create();
+		diffuseLightBlueBalloon->LoadData(diffuseMapLightBlueBalloon);
+
+		//Greenballoon texture
+		Texture2D::sptr diffuseGreenBalloon = Texture2D::Create();
+		diffuseGreenBalloon->LoadData(diffuseMapGreenBalloon);
+
+		//Limeballoon texture
+		Texture2D::sptr diffuseLimeBalloon = Texture2D::Create();
+		diffuseLimeBalloon->LoadData(diffuseMapLimeBalloon);
+
+		//Orangeballoon texture
+		Texture2D::sptr diffuseOrangeBalloon = Texture2D::Create();
+		diffuseOrangeBalloon->LoadData(diffuseMapOrangeBalloon);
+
+		//Pinkballoon texture
+		Texture2D::sptr diffusePinkBalloon = Texture2D::Create();
+		diffusePinkBalloon->LoadData(diffuseMapPinkBalloon);
+
+		//Purpleballoon texture
+		Texture2D::sptr diffusePurpleBalloon = Texture2D::Create();
+		diffusePurpleBalloon->LoadData(diffuseMapPurpleBalloon);
+
+		//Redballoon texture
+		Texture2D::sptr diffuseRedBalloon = Texture2D::Create();
+		diffuseRedBalloon->LoadData(diffuseMapRedBalloon);
+
+		//Yellowballoon texture
+		Texture2D::sptr diffuseYellowBalloon = Texture2D::Create();
+		diffuseYellowBalloon->LoadData(diffuseMapYellowBalloon);
+
+		//Ballooniconbunce texture
+		Texture2D::sptr diffuseDunceballoon = Texture2D::Create();
+		diffuseDunceballoon->LoadData(diffuseMapYellowBalloonicon);
+
+		//Ballooniconbuncet texture
+		Texture2D::sptr diffuseDuncetballoon = Texture2D::Create();
+		diffuseDuncetballoon->LoadData(diffuseMapPinkBalloonicon);
+
+		//PinWheelrainbow texture
+		Texture2D::sptr diffusePinwheel = Texture2D::Create();
+		diffusePinwheel->LoadData(diffuseMapPinwheel);
+
+		//Pinwheelblackandwhite texture
+		Texture2D::sptr diffusePinwheelblackandwhite = Texture2D::Create();
+		diffusePinwheelblackandwhite->LoadData(diffuseMapPinwheelblackandwhite);
+
+		//PinwheelBlue texture
+		Texture2D::sptr diffusePinwheelBlue = Texture2D::Create();
+		diffusePinwheelBlue->LoadData(diffuseMapPinwheelblue);
+
+		//PinwheelLightblue texture
+		Texture2D::sptr diffusePinwheellightblue = Texture2D::Create();
+		diffusePinwheellightblue->LoadData(diffuseMapPinwheellightblue);
+
+		//PinwheelPink texture
+		Texture2D::sptr diffusePinwheelpink = Texture2D::Create();
+		diffusePinwheelpink->LoadData(diffuseMapPinwheelpink);
+
+		//Pinwheelred texture
+		Texture2D::sptr diffusePinwheelred = Texture2D::Create();
+		diffusePinwheelred->LoadData(diffuseMapPinwheelred);
+
+		//Pinwheelyellow texture
+		Texture2D::sptr diffusePinwheelyellow = Texture2D::Create();
+		diffusePinwheelyellow->LoadData(diffuseMapPinwheelyellow);
+	
 	// Creating an empty texture
 	Texture2DDescription desc = Texture2DDescription();
 	desc.Width = 1;
@@ -574,209 +624,218 @@ int main() {
 	texture2->Clear(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	// TODO: store some info about our materials for each object
-	Material materials[29];
-	//player1
-	materials[0].Albedo = diffuseDunce;
-	materials[0].Albedo2 = diffuse2;
-	materials[0].Specular = specular;
-	materials[0].Shininess = 32.0f;
-	materials[0].TextureMix = 0.0f;
+	Material materials[30];
+	//materials
 	
-	//player2
-	materials[1].Albedo = diffuseDuncet;
-	materials[1].Albedo2 = diffuse2;
-	materials[1].Specular = specular;
-	materials[1].Shininess = 32.0f;
-	materials[1].TextureMix = 0.0f;
+		//player1
+		materials[0].Albedo = diffuseDunce;
+		materials[0].Albedo2 = diffuse2;
+		materials[0].Specular = specular;
+		materials[0].Shininess = 32.0f;
+		materials[0].TextureMix = 0.0f;
 
-	//Background
-	materials[2].Albedo = diffuseGround;
-	materials[2].Albedo2 = diffuse2;
-	materials[2].Specular = specular;
-	materials[2].Shininess = 32.0f;
-	materials[2].TextureMix = 0.0f;
+		//player2
+		materials[1].Albedo = diffuseDuncet;
+		materials[1].Albedo2 = diffuse2;
+		materials[1].Specular = specular;
+		materials[1].Shininess = 32.0f;
+		materials[1].TextureMix = 0.0f;
 
-	//Sandbox
-	materials[3].Albedo = diffuseSandBox;
-	materials[3].Albedo2 = diffuse2;
-	materials[3].Specular = specular;
-	materials[3].Shininess = 32.0f;
-	materials[3].TextureMix = 0.0f;
-	
-	//slide
-	materials[4].Albedo = diffuseSlide;
-	materials[4].Albedo2 = diffuse2;
-	materials[4].Specular = specular;
-	materials[4].Shininess = 32.0f;
-	materials[4].TextureMix = 0.0f;
+		//Background
+		materials[2].Albedo = diffuseGround;
+		materials[2].Albedo2 = diffuse2;
+		materials[2].Specular = specular;
+		materials[2].Shininess = 32.0f;
+		materials[2].TextureMix = 0.0f;
 
-	//Swing
-	materials[5].Albedo = diffuseSwing;
-	materials[5].Albedo2 = diffuse2;
-	materials[5].Specular = specular;
-	materials[5].Shininess = 32.0f;
-	materials[5].TextureMix = 0.0f;
-	
-	//RoundAbout
-	materials[6].Albedo = diffuseRA;
-	materials[6].Albedo2 = diffuse2;
-	materials[6].Specular = specular;
-	materials[6].Shininess = 32.0f;
-	materials[6].TextureMix = 0.0f;
+		//Sandbox
+		materials[3].Albedo = diffuseSandBox;
+		materials[3].Albedo2 = diffuse2;
+		materials[3].Specular = specular;
+		materials[3].Shininess = 32.0f;
+		materials[3].TextureMix = 0.0f;
 
-	//Monkeybar
-	materials[7].Albedo = diffuseMonkeyBar;
-	materials[7].Albedo2 = diffuse2;
-	materials[7].Specular = specular;
-	materials[7].Shininess = 32.0f;
-	materials[7].TextureMix = 0.0f;
-	
-	//blueballoon
-	materials[8].Albedo = diffuseBlueBalloon;
-	materials[8].Albedo2 = diffuse2;
-	materials[8].Specular = specular;
-	materials[8].Shininess = 32.0f;
-	materials[8].TextureMix = 0.0f;
-	
-	//table
-	materials[9].Albedo = diffuseTable;
-	materials[9].Albedo2 = diffuse2;
-	materials[9].Specular = specular;
-	materials[9].Shininess = 32.0f;
-	materials[9].TextureMix = 0.0f;
+		//slide
+		materials[4].Albedo = diffuseSlide;
+		materials[4].Albedo2 = diffuse2;
+		materials[4].Specular = specular;
+		materials[4].Shininess = 32.0f;
+		materials[4].TextureMix = 0.0f;
 
-	//bench
-	materials[10].Albedo = diffuseBench;
-	materials[10].Albedo2 = diffuse2;
-	materials[10].Specular = specular;
-	materials[10].Shininess = 32.0f;
-	materials[10].TextureMix = 0.0f;
+		//Swing
+		materials[5].Albedo = diffuseSwing;
+		materials[5].Albedo2 = diffuse2;
+		materials[5].Specular = specular;
+		materials[5].Shininess = 32.0f;
+		materials[5].TextureMix = 0.0f;
 
-	//flower
-	materials[11].Albedo = diffuseFlower;
-	materials[11].Albedo2 = diffuse2;
-	materials[11].Specular = specular;
-	materials[11].Shininess = 32.0f;
-	materials[11].TextureMix = 0.0f;
+		//RoundAbout
+		materials[6].Albedo = diffuseRA;
+		materials[6].Albedo2 = diffuse2;
+		materials[6].Specular = specular;
+		materials[6].Shininess = 32.0f;
+		materials[6].TextureMix = 0.0f;
 
-	//grass1
-	materials[12].Albedo = diffusegrass;
-	materials[12].Albedo2 = diffuse2;
-	materials[12].Specular = specular;
-	materials[12].Shininess = 32.0f;
-	materials[12].TextureMix = 0.0f;
+		//Monkeybar
+		materials[7].Albedo = diffuseMonkeyBar;
+		materials[7].Albedo2 = diffuse2;
+		materials[7].Specular = specular;
+		materials[7].Shininess = 32.0f;
+		materials[7].TextureMix = 0.0f;
 
-	//grass2
-	materials[13].Albedo = diffusegrass2;
-	materials[13].Albedo2 = diffuse2;
-	materials[13].Specular = specular;
-	materials[13].Shininess = 32.0f;
-	materials[13].TextureMix = 0.0f;
+		//blueballoon
+		materials[8].Albedo = diffuseBlueBalloon;
+		materials[8].Albedo2 = diffuse2;
+		materials[8].Specular = specular;
+		materials[8].Shininess = 32.0f;
+		materials[8].TextureMix = 0.0f;
 
-	//hedge
-	materials[14].Albedo = diffusehedge;
-	materials[14].Albedo2 = diffuse2;
-	materials[14].Specular = specular;
-	materials[14].Shininess = 32.0f;
-	materials[14].TextureMix = 0.0f;
+		//table
+		materials[9].Albedo = diffuseTable;
+		materials[9].Albedo2 = diffuse2;
+		materials[9].Specular = specular;
+		materials[9].Shininess = 32.0f;
+		materials[9].TextureMix = 0.0f;
 
-	//pinwheel
-	materials[15].Albedo = diffusePinwheel;
-	materials[15].Albedo2 = diffuse2;
-	materials[15].Specular = specular;
-	materials[15].Shininess = 32.0f;
-	materials[15].TextureMix = 0.0f;
+		//bench
+		materials[10].Albedo = diffuseBench;
+		materials[10].Albedo2 = diffuse2;
+		materials[10].Specular = specular;
+		materials[10].Shininess = 32.0f;
+		materials[10].TextureMix = 0.0f;
 
-	//Score
-	materials[16].Albedo = diffuseGround;
-	materials[16].Albedo2 = diffuse2;
-	materials[16].Specular = specular;
-	materials[16].Shininess = 32.0f;
-	materials[16].TextureMix = 1.0f;
+		//flower
+		materials[11].Albedo = diffuseFlower;
+		materials[11].Albedo2 = diffuse2;
+		materials[11].Specular = specular;
+		materials[11].Shininess = 32.0f;
+		materials[11].TextureMix = 0.0f;
 
-	//sliceofcake
-	materials[17].Albedo = diffuseslice;
-	materials[17].Albedo2 = diffuse2;
-	materials[17].Specular = specular;
-	materials[17].Shininess = 32.0f;
-	materials[17].TextureMix = 0.0f;
+		//grass1
+		materials[12].Albedo = diffusegrass;
+		materials[12].Albedo2 = diffuse2;
+		materials[12].Specular = specular;
+		materials[12].Shininess = 32.0f;
+		materials[12].TextureMix = 0.0f;
 
-	//bigtree
-	materials[18].Albedo = diffusebigtree;
-	materials[18].Albedo2 = diffuse2;
-	materials[18].Specular = specular;
-	materials[18].Shininess = 32.0f;
-	materials[18].TextureMix = 0.0f;
+		//grass2
+		materials[13].Albedo = diffusegrass2;
+		materials[13].Albedo2 = diffuse2;
+		materials[13].Specular = specular;
+		materials[13].Shininess = 32.0f;
+		materials[13].TextureMix = 0.0f;
 
-	//smalltree
-	materials[19].Albedo = diffusesmalltree;
-	materials[19].Albedo2 = diffuse2;
-	materials[19].Specular = specular;
-	materials[19].Shininess = 32.0f;
-	materials[19].TextureMix = 0.0f;
+		//hedge
+		materials[14].Albedo = diffusehedge;
+		materials[14].Albedo2 = diffuse2;
+		materials[14].Specular = specular;
+		materials[14].Shininess = 32.0f;
+		materials[14].TextureMix = 0.0f;
 
-	//balloonicon
-	materials[20].Albedo = diffuseDuncetballoon;
-	materials[20].Albedo2 = diffuse2;
-	materials[20].Specular = specular;
-	materials[20].Shininess = 32.0f;
-	materials[20].TextureMix = 0.0f;
-	
-	//Bottle
-	materials[21].Albedo = diffuseBottle;
-	materials[21].Albedo2 = diffuse2;
-	materials[21].Specular = specular;
-	materials[21].Shininess = 32.0f;
-	materials[21].TextureMix = 0.0f;
+		//pinwheel
+		materials[15].Albedo = diffusePinwheel;
+		materials[15].Albedo2 = diffuse2;
+		materials[15].Specular = specular;
+		materials[15].Shininess = 32.0f;
+		materials[15].TextureMix = 0.0f;
 
-	//Balloon purple
-	materials[22].Albedo = diffusePurpleBalloon;
-	materials[22].Albedo2 = diffuse2;
-	materials[22].Specular = specular;
-	materials[22].Shininess = 32.0f;
-	materials[22].TextureMix = 0.0f;
+		//Score
+		materials[16].Albedo = diffuseGround;
+		materials[16].Albedo2 = diffuse2;
+		materials[16].Specular = specular;
+		materials[16].Shininess = 32.0f;
+		materials[16].TextureMix = 1.0f;
 
-	//Balloon lime
-	materials[23].Albedo = diffuseLimeBalloon;
-	materials[23].Albedo2 = diffuse2;
-	materials[23].Specular = specular;
-	materials[23].Shininess = 32.0f;
-	materials[23].TextureMix = 0.0f;
+		//sliceofcake
+		materials[17].Albedo = diffuseslice;
+		materials[17].Albedo2 = diffuse2;
+		materials[17].Specular = specular;
+		materials[17].Shininess = 32.0f;
+		materials[17].TextureMix = 0.0f;
 
-	//Balloon dark blue
-	materials[24].Albedo = diffuseDarkBlueBalloon;
-	materials[24].Albedo2 = diffuse2;
-	materials[24].Specular = specular;
-	materials[24].Shininess = 32.0f;
-	materials[24].TextureMix = 0.0f;
-	
-	//Balloon pink
-	materials[25].Albedo = diffusePinkBalloon;
-	materials[25].Albedo2 = diffuse2;
-	materials[25].Specular = specular;
-	materials[25].Shininess = 32.0f;
-	materials[25].TextureMix = 0.0f;
+		//bigtree
+		materials[18].Albedo = diffusebigtree;
+		materials[18].Albedo2 = diffuse2;
+		materials[18].Specular = specular;
+		materials[18].Shininess = 32.0f;
+		materials[18].TextureMix = 0.0f;
 
-	//Balloon orange
-	materials[26].Albedo = diffuseOrangeBalloon;
-	materials[26].Albedo2 = diffuse2;
-	materials[26].Specular = specular;
-	materials[26].Shininess = 32.0f;
-	materials[26].TextureMix = 0.0f;
+		//smalltree
+		materials[19].Albedo = diffusesmalltree;
+		materials[19].Albedo2 = diffuse2;
+		materials[19].Specular = specular;
+		materials[19].Shininess = 32.0f;
+		materials[19].TextureMix = 0.0f;
 
-	//Balloon red
-	materials[27].Albedo = diffuseRedBalloon;
-	materials[27].Albedo2 = diffuse2;
-	materials[27].Specular = specular;
-	materials[27].Shininess = 32.0f;
-	materials[27].TextureMix = 0.0f;
-	
-	//Balloonicon dunce
-	materials[28].Albedo = diffuseDunceballoon;
-	materials[28].Albedo2 = diffuse2;
-	materials[28].Specular = specular;
-	materials[28].Shininess = 32.0f;
-	materials[28].TextureMix = 0.0f;
+		//balloonicon
+		materials[20].Albedo = diffuseDuncetballoon;
+		materials[20].Albedo2 = diffuse2;
+		materials[20].Specular = specular;
+		materials[20].Shininess = 32.0f;
+		materials[20].TextureMix = 0.0f;
+
+		//Bottle
+		materials[21].Albedo = diffuseBottle;
+		materials[21].Albedo2 = diffuse2;
+		materials[21].Specular = specular;
+		materials[21].Shininess = 32.0f;
+		materials[21].TextureMix = 0.0f;
+
+		//Balloon purple
+		materials[22].Albedo = diffusePurpleBalloon;
+		materials[22].Albedo2 = diffuse2;
+		materials[22].Specular = specular;
+		materials[22].Shininess = 32.0f;
+		materials[22].TextureMix = 0.0f;
+
+		//Balloon lime
+		materials[23].Albedo = diffuseLimeBalloon;
+		materials[23].Albedo2 = diffuse2;
+		materials[23].Specular = specular;
+		materials[23].Shininess = 32.0f;
+		materials[23].TextureMix = 0.0f;
+
+		//Balloon dark blue
+		materials[24].Albedo = diffuseDarkBlueBalloon;
+		materials[24].Albedo2 = diffuse2;
+		materials[24].Specular = specular;
+		materials[24].Shininess = 32.0f;
+		materials[24].TextureMix = 0.0f;
+
+		//Balloon pink
+		materials[25].Albedo = diffusePinkBalloon;
+		materials[25].Albedo2 = diffuse2;
+		materials[25].Specular = specular;
+		materials[25].Shininess = 32.0f;
+		materials[25].TextureMix = 0.0f;
+
+		//Balloon orange
+		materials[26].Albedo = diffuseOrangeBalloon;
+		materials[26].Albedo2 = diffuse2;
+		materials[26].Specular = specular;
+		materials[26].Shininess = 32.0f;
+		materials[26].TextureMix = 0.0f;
+
+		//Balloon red
+		materials[27].Albedo = diffuseRedBalloon;
+		materials[27].Albedo2 = diffuse2;
+		materials[27].Specular = specular;
+		materials[27].Shininess = 32.0f;
+		materials[27].TextureMix = 0.0f;
+
+		//Balloonicon dunce
+		materials[28].Albedo = diffuseDunceballoon;
+		materials[28].Albedo2 = diffuse2;
+		materials[28].Specular = specular;
+		materials[28].Shininess = 32.0f;
+		materials[28].TextureMix = 0.0f;
+
+		//Balloonicon dunce
+		materials[29].Albedo = diffuseDunceballoon;
+		materials[29].Albedo2 = diffuse2;
+		materials[29].Specular = specular;
+		materials[29].Shininess = 32.0f;
+		materials[29].TextureMix = 1.0f;
 
 	//Camera
 	camera = Camera::Create();
@@ -805,6 +864,23 @@ int main() {
 	float tCatmull = 0.0f;
 	float segmenttime = 1.0f;
 	bool catforward = true;
+
+	//score count
+	int countdunce = 0;
+	int countduncet = 0;
+
+	//renderer
+	bool renderammo = true;
+	bool renderammo2 = true;
+	bool renderammoground1 = true;
+	bool renderammoground2 = true;
+	bool renderammoground3 = true;
+	bool renderammoground4 = true;
+	float time1 = 0.0f;
+	float time2 = 0.0f;
+	float time3 = 0.0f;
+	float time4 = 0.0f;
+
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -816,44 +892,50 @@ int main() {
 		tLERP += dt;
 
 		//LERP
-		//makes LERP switch
-		if (tLERP >= tlimitLERP)
 		{
-			tLERP = 0.0f;
-			forward = !forward;
+			//makes LERP switch
+			if (tLERP >= tlimitLERP)
+			{
+				tLERP = 0.0f;
+				forward = !forward;
+			}
+
+			//checks if the lerp should go backwards or forwards
+			/*if (forward) {
+				transforms[8]->SetLocalPosition(LERP(transforms[32], transforms[33], tLERP));
+			}
+			else
+			{
+				transforms[8]->SetLocalPosition(LERP(transforms[33], transforms[32], tLERP));
+			}*/
 		}
 
-		//checks if the lerp should go backwards or forwards
-		/*if (forward) {
-			transforms[8]->SetLocalPosition(LERP(transforms[32], transforms[33], tLERP));
-		}
-		else
+		//Catmull-rom
 		{
-			transforms[8]->SetLocalPosition(LERP(transforms[33], transforms[32], tLERP));
-		}*/
-		//////////////////////////////
+			tCatmull += dt;
 
-		tCatmull += dt;
+			/*while (tCatmull > segmenttime)
+			{
+				tCatmull -= segmenttime;
+			}
 
-		/*while (tCatmull > segmenttime)
-		{
-			tCatmull -= segmenttime;
-		}
+			float t = tCatmull / segmenttime;
+			*/
+			if (tCatmull >= segmenttime)
+			{
+				tCatmull = 0.0f;
+				catforward = !catforward;
+			}
 
-		float t = tCatmull / segmenttime;
-		*/
-		if (tCatmull >= segmenttime)
-		{
-			tCatmull = 0.0f;
-			catforward = !catforward;
-		}
+			/*if (catforward) {
+				transforms[31]->SetLocalPosition(Catmull(transforms[34], transforms[35], transforms[36], transforms[37], tCatmull));
+			}
+			else
+			{
+				transforms[31]->SetLocalPosition(Catmull(transforms[37], transforms[36], transforms[35], transforms[34], tCatmull));
+			}*/
 
-		if (catforward) {
-			transforms[31]->SetLocalPosition(Catmull(transforms[34], transforms[35], transforms[36], transforms[37], tCatmull));
-		}
-		else
-		{
-			transforms[31]->SetLocalPosition(Catmull(transforms[37], transforms[36], transforms[35], transforms[34], tCatmull));
+			////////////////////////////////////////////////////////////////////////////////////////
 		}
 		ManipulateTransformWithInput(transforms[0], transforms[1], dt);
 
@@ -872,7 +954,8 @@ int main() {
 		shader->SetUniform("s_Specular", 2);
 
 		// Render all VAOs in our scene
-		for (int ix = 0; ix < 21; ix++) {
+		for (int ix = 0; ix < 20; ix++)
+		{
 			// TODO: Apply materials
 			materials[ix].Albedo->Bind(0);
 			materials[ix].Albedo2->Bind(1);
@@ -881,497 +964,645 @@ int main() {
 			shader->SetUniform("u_TextureMix", materials[ix].TextureMix);
 			RenderVAO(shader, vaos[ix], camera, transforms[ix]);
 		}
+
+		//rerenders bottles
+		if (!renderammoground1)
+		{
+			time1 += dt;
+			if (time1 >= 5)
+			{
+				renderammoground1 = true;
+				time1 = 0;
+			}
+		}
+		
+		if (!renderammoground2)
+		{
+			time2 += dt;
+			if (time2 >= 5)
+			{
+				renderammoground2 = true;
+				time2 = 0;
+			}
+		}
+		
+		if (!renderammoground3)
+		{
+			time3 += dt;
+			if (time3 >= 5)
+			{
+				renderammoground3 = true;
+				time3 = 0;
+			}
+		}
+		
+		if (!renderammoground4)
+		{
+			time4 += dt;
+			if (time4 >= 5)
+			{
+				renderammoground4 = true;
+				time4 = 0;
+			}
+		}
+
 		//bottle 1
-		materials[21].Albedo->Bind(0);
-		materials[21].Albedo2->Bind(1);
-		materials[21].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[21].Shininess);
-		shader->SetUniform("u_TextureMix", materials[21].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[21]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[21]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[21]->LocalTransform()));
-		vaobottle->Render();
+		if (renderammoground1) {
+			materials[21].Albedo->Bind(0);
+			materials[21].Albedo2->Bind(1);
+			materials[21].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[21].Shininess);
+			shader->SetUniform("u_TextureMix", materials[21].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[21]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[21]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[21]->LocalTransform()));
+			vaobottle->Render();
+		}
 
 		//bottle 2
-		materials[21].Albedo->Bind(0);
-		materials[21].Albedo2->Bind(1);
-		materials[21].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[21].Shininess);
-		shader->SetUniform("u_TextureMix", materials[21].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[22]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[22]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[22]->LocalTransform()));
-		vaobottle->Render();
+		if (renderammoground2) {
+			materials[21].Albedo->Bind(0);
+			materials[21].Albedo2->Bind(1);
+			materials[21].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[21].Shininess);
+			shader->SetUniform("u_TextureMix", materials[21].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[22]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[22]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[22]->LocalTransform()));
+			vaobottle->Render();
+		}
 
 		//bottle 3
-		materials[21].Albedo->Bind(0);
-		materials[21].Albedo2->Bind(1);
-		materials[21].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[21].Shininess);
-		shader->SetUniform("u_TextureMix", materials[21].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[23]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[23]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[23]->LocalTransform()));
-		vaobottle->Render();
+		if (renderammoground3) {
+			materials[21].Albedo->Bind(0);
+			materials[21].Albedo2->Bind(1);
+			materials[21].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[21].Shininess);
+			shader->SetUniform("u_TextureMix", materials[21].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[23]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[23]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[23]->LocalTransform()));
+			vaobottle->Render();
+		}
 
 		//bottle 4
-		materials[21].Albedo->Bind(0);
-		materials[21].Albedo2->Bind(1);
-		materials[21].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[21].Shininess);
-		shader->SetUniform("u_TextureMix", materials[21].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[24]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[24]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[24]->LocalTransform()));
-		vaobottle->Render();
-		
-		//ill put these into a for loop later
-		//bottle word left
-		materials[16].Albedo->Bind(0);
-		materials[16].Albedo2->Bind(1);
-		materials[16].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[16].Shininess);
-		shader->SetUniform("u_TextureMix", materials[16].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[38]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[38]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[38]->LocalTransform()));
-		vaoammo->Render();
-		
-		//bottle word right
-		materials[16].Albedo->Bind(0);
-		materials[16].Albedo2->Bind(1);
-		materials[16].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[16].Shininess);
-		shader->SetUniform("u_TextureMix", materials[16].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[39]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[39]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[39]->LocalTransform()));
-		vaoammo->Render();
-		
-		//ammo left
-		materials[21].Albedo->Bind(0);
-		materials[21].Albedo2->Bind(1);
-		materials[21].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[21].Shininess);
-		shader->SetUniform("u_TextureMix", materials[21].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[40]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[40]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[40]->LocalTransform()));
-		vaobottle->Render();
-		
-		//ammo right
-		materials[21].Albedo->Bind(0);
-		materials[21].Albedo2->Bind(1);
-		materials[21].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[21].Shininess);
-		shader->SetUniform("u_TextureMix", materials[21].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[41]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[41]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[41]->LocalTransform()));
-		vaobottle->Render();
-		
-		//bench top left
-		materials[10].Albedo->Bind(0);
-		materials[10].Albedo2->Bind(1);
-		materials[10].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[10].Shininess);
-		shader->SetUniform("u_TextureMix", materials[10].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[42]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[42]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[42]->LocalTransform()));
-		vaobench->Render();
-		
-		//bench bot left
-		materials[10].Albedo->Bind(0);
-		materials[10].Albedo2->Bind(1);
-		materials[10].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[10].Shininess);
-		shader->SetUniform("u_TextureMix", materials[10].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[43]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[43]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[43]->LocalTransform()));
-		vaobench->Render();
-		
-		//bench bot right
-		materials[10].Albedo->Bind(0);
-		materials[10].Albedo2->Bind(1);
-		materials[10].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[10].Shininess);
-		shader->SetUniform("u_TextureMix", materials[10].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[44]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[44]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[44]->LocalTransform()));
-		vaobench->Render();
-		
-		//table bot left
-		materials[9].Albedo->Bind(0);
-		materials[9].Albedo2->Bind(1);
-		materials[9].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[9].Shininess);
-		shader->SetUniform("u_TextureMix", materials[9].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[45]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[45]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[45]->LocalTransform()));
-		vaotable->Render();
-		
-		//table right
-		materials[9].Albedo->Bind(0);
-		materials[9].Albedo2->Bind(1);
-		materials[9].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[9].Shininess);
-		shader->SetUniform("u_TextureMix", materials[9].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[46]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[46]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[46]->LocalTransform()));
-		vaotable->Render();
+		if (renderammoground4) {
+			materials[21].Albedo->Bind(0);
+			materials[21].Albedo2->Bind(1);
+			materials[21].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[21].Shininess);
+			shader->SetUniform("u_TextureMix", materials[21].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[24]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[24]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[24]->LocalTransform()));
+			vaobottle->Render();
+		}
 
-		//middle left tree
-		materials[18].Albedo->Bind(0);
-		materials[18].Albedo2->Bind(1);
-		materials[18].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[18].Shininess);
-		shader->SetUniform("u_TextureMix", materials[18].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[47]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[47]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[47]->LocalTransform()));
-		vaobigtree->Render();
-		
-		//top left tree
-		materials[18].Albedo->Bind(0);
-		materials[18].Albedo2->Bind(1);
-		materials[18].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[18].Shininess);
-		shader->SetUniform("u_TextureMix", materials[18].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[48]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[48]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[48]->LocalTransform()));
-		vaobigtree->Render();
-		
-		//bot left big tree
-		materials[18].Albedo->Bind(0);
-		materials[18].Albedo2->Bind(1);
-		materials[18].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[18].Shininess);
-		shader->SetUniform("u_TextureMix", materials[18].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[49]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[49]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[49]->LocalTransform()));
-		vaobigtree->Render();
-		
-		//bot left tree up
-		materials[19].Albedo->Bind(0);
-		materials[19].Albedo2->Bind(1);
-		materials[19].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[19].Shininess);
-		shader->SetUniform("u_TextureMix", materials[19].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[50]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[50]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[50]->LocalTransform()));
-		vaosmalltree->Render();
-		
-		//bot left tree right
-		materials[19].Albedo->Bind(0);
-		materials[19].Albedo2->Bind(1);
-		materials[19].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[19].Shininess);
-		shader->SetUniform("u_TextureMix", materials[19].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[51]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[51]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[51]->LocalTransform()));
-		vaosmalltree->Render();
-		
-		//tree bot left mid 
-		materials[19].Albedo->Bind(0);
-		materials[19].Albedo2->Bind(1);
-		materials[19].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[19].Shininess);
-		shader->SetUniform("u_TextureMix", materials[19].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[52]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[52]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[52]->LocalTransform()));
-		vaosmalltree->Render();
-		
-		//tree bot right mid
-		materials[19].Albedo->Bind(0);
-		materials[19].Albedo2->Bind(1);
-		materials[19].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[9].Shininess);
-		shader->SetUniform("u_TextureMix", materials[9].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[53]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[53]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[53]->LocalTransform()));
-		vaosmalltree->Render();
-		
-		//tree bot right
-		materials[18].Albedo->Bind(0);
-		materials[18].Albedo2->Bind(1);
-		materials[18].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[18].Shininess);
-		shader->SetUniform("u_TextureMix", materials[18].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[54]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[54]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[54]->LocalTransform()));
-		vaobigtree->Render();
-		
-		//tree bot right up
-		materials[19].Albedo->Bind(0);
-		materials[19].Albedo2->Bind(1);
-		materials[19].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[19].Shininess);
-		shader->SetUniform("u_TextureMix", materials[19].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[55]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[55]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[55]->LocalTransform()));
-		vaosmalltree->Render();
-		
-		//tree top right
-		materials[18].Albedo->Bind(0);
-		materials[18].Albedo2->Bind(1);
-		materials[18].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[18].Shininess);
-		shader->SetUniform("u_TextureMix", materials[18].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[56]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[56]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[56]->LocalTransform()));
-		vaobigtree->Render();
-		
-		//tree top right down
-		materials[19].Albedo->Bind(0);
-		materials[19].Albedo2->Bind(1);
-		materials[19].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[19].Shininess);
-		shader->SetUniform("u_TextureMix", materials[19].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[57]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[57]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[57]->LocalTransform()));
-		vaosmalltree->Render();
-		
-		//tree top right left
-		materials[19].Albedo->Bind(0);
-		materials[19].Albedo2->Bind(1);
-		materials[19].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[19].Shininess);
-		shader->SetUniform("u_TextureMix", materials[19].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[58]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[58]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[58]->LocalTransform()));
-		vaosmalltree->Render();
+		if (countduncet == 1) {
+			//first right icon
+			materials[20].Albedo->Bind(0);
+			materials[20].Albedo2->Bind(1);
+			materials[20].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[20].Shininess);
+			shader->SetUniform("u_TextureMix", materials[20].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[20]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[20]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[20]->LocalTransform()));
+			vaoballoonicon->Render();
+		}
 
-		//purple balloon
-		materials[22].Albedo->Bind(0);
-		materials[22].Albedo2->Bind(1);
-		materials[22].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[22].Shininess);
-		shader->SetUniform("u_TextureMix", materials[22].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[59]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[59]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[59]->LocalTransform()));
-		vaoballoon->Render();
+		if (countduncet == 2) {
+			//second right icon
+			materials[20].Albedo->Bind(0);
+			materials[20].Albedo2->Bind(1);
+			materials[20].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[20].Shininess);
+			shader->SetUniform("u_TextureMix", materials[20].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[68]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[68]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[68]->LocalTransform()));
+			vaoballoonicon->Render();
 
-		//lime balloon
-		materials[23].Albedo->Bind(0);
-		materials[23].Albedo2->Bind(1);
-		materials[23].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[23].Shininess);
-		shader->SetUniform("u_TextureMix", materials[23].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[60]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[60]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[60]->LocalTransform()));
-		vaoballoon->Render();
-		
-		//Dark blue balloon
-		materials[24].Albedo->Bind(0);
-		materials[24].Albedo2->Bind(1);
-		materials[24].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[24].Shininess);
-		shader->SetUniform("u_TextureMix", materials[24].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[61]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[61]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[61]->LocalTransform()));
-		vaoballoon->Render();
+			materials[20].Albedo->Bind(0);
+			materials[20].Albedo2->Bind(1);
+			materials[20].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[20].Shininess);
+			shader->SetUniform("u_TextureMix", materials[20].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[20]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[20]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[20]->LocalTransform()));
+			vaoballoonicon->Render();
+		}
 
-		//pink balloon mid
-		materials[25].Albedo->Bind(0);
-		materials[25].Albedo2->Bind(1);
-		materials[25].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[25].Shininess);
-		shader->SetUniform("u_TextureMix", materials[25].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[62]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[62]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[62]->LocalTransform()));
-		vaoballoon->Render();
+		if (countduncet == 3) {
+			//third right icon
+			materials[20].Albedo->Bind(0);
+			materials[20].Albedo2->Bind(1);
+			materials[20].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[20].Shininess);
+			shader->SetUniform("u_TextureMix", materials[20].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[69]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[69]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[69]->LocalTransform()));
+			vaoballoonicon->Render();
 
-		//orange balloon mid
-		materials[26].Albedo->Bind(0);
-		materials[26].Albedo2->Bind(1);
-		materials[26].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[26].Shininess);
-		shader->SetUniform("u_TextureMix", materials[26].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[63]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[63]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[63]->LocalTransform()));
-		vaoballoon->Render();
+			materials[20].Albedo->Bind(0);
+			materials[20].Albedo2->Bind(1);
+			materials[20].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[20].Shininess);
+			shader->SetUniform("u_TextureMix", materials[20].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[68]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[68]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[68]->LocalTransform()));
+			vaoballoonicon->Render();
 
-		//light blue right balloon
-		materials[27].Albedo->Bind(0);
-		materials[27].Albedo2->Bind(1);
-		materials[27].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[27].Shininess);
-		shader->SetUniform("u_TextureMix", materials[27].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[64]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[64]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[64]->LocalTransform()));
-		vaoballoon->Render();
-		
-		//red balloon
-		materials[27].Albedo->Bind(0);
-		materials[27].Albedo2->Bind(1);
-		materials[27].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[27].Shininess);
-		shader->SetUniform("u_TextureMix", materials[27].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[65]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[65]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[65]->LocalTransform()));
-		vaoballoon->Render();
-		
-		//lime balloon right
-		materials[23].Albedo->Bind(0);
-		materials[23].Albedo2->Bind(1);
-		materials[23].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[23].Shininess);
-		shader->SetUniform("u_TextureMix", materials[23].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[66]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[66]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[66]->LocalTransform()));
-		vaoballoon->Render();
+			materials[20].Albedo->Bind(0);
+			materials[20].Albedo2->Bind(1);
+			materials[20].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[20].Shininess);
+			shader->SetUniform("u_TextureMix", materials[20].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[20]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[20]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[20]->LocalTransform()));
+			vaoballoonicon->Render();
+		}
 
-		//pink balloon right
-		materials[25].Albedo->Bind(0);
-		materials[25].Albedo2->Bind(1);
-		materials[25].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[25].Shininess);
-		shader->SetUniform("u_TextureMix", materials[25].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[67]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[67]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[67]->LocalTransform()));
-		vaoballoon->Render();
-		
-		//second right icon
-		materials[20].Albedo->Bind(0);
-		materials[20].Albedo2->Bind(1);
-		materials[20].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[20].Shininess);
-		shader->SetUniform("u_TextureMix", materials[20].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[68]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[68]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[68]->LocalTransform()));
-		vaoballoonicon->Render();
-		
-		//third right icon
-		materials[20].Albedo->Bind(0);
-		materials[20].Albedo2->Bind(1);
-		materials[20].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[20].Shininess);
-		shader->SetUniform("u_TextureMix", materials[20].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[69]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[69]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[69]->LocalTransform()));
-		vaoballoonicon->Render();
-		
-		//first left icon
-		materials[28].Albedo->Bind(0);
-		materials[28].Albedo2->Bind(1);
-		materials[28].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[28].Shininess);
-		shader->SetUniform("u_TextureMix", materials[28].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[70]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[70]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[70]->LocalTransform()));
-		vaoballoonicon->Render();
-		
-		//second left icon
-		materials[28].Albedo->Bind(0);
-		materials[28].Albedo2->Bind(1);
-		materials[28].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[28].Shininess);
-		shader->SetUniform("u_TextureMix", materials[28].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[71]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[71]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[71]->LocalTransform()));
-		vaoballoonicon->Render();
-		
-		//third left icon
-		materials[28].Albedo->Bind(0);
-		materials[28].Albedo2->Bind(1);
-		materials[28].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[28].Shininess);
-		shader->SetUniform("u_TextureMix", materials[28].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[72]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[72]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[72]->LocalTransform()));
-		vaoballoonicon->Render();
+		if (countdunce == 1) {
+			//first left icon
+			materials[28].Albedo->Bind(0);
+			materials[28].Albedo2->Bind(1);
+			materials[28].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[28].Shininess);
+			shader->SetUniform("u_TextureMix", materials[28].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[70]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[70]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[70]->LocalTransform()));
+			vaoballoonicon->Render();
+		}
 
-		//Hitboxleft wall
-		materials[1].Albedo->Bind(0);
-		materials[1].Albedo2->Bind(1);
-		materials[1].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[1].Shininess);
-		shader->SetUniform("u_TextureMix", materials[1].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[27]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[27]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[27]->LocalTransform()));
-		//vaoHitbox->Render();
+		if (countdunce == 2) {
+			//second left icon
+			materials[28].Albedo->Bind(0);
+			materials[28].Albedo2->Bind(1);
+			materials[28].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[28].Shininess);
+			shader->SetUniform("u_TextureMix", materials[28].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[71]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[71]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[71]->LocalTransform()));
+			vaoballoonicon->Render();
+
+			materials[28].Albedo->Bind(0);
+			materials[28].Albedo2->Bind(1);
+			materials[28].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[28].Shininess);
+			shader->SetUniform("u_TextureMix", materials[28].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[70]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[70]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[70]->LocalTransform()));
+			vaoballoonicon->Render();
+		}
+
+		if (countdunce == 3) {
+//third left icon
+materials[28].Albedo->Bind(0);
+materials[28].Albedo2->Bind(1);
+materials[28].Specular->Bind(2);
+shader->SetUniform("u_Shininess", materials[28].Shininess);
+shader->SetUniform("u_TextureMix", materials[28].TextureMix);
+shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[72]->LocalTransform());
+shader->SetUniformMatrix("u_Model", transforms[72]->LocalTransform());
+shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[72]->LocalTransform()));
+vaoballoonicon->Render();
+
+materials[28].Albedo->Bind(0);
+materials[28].Albedo2->Bind(1);
+materials[28].Specular->Bind(2);
+shader->SetUniform("u_Shininess", materials[28].Shininess);
+shader->SetUniform("u_TextureMix", materials[28].TextureMix);
+shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[71]->LocalTransform());
+shader->SetUniformMatrix("u_Model", transforms[71]->LocalTransform());
+shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[71]->LocalTransform()));
+vaoballoonicon->Render();
+
+materials[28].Albedo->Bind(0);
+materials[28].Albedo2->Bind(1);
+materials[28].Specular->Bind(2);
+shader->SetUniform("u_Shininess", materials[28].Shininess);
+shader->SetUniform("u_TextureMix", materials[28].TextureMix);
+shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[70]->LocalTransform());
+shader->SetUniformMatrix("u_Model", transforms[70]->LocalTransform());
+shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[70]->LocalTransform()));
+vaoballoonicon->Render();
+		}
+
+		//ill put these into a for loop later doesnt work well fix later
+		/*for (int ix = 38; ix < 68; ix++) {
+			if (ix < 40) {
+				materials[16].Albedo->Bind(0);
+				materials[16].Albedo2->Bind(1);
+				materials[16].Specular->Bind(2);
+				shader->SetUniform("u_Shininess", materials[16].Shininess);
+				shader->SetUniform("u_TextureMix", materials[16].TextureMix);
+				vaoammo->Render();
+				positionVAO(shader, camera, transforms[ix]);
+			}
+			else if (ix > 39 && ix < 42) {
+				materials[21].Albedo->Bind(0);
+				materials[21].Albedo2->Bind(1);
+				materials[21].Specular->Bind(2);
+				shader->SetUniform("u_Shininess", materials[21].Shininess);
+				shader->SetUniform("u_TextureMix", materials[21].TextureMix);
+				vaobottle->Render();
+				positionVAO(shader, camera, transforms[ix]);
+			}
+			else if (ix > 41 && ix < 45) {
+				materials[10].Albedo->Bind(0);
+				materials[10].Albedo2->Bind(1);
+				materials[10].Specular->Bind(2);
+				shader->SetUniform("u_Shininess", materials[10].Shininess);
+				shader->SetUniform("u_TextureMix", materials[10].TextureMix);
+				vaobench->Render();
+				positionVAO(shader, camera, transforms[ix]);
+			}
+			else if (ix > 44 && ix < 47) {
+				materials[9].Albedo->Bind(0);
+				materials[9].Albedo2->Bind(1);
+				materials[9].Specular->Bind(2);
+				shader->SetUniform("u_Shininess", materials[9].Shininess);
+				shader->SetUniform("u_TextureMix", materials[9].TextureMix);
+				vaotable->Render();
+				positionVAO(shader, camera, transforms[ix]);
+			}
+			else if ((ix > 46 && ix < 50) || ix == 54 || ix == 56) {
+				materials[18].Albedo->Bind(0);
+				materials[18].Albedo2->Bind(1);
+				materials[18].Specular->Bind(2);
+				shader->SetUniform("u_Shininess", materials[18].Shininess);
+				shader->SetUniform("u_TextureMix", materials[18].TextureMix);
+				vaobigtree->Render();
+				positionVAO(shader, camera, transforms[ix]);
+			}
+			else if ((ix > 49 && ix < 54) || ix == 55 || ix == 57 || ix == 58) {
+				materials[19].Albedo->Bind(0);
+				materials[19].Albedo2->Bind(1);
+				materials[19].Specular->Bind(2);
+				shader->SetUniform("u_Shininess", materials[19].Shininess);
+				shader->SetUniform("u_TextureMix", materials[19].TextureMix);
+				vaosmalltree->Render();
+				positionVAO(shader, camera, transforms[ix]);
+			}
+			else{
+				materials[22].Albedo->Bind(0);
+				materials[22].Albedo2->Bind(1);
+				materials[22].Specular->Bind(2);
+				shader->SetUniform("u_Shininess", materials[22].Shininess);
+				shader->SetUniform("u_TextureMix", materials[22].TextureMix);
+				vaoballoon->Render();
+				positionVAO(shader, camera, transforms[ix]);
+			}
+		}
+		*/
+		//rendering stuff
+		{
+			//bottle word left
+			materials[16].Albedo->Bind(0);
+			materials[16].Albedo2->Bind(1);
+			materials[16].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[16].Shininess);
+			shader->SetUniform("u_TextureMix", materials[16].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[38]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[38]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[38]->LocalTransform()));
+			vaoammo->Render();
+
+			//bottle word right
+			materials[16].Albedo->Bind(0);
+			materials[16].Albedo2->Bind(1);
+			materials[16].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[16].Shininess);
+			shader->SetUniform("u_TextureMix", materials[16].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[39]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[39]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[39]->LocalTransform()));
+			vaoammo->Render();
+
+			//bench top left
+			materials[10].Albedo->Bind(0);
+			materials[10].Albedo2->Bind(1);
+			materials[10].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[10].Shininess);
+			shader->SetUniform("u_TextureMix", materials[10].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[42]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[42]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[42]->LocalTransform()));
+			vaobench->Render();
+
+			//bench bot left
+			materials[10].Albedo->Bind(0);
+			materials[10].Albedo2->Bind(1);
+			materials[10].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[10].Shininess);
+			shader->SetUniform("u_TextureMix", materials[10].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[43]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[43]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[43]->LocalTransform()));
+			vaobench->Render();
+
+			//bench bot right
+			materials[10].Albedo->Bind(0);
+			materials[10].Albedo2->Bind(1);
+			materials[10].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[10].Shininess);
+			shader->SetUniform("u_TextureMix", materials[10].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[44]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[44]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[44]->LocalTransform()));
+			vaobench->Render();
+
+			//table bot left
+			materials[9].Albedo->Bind(0);
+			materials[9].Albedo2->Bind(1);
+			materials[9].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[9].Shininess);
+			shader->SetUniform("u_TextureMix", materials[9].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[45]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[45]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[45]->LocalTransform()));
+			vaotable->Render();
+
+			//table right
+			materials[9].Albedo->Bind(0);
+			materials[9].Albedo2->Bind(1);
+			materials[9].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[9].Shininess);
+			shader->SetUniform("u_TextureMix", materials[9].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[46]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[46]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[46]->LocalTransform()));
+			vaotable->Render();
+
+			//middle left tree
+			materials[18].Albedo->Bind(0);
+			materials[18].Albedo2->Bind(1);
+			materials[18].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[18].Shininess);
+			shader->SetUniform("u_TextureMix", materials[18].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[47]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[47]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[47]->LocalTransform()));
+			vaobigtree->Render();
+
+			//top left tree
+			materials[18].Albedo->Bind(0);
+			materials[18].Albedo2->Bind(1);
+			materials[18].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[18].Shininess);
+			shader->SetUniform("u_TextureMix", materials[18].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[48]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[48]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[48]->LocalTransform()));
+			vaobigtree->Render();
+
+			//bot left big tree
+			materials[18].Albedo->Bind(0);
+			materials[18].Albedo2->Bind(1);
+			materials[18].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[18].Shininess);
+			shader->SetUniform("u_TextureMix", materials[18].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[49]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[49]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[49]->LocalTransform()));
+			vaobigtree->Render();
+
+			//bot left tree up
+			materials[19].Albedo->Bind(0);
+			materials[19].Albedo2->Bind(1);
+			materials[19].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[19].Shininess);
+			shader->SetUniform("u_TextureMix", materials[19].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[50]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[50]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[50]->LocalTransform()));
+			vaosmalltree->Render();
+
+			//bot left tree right
+			materials[19].Albedo->Bind(0);
+			materials[19].Albedo2->Bind(1);
+			materials[19].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[19].Shininess);
+			shader->SetUniform("u_TextureMix", materials[19].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[51]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[51]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[51]->LocalTransform()));
+			vaosmalltree->Render();
+
+			//tree bot left mid 
+			materials[19].Albedo->Bind(0);
+			materials[19].Albedo2->Bind(1);
+			materials[19].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[19].Shininess);
+			shader->SetUniform("u_TextureMix", materials[19].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[52]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[52]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[52]->LocalTransform()));
+			vaosmalltree->Render();
+
+			//tree bot right mid
+			materials[19].Albedo->Bind(0);
+			materials[19].Albedo2->Bind(1);
+			materials[19].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[9].Shininess);
+			shader->SetUniform("u_TextureMix", materials[9].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[53]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[53]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[53]->LocalTransform()));
+			vaosmalltree->Render();
+
+			//tree bot right
+			materials[18].Albedo->Bind(0);
+			materials[18].Albedo2->Bind(1);
+			materials[18].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[18].Shininess);
+			shader->SetUniform("u_TextureMix", materials[18].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[54]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[54]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[54]->LocalTransform()));
+			vaobigtree->Render();
+
+			//tree bot right up
+			materials[19].Albedo->Bind(0);
+			materials[19].Albedo2->Bind(1);
+			materials[19].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[19].Shininess);
+			shader->SetUniform("u_TextureMix", materials[19].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[55]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[55]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[55]->LocalTransform()));
+			vaosmalltree->Render();
+
+			//tree top right
+			materials[18].Albedo->Bind(0);
+			materials[18].Albedo2->Bind(1);
+			materials[18].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[18].Shininess);
+			shader->SetUniform("u_TextureMix", materials[18].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[56]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[56]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[56]->LocalTransform()));
+			vaobigtree->Render();
+
+			//tree top right down
+			materials[19].Albedo->Bind(0);
+			materials[19].Albedo2->Bind(1);
+			materials[19].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[19].Shininess);
+			shader->SetUniform("u_TextureMix", materials[19].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[57]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[57]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[57]->LocalTransform()));
+			vaosmalltree->Render();
+
+			//tree top right left
+			materials[19].Albedo->Bind(0);
+			materials[19].Albedo2->Bind(1);
+			materials[19].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[19].Shininess);
+			shader->SetUniform("u_TextureMix", materials[19].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[58]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[58]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[58]->LocalTransform()));
+			vaosmalltree->Render();
+
+			//purple balloon
+			materials[22].Albedo->Bind(0);
+			materials[22].Albedo2->Bind(1);
+			materials[22].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[22].Shininess);
+			shader->SetUniform("u_TextureMix", materials[22].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[59]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[59]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[59]->LocalTransform()));
+			vaoballoon->Render();
+
+			//lime balloon
+			materials[23].Albedo->Bind(0);
+			materials[23].Albedo2->Bind(1);
+			materials[23].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[23].Shininess);
+			shader->SetUniform("u_TextureMix", materials[23].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[60]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[60]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[60]->LocalTransform()));
+			vaoballoon->Render();
+
+			//Dark blue balloon
+			materials[24].Albedo->Bind(0);
+			materials[24].Albedo2->Bind(1);
+			materials[24].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[24].Shininess);
+			shader->SetUniform("u_TextureMix", materials[24].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[61]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[61]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[61]->LocalTransform()));
+			vaoballoon->Render();
+
+			//pink balloon mid
+			materials[25].Albedo->Bind(0);
+			materials[25].Albedo2->Bind(1);
+			materials[25].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[25].Shininess);
+			shader->SetUniform("u_TextureMix", materials[25].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[62]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[62]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[62]->LocalTransform()));
+			vaoballoon->Render();
+
+			//orange balloon mid
+			materials[26].Albedo->Bind(0);
+			materials[26].Albedo2->Bind(1);
+			materials[26].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[26].Shininess);
+			shader->SetUniform("u_TextureMix", materials[26].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[63]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[63]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[63]->LocalTransform()));
+			vaoballoon->Render();
+
+			//light blue right balloon
+			materials[27].Albedo->Bind(0);
+			materials[27].Albedo2->Bind(1);
+			materials[27].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[27].Shininess);
+			shader->SetUniform("u_TextureMix", materials[27].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[64]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[64]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[64]->LocalTransform()));
+			vaoballoon->Render();
+
+			//red balloon
+			materials[27].Albedo->Bind(0);
+			materials[27].Albedo2->Bind(1);
+			materials[27].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[27].Shininess);
+			shader->SetUniform("u_TextureMix", materials[27].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[65]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[65]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[65]->LocalTransform()));
+			vaoballoon->Render();
+
+			//lime balloon right
+			materials[23].Albedo->Bind(0);
+			materials[23].Albedo2->Bind(1);
+			materials[23].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[23].Shininess);
+			shader->SetUniform("u_TextureMix", materials[23].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[66]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[66]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[66]->LocalTransform()));
+			vaoballoon->Render();
+
+			//pink balloon right
+			materials[25].Albedo->Bind(0);
+			materials[25].Albedo2->Bind(1);
+			materials[25].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[25].Shininess);
+			shader->SetUniform("u_TextureMix", materials[25].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[67]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[67]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[67]->LocalTransform()));
+			vaoballoon->Render();
+
+			//test hitbox
+			materials[29].Albedo->Bind(0);
+			materials[29].Albedo2->Bind(1);
+			materials[29].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[29].Shininess);
+			shader->SetUniform("u_TextureMix", materials[29].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[31]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[31]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[31]->LocalTransform()));
+			//vaoHitbox->Render();	
+		}
 		
-		//Hitboxright wall
-		materials[1].Albedo->Bind(0);
-		materials[1].Albedo2->Bind(1);
-		materials[1].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[1].Shininess);
-		shader->SetUniform("u_TextureMix", materials[1].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[28]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[28]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[28]->LocalTransform()));
-		//vaoHitbox->Render();
-		
-		//Hitboxbottom wall
-		materials[1].Albedo->Bind(0);
-		materials[1].Albedo2->Bind(1);
-		materials[1].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[1].Shininess);
-		shader->SetUniform("u_TextureMix", materials[1].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[29]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[29]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[29]->LocalTransform()));
-		//vaoHitbox->Render();
-		
-		//Hitboxtop wall
-		materials[1].Albedo->Bind(0);
-		materials[1].Albedo2->Bind(1);
-		materials[1].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[1].Shininess);
-		shader->SetUniform("u_TextureMix", materials[1].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[30]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[30]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[30]->LocalTransform()));
-		//vaoHitbox->Render();	
-		
-		//catmull tester
-		materials[1].Albedo->Bind(0);
-		materials[1].Albedo2->Bind(1);
-		materials[1].Specular->Bind(2);
-		shader->SetUniform("u_Shininess", materials[1].Shininess);
-		shader->SetUniform("u_TextureMix", materials[1].TextureMix);
-		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[31]->LocalTransform());
-		shader->SetUniformMatrix("u_Model", transforms[31]->LocalTransform());
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[31]->LocalTransform()));
-		//vaoHitbox->Render();	
-		
-		// working getto shooting
+		//hitboxes viusals
+		/*for (int ix = 73; ix < 108; ix++) {
+			// TODO: Apply materials
+			materials[29].Albedo->Bind(0);
+			materials[29].Albedo2->Bind(1);
+			materials[29].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[29].Shininess);
+			shader->SetUniform("u_TextureMix", materials[29].TextureMix);
+			RenderVAO(shader, vaos[21], camera, transforms[ix]);
+		}*/
+
+		////////////////////player 1 stuff
 		//player1 shooting
 		if (ammo) {
 			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS || shoot) {
 				transforms[25]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
 				shoot = true;
+				renderammo = false;
 			}
 			else
 			{
@@ -1382,117 +1613,132 @@ int main() {
 		}
 		
 		if (shoot) {
-			//shoot collision left
-			if (Collision(transforms[27], transforms[25]))
-			{
-				//std::cout << "yes" << std::endl;//checking if hit boxes are working
-				transforms[25]->SetLocalPosition(transforms[0]->GetLocalPosition());
-				transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
-				shoot = false;
-				ammo = false;
-			}
-
-			//shoot collision right
-			if (Collision(transforms[28], transforms[25]))
-			{
-				//std::cout << "yes right" << std::endl;//checking if hit boxes are working
-				transforms[25]->SetLocalPosition(transforms[0]->GetLocalPosition());
-				transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
-				shoot = false;
-				ammo = false;
-			}
-
-			//shoot collision bot
-			if (Collision(transforms[29], transforms[25]))
-			{
-				//std::cout << "yes bottom" << std::endl;//checking if hit boxes are working
-				transforms[25]->SetLocalPosition(transforms[0]->GetLocalPosition());
-				transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
-				shoot = false;
-				ammo = false;
-			}
-
-			//shoot collision top
-			if (Collision(transforms[30], transforms[25]))
-			{
-				//std::cout << "yes top" << std::endl;//checking if hit boxes are working
-				transforms[25]->SetLocalPosition(transforms[0]->GetLocalPosition());
-				transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
-				shoot = false;
-				ammo = false;
-			}
-		}
-		if (Collision(transforms[0], transforms[31]))
-		{
-			ammo = true;
-		}
-		if (shoot) {
-			//Hitboxplayer 1 shoot
-			materials[1].Albedo->Bind(0);
-			materials[1].Albedo2->Bind(1);
-			materials[1].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[1].Shininess);
-			shader->SetUniform("u_TextureMix", materials[1].TextureMix);
+			//bullet render
+			materials[29].Albedo->Bind(0);
+			materials[29].Albedo2->Bind(1);
+			materials[29].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[29].Shininess);
+			shader->SetUniform("u_TextureMix", materials[29].TextureMix);
 			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[25]->LocalTransform());
 			shader->SetUniformMatrix("u_Model", transforms[25]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[25]->LocalTransform()));
 			vaoHitbox->Render();
-		}
-
-		//player 1 hitboxes
-		//Left
-		if (Collision(transforms[0], transforms[27]))
-		{
-			//std::cout << "yes" << std::endl;//checking if hit boxes are working
-			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, -9.0f * dt);
+			//bullet collision with walls
+			for (int i = 27; i < 31; i++) {
+				if (Collision(transforms[i], transforms[25]))
+				{
+					transforms[25]->SetLocalPosition(transforms[0]->GetLocalPosition());
+					transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
+					shoot = false;
+					ammo = false;
+				}
 			}
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, 9.0f * dt);
-			}
-		}	
-		
-		//right
-		if (Collision(transforms[0], transforms[28]))
-		{
-			//std::cout << "yes" << std::endl;//checking if hit boxes are working
-			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, -9.0f * dt);
-			}
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, 9.0f * dt);
-			}
-		}	
-		
-		//bot
-		if (Collision(transforms[0], transforms[29]))
-		{
-			//std::cout << "yes" << std::endl;//checking if hit boxes are working
-			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, -9.0f * dt);
-			}
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, 9.0f * dt);
-			}
-		}	
-		
-		//top
-		if (Collision(transforms[0], transforms[30]))
-		{
-			//std::cout << "yes" << std::endl;//checking if hit boxes are working
-			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, -9.0f * dt);
-			}
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, 9.0f * dt);
+			//bullet collision with stuff
+			for (int i = 77; i < 108; i++) {
+				if (Collision(transforms[i], transforms[25]))
+				{
+					transforms[25]->SetLocalPosition(transforms[0]->GetLocalPosition());
+					transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
+					shoot = false;
+					ammo = false;
+				}
 			}
 		}
 
+		//ammo hitboxes p1
+		if (renderammoground3) {
+			if (Collision(transforms[0], transforms[73]) && ammo == false)
+			{
+				ammo = true;
+				renderammo = true;
+				renderammoground3 = false;
+			}
+		}
+		if (renderammoground1) {
+			if (Collision(transforms[0], transforms[74]) && ammo == false)
+			{
+				ammo = true;
+				renderammo = true;
+				renderammoground1 = false;
+			}
+		}
+		if (renderammoground4) {
+			if (Collision(transforms[0], transforms[75]) && ammo == false)
+			{
+				ammo = true;
+				renderammo = true;
+				renderammoground4 = false;
+			}
+		}
+		if (renderammoground2) {
+			if (Collision(transforms[0], transforms[76]) && ammo == false)
+			{
+				ammo = true;
+				renderammo = true;
+				renderammoground2 = false;
+			}
+		}
+
+		//player 1 wall collisons
+		for (int x = 27; x < 31; x++) {
+			if (Collision(transforms[0], transforms[x]))
+			{
+				//std::cout << "yes" << std::endl;//checking if hit boxes are working
+				if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+					transforms[0]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+				}
+				if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+					transforms[0]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+				}
+			}
+		}
+
+		//player 1 stuff collsions
+		for (int i = 77; i < 108; i++) {
+			if (Collision(transforms[0], transforms[i]))
+			{
+				if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+					transforms[0]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+				}
+				if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+					transforms[0]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+				}
+			}
+		}
+
+		//Player 1 collision with bullet
+		if (Collision(transforms[0], transforms[26]))
+		{
+			transforms[26]->SetLocalPosition(transforms[1]->GetLocalPosition());
+			transforms[26]->SetLocalRotation(transforms[1]->GetLocalRotation());
+			shoot2 = false;
+			ammo2 = false;
+			countduncet += 1;
+		}
+
+		//render UI
+		if (renderammo)
+		{
+			//ammo left
+			materials[21].Albedo->Bind(0);
+			materials[21].Albedo2->Bind(1);
+			materials[21].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[21].Shininess);
+			shader->SetUniform("u_TextureMix", materials[21].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[40]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[40]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[40]->LocalTransform()));
+			vaobottle->Render();
+		}
+		////////////////////////////////////////////////////////////////
+
+		/////////////////////player 2 stuff
 		//player 2 shooting
 		if (ammo2) {
 			if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS || shoot2) {
 				transforms[26]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
 				shoot2 = true;
+				renderammo2 = false;
 			}
 			else
 			{
@@ -1502,130 +1748,122 @@ int main() {
 			}
 		}
 
+		//shooting p2
 		if (shoot2) {
-			//player left collison shoot
-			if (Collision(transforms[27], transforms[26]))
-			{
-				//std::cout << "yes" << std::endl;//checking if hit boxes are working
-				transforms[26]->SetLocalPosition(transforms[1]->GetLocalPosition());
-				transforms[26]->SetLocalRotation(transforms[1]->GetLocalRotation());
-				shoot2 = false;
-				ammo2 = false;
-			}
-
-			//player right collison shoot
-			if (Collision(transforms[28], transforms[26]))
-			{
-				//std::cout << "yes right" << std::endl;//checking if hit boxes are working
-				transforms[26]->SetLocalPosition(transforms[1]->GetLocalPosition());
-				transforms[26]->SetLocalRotation(transforms[1]->GetLocalRotation());
-				shoot2 = false;
-				ammo2 = false;
-			}
-
-			//player bottom collison shoot
-			if (Collision(transforms[29], transforms[26]))
-			{
-				//std::cout << "yes bottom" << std::endl;//checking if hit boxes are working
-				transforms[26]->SetLocalPosition(transforms[1]->GetLocalPosition());
-				transforms[26]->SetLocalRotation(transforms[1]->GetLocalRotation());
-				shoot2 = false;
-				ammo2 = false;
-			}
-
-			//player top collison shoot
-			if (Collision(transforms[30], transforms[26]))
-			{
-				//std::cout << "yes top" << std::endl;//checking if hit boxes are working
-				transforms[26]->SetLocalPosition(transforms[1]->GetLocalPosition());
-				transforms[26]->SetLocalRotation(transforms[1]->GetLocalRotation());
-				shoot2 = false;
-				ammo2 = false;
-			}
-		}
-		if (Collision(transforms[1], transforms[31]))
-		{
-			ammo2 = true;
-		}
-
-		if (shoot2) {
-			//Hitboxplayer 2 shoot
-			materials[1].Albedo->Bind(0);
-			materials[1].Albedo2->Bind(1);
-			materials[1].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[1].Shininess);
-			shader->SetUniform("u_TextureMix", materials[1].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[26]->LocalTransform());
+			//bullet render p2
+			materials[29].Albedo->Bind(0);
+			materials[29].Albedo2->Bind(1);
+			materials[29].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[29].Shininess);
+			shader->SetUniform("u_TextureMix", materials[29].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[26]->LocalTransform());
 			shader->SetUniformMatrix("u_Model", transforms[26]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[26]->LocalTransform()));
 			vaoHitbox->Render();
-		}
-
-		//player2 left collison
-		if (Collision(transforms[1], transforms[27]))
-		{
-			//std::cout << "yes" << std::endl;//checking if hit boxes are working
-			if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, -9.0f * dt);
+			for (int i = 27; i < 31; i++) {
+				if (Collision(transforms[i], transforms[26]))
+				{
+					transforms[26]->SetLocalPosition(transforms[1]->GetLocalPosition());
+					transforms[26]->SetLocalRotation(transforms[1]->GetLocalRotation());
+					shoot2 = false;
+					ammo2 = false;
+				}
 			}
-			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, 9.0f * dt);
-			}
-		}
-
-		//player2 right collison
-		if (Collision(transforms[1], transforms[28]))
-		{
-			//std::cout << "yes" << std::endl;//checking if hit boxes are working
-			if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, -9.0f * dt);
-			}
-			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, 9.0f * dt);
+			//bullet collision with stuff
+			for (int i = 77; i < 108; i++) {
+				if (Collision(transforms[i], transforms[26]))
+				{
+					transforms[26]->SetLocalPosition(transforms[1]->GetLocalPosition());
+					transforms[26]->SetLocalRotation(transforms[1]->GetLocalRotation());
+					shoot2 = false;
+					ammo2 = false;
+				}
 			}
 		}
 
-		//player2 bottom collison
-		if (Collision(transforms[1], transforms[29]))
-		{
-			//std::cout << "yes" << std::endl;//checking if hit boxes are working
-			if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, -9.0f * dt);
+		//ammo hitboxes p2
+		if (renderammoground3) {
+			if (Collision(transforms[1], transforms[73]) && ammo2 == false)
+			{
+				ammo2 = true;
+				renderammo2 = true;
+				renderammoground3 = false;
 			}
-			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, 9.0f * dt);
+		}
+		if (renderammoground1) {
+			if (Collision(transforms[1], transforms[74]) && ammo2 == false)
+			{
+				ammo2 = true;
+				renderammo2 = true;
+				renderammoground1 = false;
+			}
+		}
+		if (renderammoground4) {
+			if (Collision(transforms[1], transforms[75]) && ammo2 == false)
+			{
+				ammo2 = true;
+				renderammo2 = true;
+				renderammoground4 = false;
+			}
+		}
+		if (renderammoground2) {
+			if (Collision(transforms[1], transforms[76]) && ammo2 == false)
+			{
+				ammo2 = true;
+				renderammo2 = true;
+				renderammoground2 = false;
 			}
 		}
 
-		//player2 top collison
-		if (Collision(transforms[1], transforms[30]))
-		{
-			//std::cout << "yes" << std::endl;//checking if hit boxes are working
-			if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, -9.0f * dt);
-			}
-			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, 9.0f * dt);
-			}
-		}
-		
-		//player2 player1 collison
-		if (Collision(transforms[1], transforms[0]))
-		{
-			//std::cout << "yes" << std::endl;//checking if hit boxes are working
-			if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, -9.0f * dt);
-			}
-			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, 9.0f * dt);
-			}
-			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, -9.0f * dt);
-			}
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, 9.0f * dt);
+		//p2 wall collisions
+		for (int i = 27; i < 31; i++) {
+			if (Collision(transforms[1], transforms[i]))
+			{
+				if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+					transforms[1]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+				}
+				if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+					transforms[1]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+				}
 			}
 		}
+
+		//p2 stuff collisions
+		for (int i = 77; i < 108; i++) {
+			if (Collision(transforms[1], transforms[i]))
+			{
+				if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+					transforms[1]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+				}
+				if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+					transforms[1]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+				}
+			}
+		}
+
+		//p2 collision with bullet
+		if (Collision(transforms[1], transforms[25]))
+		{
+			transforms[25]->SetLocalPosition(transforms[0]->GetLocalPosition());
+			transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
+			shoot = false;
+			ammo = false;
+			countdunce += 1;
+		}
+
+		if (renderammo2) {
+			//ammo right
+			materials[21].Albedo->Bind(0);
+			materials[21].Albedo2->Bind(1);
+			materials[21].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[21].Shininess);
+			shader->SetUniform("u_TextureMix", materials[21].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[41]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[41]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[41]->LocalTransform()));
+			vaobottle->Render();
+		}
+		////////////////////////////////////////////////////////////////
 		glfwSwapBuffers(window);
 		lastFrame = thisFrame;
 	}
