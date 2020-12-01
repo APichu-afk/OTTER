@@ -457,6 +457,8 @@ int main() {
 	Texture2DData::sptr diffuseMapPinwheelpink = Texture2DData::LoadFromFile("images/PinWheel/PinWheelPink.png");
 	Texture2DData::sptr diffuseMapPinwheelred = Texture2DData::LoadFromFile("images/PinWheel/PinWheelRed.png");
 	Texture2DData::sptr diffuseMapPinwheelyellow = Texture2DData::LoadFromFile("images/PinWheel/PinWheelYellow.png");
+	Texture2DData::sptr diffuseMapyellow = Texture2DData::LoadFromFile("images/Yellow.png");
+	Texture2DData::sptr diffuseMappink = Texture2DData::LoadFromFile("images/Pink.png");
 	Texture2DData::sptr specularMap = Texture2DData::LoadFromFile("images/Stone_001_Specular.png");
 
 	// Create a texture from the data
@@ -614,6 +616,14 @@ int main() {
 		//Pinwheelyellow texture
 		Texture2D::sptr diffusePinwheelyellow = Texture2D::Create();
 		diffusePinwheelyellow->LoadData(diffuseMapPinwheelyellow);
+		
+		//yellow texture
+		Texture2D::sptr diffuseyellow = Texture2D::Create();
+		diffuseyellow->LoadData(diffuseMapyellow);
+		
+		//yellow texture
+		Texture2D::sptr diffusepink = Texture2D::Create();
+		diffusepink->LoadData(diffuseMappink);
 	
 	// Creating an empty texture
 	Texture2DDescription desc = Texture2DDescription();
@@ -624,7 +634,7 @@ int main() {
 	texture2->Clear(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	// TODO: store some info about our materials for each object
-	Material materials[30];
+	Material materials[32];
 	//materials
 	
 		//player1
@@ -830,12 +840,26 @@ int main() {
 		materials[28].Shininess = 32.0f;
 		materials[28].TextureMix = 0.0f;
 
-		//Balloonicon dunce
+		//red
 		materials[29].Albedo = diffuseDunceballoon;
 		materials[29].Albedo2 = diffuse2;
 		materials[29].Specular = specular;
 		materials[29].Shininess = 32.0f;
 		materials[29].TextureMix = 1.0f;
+		
+		//yellow
+		materials[30].Albedo = diffuseDunceballoon;
+		materials[30].Albedo2 = diffuseyellow;
+		materials[30].Specular = specular;
+		materials[30].Shininess = 32.0f;
+		materials[30].TextureMix = 1.0f;
+		
+		//pink
+		materials[31].Albedo = diffuseDunceballoon;
+		materials[31].Albedo2 = diffusepink;
+		materials[31].Specular = specular;
+		materials[31].Shininess = 32.0f;
+		materials[31].TextureMix = 1.0f;
 
 	//Camera
 	camera = Camera::Create();
@@ -1206,22 +1230,22 @@ int main() {
 		//rendering stuff
 		{
 			//bottle word left
-			materials[16].Albedo->Bind(0);
-			materials[16].Albedo2->Bind(1);
-			materials[16].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[16].Shininess);
-			shader->SetUniform("u_TextureMix", materials[16].TextureMix);
+			materials[30].Albedo->Bind(0);
+			materials[30].Albedo2->Bind(1);
+			materials[30].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[30].Shininess);
+			shader->SetUniform("u_TextureMix", materials[30].TextureMix);
 			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[38]->LocalTransform());
 			shader->SetUniformMatrix("u_Model", transforms[38]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[38]->LocalTransform()));
 			vaoammo->Render();
 
 			//bottle word right
-			materials[16].Albedo->Bind(0);
-			materials[16].Albedo2->Bind(1);
-			materials[16].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[16].Shininess);
-			shader->SetUniform("u_TextureMix", materials[16].TextureMix);
+			materials[31].Albedo->Bind(0);
+			materials[31].Albedo2->Bind(1);
+			materials[31].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[31].Shininess);
+			shader->SetUniform("u_TextureMix", materials[31].TextureMix);
 			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[39]->LocalTransform());
 			shader->SetUniformMatrix("u_Model", transforms[39]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[39]->LocalTransform()));
