@@ -238,6 +238,9 @@ int main() {
 	VertexArrayObject::sptr vaobigtree = ObjLoader::LoadFromFile("models/TreeBig.obj");//bigtree
 	VertexArrayObject::sptr vaosmalltree = ObjLoader::LoadFromFile("models/TreeSmall.obj");//smalltree
 	VertexArrayObject::sptr vaoHitbox = ObjLoader::LoadFromFile("models/HitBox.obj");//Hitbox
+	VertexArrayObject::sptr vaowater = ObjLoader::LoadFromFile("models/WaterBeam.obj");//Hitbox
+	VertexArrayObject::sptr vaoraframe1 = ObjLoader::LoadFromFile("Animations/Duncet_frame_1_3.obj");//raanimation frame 1
+	VertexArrayObject::sptr vaoraframe2 = ObjLoader::LoadFromFile("Animations/Duncet_frame_2.obj");//raanimation frame 2
 
 	// Load our shaders
 	Shader::sptr shader = Shader::Create();
@@ -309,7 +312,7 @@ int main() {
 	transforms[25]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 135.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bullethitboxplayer1
 	transforms[26]->SetLocalPosition(30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 225.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bullethitboxplayer2
 	transforms[31]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test hitbox
-	transforms[32]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test start
+	transforms[32]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(10.0f, 10.0f, 10.0f);//test start
 	transforms[33]->SetLocalPosition(10.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test end
 	transforms[34]->SetLocalPosition(20.0f, 20.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull start
 	transforms[35]->SetLocalPosition(15.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull mid1
@@ -905,6 +908,9 @@ int main() {
 	float time3 = 0.0f;
 	float time4 = 0.0f;
 
+	//animation
+	float ratime = 0.0f;
+
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -913,10 +919,43 @@ int main() {
 		double thisFrame = glfwGetTime();
 		float dt = static_cast<float>(thisFrame - lastFrame);
 		//keeps track of time in our game
-		tLERP += dt;
+		ratime += dt;
+
+		if (ratime <= 1)
+		{
+			materials[6].Albedo->Bind(0);
+			materials[6].Albedo2->Bind(1);
+			materials[6].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[6].Shininess);
+			shader->SetUniform("u_TextureMix", materials[6].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[32]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[32]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[32]->LocalTransform()));
+			vaoraframe1->Render();
+		}
+
+		if (ratime <= 2)
+		{
+			materials[6].Albedo->Bind(0);
+			materials[6].Albedo2->Bind(1);
+			materials[6].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[6].Shininess);
+			shader->SetUniform("u_TextureMix", materials[6].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[32]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[32]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[32]->LocalTransform()));
+			vaoraframe2->Render();
+		}
+
+		if (ratime >= 3)
+		{
+			ratime = 0.0f;
+		}
 
 		//LERP
 		{
+			tLERP += dt;
+
 			//makes LERP switch
 			if (tLERP >= tlimitLERP)
 			{
