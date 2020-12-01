@@ -462,6 +462,7 @@ int main() {
 	Texture2DData::sptr diffuseMapPinwheelyellow = Texture2DData::LoadFromFile("images/PinWheel/PinWheelYellow.png");
 	Texture2DData::sptr diffuseMapyellow = Texture2DData::LoadFromFile("images/Yellow.png");
 	Texture2DData::sptr diffuseMappink = Texture2DData::LoadFromFile("images/Pink.png");
+	Texture2DData::sptr diffuseMapwater = Texture2DData::LoadFromFile("images/waterBeamTex.png");
 	Texture2DData::sptr specularMap = Texture2DData::LoadFromFile("images/Stone_001_Specular.png");
 
 	// Create a texture from the data
@@ -624,9 +625,13 @@ int main() {
 		Texture2D::sptr diffuseyellow = Texture2D::Create();
 		diffuseyellow->LoadData(diffuseMapyellow);
 		
-		//yellow texture
+		//pink texture
 		Texture2D::sptr diffusepink = Texture2D::Create();
 		diffusepink->LoadData(diffuseMappink);
+		
+		//water texture
+		Texture2D::sptr diffusewater = Texture2D::Create();
+		diffusewater->LoadData(diffuseMapwater);
 	
 	// Creating an empty texture
 	Texture2DDescription desc = Texture2DDescription();
@@ -637,7 +642,7 @@ int main() {
 	texture2->Clear(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	// TODO: store some info about our materials for each object
-	Material materials[32];
+	Material materials[33];
 	//materials
 	
 		//player1
@@ -863,6 +868,13 @@ int main() {
 		materials[31].Specular = specular;
 		materials[31].Shininess = 32.0f;
 		materials[31].TextureMix = 1.0f;
+		
+		//pink
+		materials[32].Albedo = diffuseDunceballoon;
+		materials[32].Albedo2 = diffusewater;
+		materials[32].Specular = specular;
+		materials[32].Shininess = 32.0f;
+		materials[32].TextureMix = 1.0f;
 
 	//Camera
 	camera = Camera::Create();
@@ -1603,7 +1615,7 @@ int main() {
 		//player1 shooting
 		if (ammo) {
 			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS || shoot) {
-				transforms[25]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+				transforms[25]->MoveLocal(0.0f, 0.0f, -28.0f * dt);
 				shoot = true;
 				renderammo = false;
 			}
@@ -1617,11 +1629,11 @@ int main() {
 		
 		if (shoot) {
 			//bullet render
-			materials[29].Albedo->Bind(0);
-			materials[29].Albedo2->Bind(1);
-			materials[29].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[29].Shininess);
-			shader->SetUniform("u_TextureMix", materials[29].TextureMix);
+			materials[32].Albedo->Bind(0);
+			materials[32].Albedo2->Bind(1);
+			materials[32].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[32].Shininess);
+			shader->SetUniform("u_TextureMix", materials[32].TextureMix);
 			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[25]->LocalTransform());
 			shader->SetUniformMatrix("u_Model", transforms[25]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[25]->LocalTransform()));
@@ -1759,7 +1771,7 @@ int main() {
 		//player 2 shooting
 		if (ammo2) {
 			if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS || shoot2) {
-				transforms[26]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+				transforms[26]->MoveLocal(0.0f, 0.0f, -28.0f * dt);
 				shoot2 = true;
 				renderammo2 = false;
 			}
@@ -1774,11 +1786,11 @@ int main() {
 		//shooting p2
 		if (shoot2) {
 			//bullet render p2
-			materials[29].Albedo->Bind(0);
-			materials[29].Albedo2->Bind(1);
-			materials[29].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[29].Shininess);
-			shader->SetUniform("u_TextureMix", materials[29].TextureMix);
+			materials[32].Albedo->Bind(0);
+			materials[32].Albedo2->Bind(1);
+			materials[32].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[32].Shininess);
+			shader->SetUniform("u_TextureMix", materials[32].TextureMix);
 			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[26]->LocalTransform());
 			shader->SetUniformMatrix("u_Model", transforms[26]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[26]->LocalTransform()));
