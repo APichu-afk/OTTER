@@ -138,10 +138,10 @@ void ManipulateTransformWithInput(const Transform::sptr& transformPlayer, const 
 		transformPlayer->RotateLocal(0.0f, -0.5, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		transformPlayer->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+		transformPlayer->MoveLocal(0.0f, 0.0f, -18.0f * dt);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		transformPlayer->MoveLocal(0.0f, 0.0f, -18.0f * dt); 
+		transformPlayer->MoveLocal(0.0f, 0.0f, 18.0f * dt); 
 	}
 
 	//second player
@@ -152,10 +152,10 @@ void ManipulateTransformWithInput(const Transform::sptr& transformPlayer, const 
 		transformPlayer2->RotateLocal(0.0f, -0.5f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-		transformPlayer2->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+		transformPlayer2->MoveLocal(0.0f, 0.0f, -18.0f * dt);
 	}
 	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-		transformPlayer2->MoveLocal(0.0f, 0.0f, -18.0f * dt); 
+		transformPlayer2->MoveLocal(0.0f, 0.0f, 18.0f * dt); 
 	}
 }
 
@@ -239,8 +239,35 @@ int main() {
 	VertexArrayObject::sptr vaosmalltree = ObjLoader::LoadFromFile("models/TreeSmall.obj");//smalltree
 	VertexArrayObject::sptr vaoHitbox = ObjLoader::LoadFromFile("models/HitBox.obj");//Hitbox
 	VertexArrayObject::sptr vaowater = ObjLoader::LoadFromFile("models/WaterBeam.obj");//Hitbox
-	VertexArrayObject::sptr vaoraframe1 = ObjLoader::LoadFromFile("Animations/Duncet_frame_1_3.obj");//raanimation frame 1
-	VertexArrayObject::sptr vaoraframe2 = ObjLoader::LoadFromFile("Animations/Duncet_frame_2.obj");//raanimation frame 2
+
+	//Animation key frames
+	VertexArrayObject::sptr vaoDuncetframe1 = ObjLoader::LoadFromFile("Animations/Duncet_frame_1_3.obj");//duncet animation frame 1 and 3
+	VertexArrayObject::sptr vaoDuncetframe2 = ObjLoader::LoadFromFile("Animations/Duncet_frame_2.obj");//duncet animation frame 2
+	VertexArrayObject::sptr vaoDuncetframe4 = ObjLoader::LoadFromFile("Animations/Duncet_frame_4.obj");//duncet animation frame 4
+	VertexArrayObject::sptr vaoDuncetframe5 = ObjLoader::LoadFromFile("Animations/Duncet_frame_5.obj");//duncet animation frame 5
+	VertexArrayObject::sptr vaoDunceframe1 = ObjLoader::LoadFromFile("Animations/Dunce_frame_1_3.obj");//dunce animation frame 1 and 3
+	VertexArrayObject::sptr vaoDunceframe2 = ObjLoader::LoadFromFile("Animations/Dunce_frame_2.obj");//dunce animation frame 2
+	VertexArrayObject::sptr vaoDunceframe4 = ObjLoader::LoadFromFile("Animations/Dunce_frame_4.obj");//dunce animation frame 4
+	VertexArrayObject::sptr vaoDunceframe5 = ObjLoader::LoadFromFile("Animations/Dunce_frame_5.obj");//dunce animation frame 5
+	VertexArrayObject::sptr vaoPinwheelframe1 = ObjLoader::LoadFromFile("Animations/Pinwheel_1.obj");//pinwheel animation frame 1
+	VertexArrayObject::sptr vaoPinwheelframe2 = ObjLoader::LoadFromFile("Animations/Pinwheel_2.obj");//pinwheel animation frame 2
+	VertexArrayObject::sptr vaoPinwheelframe3 = ObjLoader::LoadFromFile("Animations/Pinwheel_3.obj");//pinwheel animation frame 3
+	VertexArrayObject::sptr vaoPinwheelframe4 = ObjLoader::LoadFromFile("Animations/Pinwheel_4.obj");//pinwheel animation frame 4
+	VertexArrayObject::sptr vaoPinwheelframe5 = ObjLoader::LoadFromFile("Animations/Pinwheel_5.obj");//pinwheel animation frame 5
+	VertexArrayObject::sptr vaoPinwheelframe6 = ObjLoader::LoadFromFile("Animations/Pinwheel_6.obj");//pinwheel animation frame 6
+	VertexArrayObject::sptr vaoPinwheelframe7 = ObjLoader::LoadFromFile("Animations/Pinwheel_7.obj");//pinwheel animation frame 7
+	VertexArrayObject::sptr vaoPinwheelframe8 = ObjLoader::LoadFromFile("Animations/Pinwheel_8.obj");//pinwheel animation frame 8
+	VertexArrayObject::sptr vaobottleframe1 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_1.obj");//bottle animation frame 1
+	VertexArrayObject::sptr vaobottleframe2 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_2.obj");//bottle animation frame 2
+	VertexArrayObject::sptr vaobottleframe3 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_3.obj");//bottle animation frame 3
+	VertexArrayObject::sptr vaobottleframe4 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_4.obj");//bottle animation frame 4
+	VertexArrayObject::sptr vaobottleframe5 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_5.obj");//bottle animation frame 5
+	VertexArrayObject::sptr vaobottleframe6 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_6.obj");//bottle animation frame 6
+	VertexArrayObject::sptr vaobottleframe7 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_7.obj");//bottle animation frame 7
+	VertexArrayObject::sptr vaobottleframe8 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_8.obj");//bottle animation frame 8
+	VertexArrayObject::sptr vaobottleframe9 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_9.obj");//bottle animation frame 9
+	VertexArrayObject::sptr vaobottleframe10 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_10.obj");//bottle animation frame 10
+	VertexArrayObject::sptr vaobottleframe11 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_11.obj");//bottle animation frame 11
 
 	// Load our shaders
 	Shader::sptr shader = Shader::Create();
@@ -299,7 +326,7 @@ int main() {
 	transforms[12]->SetLocalPosition(15.0f, -15.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//grass1
 	transforms[13]->SetLocalPosition(17.0f, -14.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//grass2
 	transforms[14]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//hedge
-	transforms[15]->SetLocalPosition(0.0f, -10.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//pinwheel
+	transforms[15]->SetLocalPosition(0.0f, 20.0f, 5.0f)->SetLocalRotation(90.0f, 180.0f, 90.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//pinwheel
 	transforms[16]->SetLocalPosition(-8.0f, 45.0f, 5.0f)->SetLocalRotation(-10.0f, 180.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//score
 	transforms[17]->SetLocalPosition(-29.0f, 5.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//slice
 	transforms[18]->SetLocalPosition(0.0f, 30.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bigtree Middle top
@@ -311,8 +338,8 @@ int main() {
 	transforms[24]->SetLocalPosition(-35.0f, 20.0f, 1.0f)->SetLocalRotation(0.0f, 180.0f, 45.0f)->SetLocalScale(2.0f, 2.0f, 2.0f);//BOTTLE 4 Top Left Field
 	transforms[25]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 135.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bullethitboxplayer1
 	transforms[26]->SetLocalPosition(30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 225.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bullethitboxplayer2
-	transforms[31]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test hitbox
-	transforms[32]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(10.0f, 10.0f, 10.0f);//test start
+	transforms[31]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test hitbox
+	transforms[32]->SetLocalPosition(0.0f, 0.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//test start
 	transforms[33]->SetLocalPosition(10.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test end
 	transforms[34]->SetLocalPosition(20.0f, 20.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull start
 	transforms[35]->SetLocalPosition(15.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull mid1
@@ -642,7 +669,7 @@ int main() {
 	texture2->Clear(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	// TODO: store some info about our materials for each object
-	Material materials[33];
+	Material materials[34];
 	//materials
 	
 		//player1
@@ -875,6 +902,13 @@ int main() {
 		materials[32].Specular = specular;
 		materials[32].Shininess = 32.0f;
 		materials[32].TextureMix = 1.0f;
+		
+		//Pinwheel
+		materials[33].Albedo = diffusePinwheel;
+		materials[33].Albedo2 = diffusewater;
+		materials[33].Specular = specular;
+		materials[33].Shininess = 32.0f;
+		materials[33].TextureMix = 0.0f;
 
 	//Camera
 	camera = Camera::Create();
@@ -921,7 +955,13 @@ int main() {
 	float time4 = 0.0f;
 
 	//animation
-	float ratime = 0.0f;
+	float Duncettime = 0.0f;
+	float Duncetime = 0.0f;
+	float Ammotime = 0.0f;
+	float Ammotime2 = 0.0f;
+	float Pinwheeltime = 0.0f;
+	float RoundAbouttime = 0.0f;
+	bool animatebottle = false;
 
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
@@ -931,39 +971,9 @@ int main() {
 		double thisFrame = glfwGetTime();
 		float dt = static_cast<float>(thisFrame - lastFrame);
 		//keeps track of time in our game
-		ratime += dt;
-
-		if (ratime <= 1)
-		{
-			materials[6].Albedo->Bind(0);
-			materials[6].Albedo2->Bind(1);
-			materials[6].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[6].Shininess);
-			shader->SetUniform("u_TextureMix", materials[6].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[32]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[32]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[32]->LocalTransform()));
-			vaoraframe1->Render();
-		}
-
-		if (ratime <= 2)
-		{
-			materials[6].Albedo->Bind(0);
-			materials[6].Albedo2->Bind(1);
-			materials[6].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[6].Shininess);
-			shader->SetUniform("u_TextureMix", materials[6].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[32]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[32]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[32]->LocalTransform()));
-			vaoraframe2->Render();
-		}
-
-		if (ratime >= 3)
-		{
-			ratime = 0.0f;
-		}
-
+		Duncettime += dt;
+		Duncetime += dt;
+		Pinwheeltime += dt;
 		//LERP
 		{
 			tLERP += dt;
@@ -1029,15 +1039,118 @@ int main() {
 		shader->SetUniform("s_Specular", 2);
 
 		// Render all VAOs in our scene
-		for (int ix = 0; ix < 20; ix++)
+		for (int ix = 2; ix < 20; ix++)
 		{
-			// TODO: Apply materials
-			materials[ix].Albedo->Bind(0);
-			materials[ix].Albedo2->Bind(1);
-			materials[ix].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[ix].Shininess);
-			shader->SetUniform("u_TextureMix", materials[ix].TextureMix);
-			RenderVAO(shader, vaos[ix], camera, transforms[ix]);
+			if (ix == 15) {
+
+			}
+			else {
+				// TODO: Apply materials
+				materials[ix].Albedo->Bind(0);
+				materials[ix].Albedo2->Bind(1);
+				materials[ix].Specular->Bind(2);
+				shader->SetUniform("u_Shininess", materials[ix].Shininess);
+				shader->SetUniform("u_TextureMix", materials[ix].TextureMix);
+				RenderVAO(shader, vaos[ix], camera, transforms[ix]);
+			}
+		}
+
+		//Player 1 animation
+		materials[0].Albedo->Bind(0);
+		materials[0].Albedo2->Bind(1);
+		materials[0].Specular->Bind(2);
+		shader->SetUniform("u_Shininess", materials[0].Shininess);
+		shader->SetUniform("u_TextureMix", materials[0].TextureMix);
+		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[0]->LocalTransform());
+		shader->SetUniformMatrix("u_Model", transforms[0]->LocalTransform());
+		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[0]->LocalTransform()));
+		if (Duncetime < 0.2f) {
+			vaoDunceframe1->Render();
+		}
+		if (Duncetime >= 0.2f && Duncetime < 0.4f) {
+			vaoDunceframe2->Render();
+		}
+		if (Duncetime >= 0.4f && Duncetime < 0.6f) {
+			vaoDunceframe1->Render();
+		}
+		if (Duncetime >= 0.6f && Duncetime < 0.8f) {
+			vaoDunceframe4->Render();
+		}
+		if (Duncetime >= 0.8f && Duncetime < 1.0f) {
+			vaoDunceframe5->Render();
+		}
+		if (Duncetime >= 1.0f)
+		{
+			Duncetime = 0.0f;
+		}
+		
+		//Player 2 animation
+		materials[1].Albedo->Bind(0);
+		materials[1].Albedo2->Bind(1);
+		materials[1].Specular->Bind(2);
+		shader->SetUniform("u_Shininess", materials[1].Shininess);
+		shader->SetUniform("u_TextureMix", materials[1].TextureMix);
+		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[1]->LocalTransform());
+		shader->SetUniformMatrix("u_Model", transforms[1]->LocalTransform());
+		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[1]->LocalTransform()));
+		if (Duncettime < 0.2f) {
+			vaoDuncetframe1->Render();
+		}
+		if (Duncettime >= 0.2f && Duncettime < 0.4f) {
+			vaoDuncetframe2->Render();
+		}
+		if (Duncettime >= 0.4f && Duncettime < 0.6f) {
+			vaoDuncetframe1->Render();
+		}
+		if (Duncettime >= 0.6f && Duncettime < 0.8f) {
+			vaoDuncetframe4->Render();
+		}
+		if (Duncettime >= 0.8f && Duncettime < 1.0f) {
+			vaoDuncetframe5->Render();
+		}
+		if (Duncettime >= 1.0f)
+		{
+			Duncettime = 0.0f;
+		}
+		
+		
+		
+		//Pinwheel animation
+		materials[15].Albedo->Bind(0);
+		materials[15].Albedo2->Bind(1);
+		materials[15].Specular->Bind(2);
+		shader->SetUniform("u_Shininess", materials[15].Shininess);
+		shader->SetUniform("u_TextureMix", materials[15].TextureMix);
+		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[15]->LocalTransform());
+		shader->SetUniformMatrix("u_Model", transforms[15]->LocalTransform());
+		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[15]->LocalTransform()));
+		if (Pinwheeltime < 0.2f) {
+			vaoPinwheelframe1->Render();
+		}
+		if (Pinwheeltime >= 0.2f && Pinwheeltime < 0.4f) {
+			vaoPinwheelframe2->Render();
+		}
+		if (Pinwheeltime >= 0.4f && Pinwheeltime < 0.6f) {
+			vaoPinwheelframe1->Render();
+		}
+		if (Pinwheeltime >= 0.6f && Pinwheeltime < 0.8f) {
+			vaoPinwheelframe4->Render();
+		}
+		if (Pinwheeltime >= 0.8f && Pinwheeltime < 1.0f) {
+			vaoPinwheelframe5->Render();
+		}
+		if (Pinwheeltime >= 1.0f && Pinwheeltime < 1.2f) {
+			vaoPinwheelframe6->Render();
+		}
+		if (Pinwheeltime >= 1.2f && Pinwheeltime < 1.4f) {
+			vaoPinwheelframe7->Render();
+		}
+		if (Pinwheeltime >= 1.4f && Pinwheeltime < 1.6f) {
+			vaoPinwheelframe8->Render();
+		}
+		if (Pinwheeltime >= 1.6f)
+		{
+			Pinwheeltime = 0.0f;
 		}
 
 		//rerenders bottles
@@ -1279,7 +1392,6 @@ int main() {
 		}
 		*/
 		//rendering stuff
-		{
 			//bottle word left
 			materials[30].Albedo->Bind(0);
 			materials[30].Albedo2->Bind(1);
@@ -1598,7 +1710,6 @@ int main() {
 			shader->SetUniformMatrix("u_Model", transforms[31]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[31]->LocalTransform()));
 			//vaoHitbox->Render();	
-		}
 		
 		//hitboxes viusals
 		/*for (int ix = 73; ix < 108; ix++) {
@@ -1615,7 +1726,7 @@ int main() {
 		//player1 shooting
 		if (ammo) {
 			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS || shoot) {
-				transforms[25]->MoveLocal(0.0f, 0.0f, -28.0f * dt);
+				transforms[25]->MoveLocal(0.0f, 0.0f, 28.0f * dt);
 				shoot = true;
 				renderammo = false;
 			}
@@ -1646,6 +1757,7 @@ int main() {
 					transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
 					shoot = false;
 					ammo = false;
+					animatebottle = true;
 				}
 			}
 			//bullet collision with stuff
@@ -1656,7 +1768,59 @@ int main() {
 					transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
 					shoot = false;
 					ammo = false;
+					animatebottle = true;
 				}
+			}
+		}
+
+		if (animatebottle)
+		{
+			//bottle animation
+			materials[21].Albedo->Bind(0);
+			materials[21].Albedo2->Bind(1);
+			materials[21].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[21].Shininess);
+			shader->SetUniform("u_TextureMix", materials[21].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[40]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[40]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[40]->LocalTransform()));
+			if (Ammotime < 0.2f) {
+				vaobottleframe1->Render();
+			}
+			if (Ammotime >= 0.2f && Ammotime < 0.4f) {
+				vaobottleframe2->Render();
+			}
+			if (Ammotime >= 0.4f && Ammotime < 0.6f) {
+				vaobottleframe1->Render();
+			}
+			if (Ammotime >= 0.6f && Ammotime < 0.8f) {
+				vaobottleframe4->Render();
+			}
+			if (Ammotime >= 0.8f && Ammotime < 1.0f) {
+				vaobottleframe5->Render();
+			}
+			if (Ammotime >= 1.0f && Ammotime < 1.2f) {
+				vaobottleframe6->Render();
+			}
+			if (Ammotime >= 1.2f && Ammotime < 1.4f) {
+				vaobottleframe7->Render();
+			}
+			if (Ammotime >= 1.4f && Ammotime < 1.6f) {
+				vaobottleframe8->Render();
+			}
+			if (Ammotime >= 1.6f && Ammotime < 1.8f) {
+				vaobottleframe9->Render();
+			}
+			if (Ammotime >= 1.8f && Ammotime < 2.0f) {
+				vaobottleframe10->Render();
+			}
+			if (Ammotime >= 2.2f && Ammotime < 2.4f) {
+				vaobottleframe11->Render();
+			}
+			if (Ammotime >= 2.4f)
+			{
+				Ammotime = 0.0f;
+				animatebottle = false;
 			}
 		}
 
@@ -1700,10 +1864,10 @@ int main() {
 			{
 				//std::cout << "yes" << std::endl;//checking if hit boxes are working
 				if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-					transforms[0]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+					transforms[0]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
 				}
 				if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-					transforms[0]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+					transforms[0]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
 				}
 			}
 		}
@@ -1713,10 +1877,10 @@ int main() {
 			if (Collision(transforms[0], transforms[i]))
 			{
 				if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-					transforms[0]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+					transforms[0]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
 				}
 				if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-					transforms[0]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+					transforms[0]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
 				}
 			}
 		}
@@ -1751,19 +1915,19 @@ int main() {
 
 		if (Collision(transforms[0], transforms[1])) {
 			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
-			}
-			
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 				transforms[0]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
 			}
 			
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+				transforms[0]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+			}
+			
 			if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+				transforms[1]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
 			}
 			
 			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+				transforms[1]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
 			}
 		}
 
