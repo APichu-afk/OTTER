@@ -284,9 +284,9 @@ int main() {
 	float     lightSpecularPow = 1.0f;
 	glm::vec3 ambientCol = glm::vec3(1.0f);
 	float     ambientPow = 0.1f;
-	float     shininess = 16.0f;//4
+	float     shininess = 16.0f;
 	float     lightLinearFalloff = 0.09f;
-	float     lightQuadraticFalloff = 0.032f;//0.032
+	float     lightQuadraticFalloff = 0.032f;
 
 	// These are our application / scene level uniforms that don't necessarily update
 	// every frame
@@ -2022,10 +2022,10 @@ int main() {
 			if (Collision(transforms[1], transforms[i]))
 			{
 				if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-					transforms[1]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+					transforms[1]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
 				}
 				if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-					transforms[1]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+					transforms[1]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
 				}
 			}
 		}
@@ -2035,10 +2035,10 @@ int main() {
 			if (Collision(transforms[1], transforms[i]))
 			{
 				if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-					transforms[1]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+					transforms[1]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
 				}
 				if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-					transforms[1]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+					transforms[1]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
 				}
 			}
 		}

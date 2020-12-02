@@ -17,11 +17,16 @@ uniform vec3  u_LightCol;
 uniform float u_AmbientLightStrength;
 uniform float u_SpecularLightStrength;
 uniform float u_Shininess;
+
 // NEW in week 7, see https://learnopengl.com/Lighting/Light-casters for a good reference on how this all works, or
 // https://developer.valvesoftware.com/wiki/Constant-Linear-Quadratic_Falloff
 uniform float u_LightAttenuationConstant;
 uniform float u_LightAttenuationLinear;
 uniform float u_LightAttenuationQuadratic;
+//light 2
+uniform float u_LightAttenuationConstant2;
+uniform float u_LightAttenuationLinear2;
+uniform float u_LightAttenuationQuadratic2;
 
 uniform float u_TextureMix;
 
