@@ -220,7 +220,7 @@ int main() {
 	VertexArrayObject::sptr vaomonkeybar = ObjLoader::LoadFromFile("models/MonkeyBar.obj");//MonkeyBars
 	VertexArrayObject::sptr vaosandbox = ObjLoader::LoadFromFile("models/SandBox.obj");//SandBox
 	VertexArrayObject::sptr vaoslide = ObjLoader::LoadFromFile("models/Slide.obj");//Slide
-	VertexArrayObject::sptr vaoround = ObjLoader::LoadFromFile("models/RA.obj");//roundabout
+	VertexArrayObject::sptr vaoround = ObjLoader::LoadFromFile("models/RoundAbout.obj");//roundabout
 	VertexArrayObject::sptr vaobottle = ObjLoader::LoadFromFile("models/waterBottle.obj");//Waterbottle
 	VertexArrayObject::sptr vaoammo = ObjLoader::LoadFromFile("models/Bottle.obj");//ammobottle
 	VertexArrayObject::sptr vaoswing = ObjLoader::LoadFromFile("models/Swing.obj");//swing
@@ -320,7 +320,7 @@ int main() {
 	transforms[3]->SetLocalPosition(0.0f, 0.0f, -3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Sandbox
 	transforms[4]->SetLocalPosition(-8.0f, 8.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//slide
 	transforms[5]->SetLocalPosition(10.0f, -7.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//swing
-	transforms[6]->SetLocalPosition(4.0f, 5.0f, -3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//roundabout
+	transforms[6]->SetLocalPosition(-5.0f, -7.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//roundabout
 	transforms[7]->SetLocalPosition(6.0f, 10.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//monkeybar
 	transforms[8]->SetLocalPosition(-29.0f, 10.0f, 3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//balloon blue
 	transforms[9]->SetLocalPosition(-30.0f, 5.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//table top left
@@ -965,6 +965,7 @@ int main() {
 	float Pinwheeltime = 0.0f;
 	float RoundAbouttime = 0.0f;
 	bool animatebottle = false;
+	bool animatebottle2 = false;
 
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
@@ -977,8 +978,10 @@ int main() {
 		Duncettime += dt;
 		Duncetime += dt;
 		Pinwheeltime += dt;
+		Ammotime += dt;
+		Ammotime2 += dt;
 		//LERP
-		{
+		
 			tLERP += dt;
 
 			//makes LERP switch
@@ -996,10 +999,10 @@ int main() {
 			{
 				transforms[8]->SetLocalPosition(LERP(transforms[33], transforms[32], tLERP));
 			}*/
-		}
+		
 
 		//Catmull-rom
-		{
+		
 			tCatmull += dt;
 
 			/*while (tCatmull > segmenttime)
@@ -1024,7 +1027,7 @@ int main() {
 			}*/
 
 			////////////////////////////////////////////////////////////////////////////////////////
-		}
+		
 		ManipulateTransformWithInput(transforms[0], transforms[1], dt);
 
 		//colour of the background
@@ -1116,7 +1119,7 @@ int main() {
 			Duncettime = 0.0f;
 		}
 		
-		
+		transforms[6]->RotateLocal(0.0f, 0.1f, 0.0f);
 		
 		//Pinwheel animation
 		materials[15].Albedo->Bind(0);
@@ -1731,7 +1734,8 @@ int main() {
 			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS || shoot) {
 				transforms[25]->MoveLocal(0.0f, 0.0f, 28.0f * dt);
 				shoot = true;
-				renderammo = false;
+				renderammo = false;					
+				animatebottle = true;
 			}
 			else
 			{
@@ -1760,7 +1764,6 @@ int main() {
 					transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
 					shoot = false;
 					ammo = false;
-					animatebottle = true;
 				}
 			}
 			//bullet collision with stuff
@@ -1771,22 +1774,22 @@ int main() {
 					transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
 					shoot = false;
 					ammo = false;
-					animatebottle = true;
 				}
 			}
 		}
 
+		//bottle animation
+		materials[21].Albedo->Bind(0);
+		materials[21].Albedo2->Bind(1);
+		materials[21].Specular->Bind(2);
+		shader->SetUniform("u_Shininess", materials[21].Shininess);
+		shader->SetUniform("u_TextureMix", materials[21].TextureMix);
+		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[40]->LocalTransform());
+		shader->SetUniformMatrix("u_Model", transforms[40]->LocalTransform());
+		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[40]->LocalTransform()));
+		
 		if (animatebottle)
 		{
-			//bottle animation
-			materials[21].Albedo->Bind(0);
-			materials[21].Albedo2->Bind(1);
-			materials[21].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[21].Shininess);
-			shader->SetUniform("u_TextureMix", materials[21].TextureMix);
-			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[40]->LocalTransform());
-			shader->SetUniformMatrix("u_Model", transforms[40]->LocalTransform());
-			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[40]->LocalTransform()));
 			if (Ammotime < 0.2f) {
 				vaobottleframe1->Render();
 			}
@@ -1794,7 +1797,7 @@ int main() {
 				vaobottleframe2->Render();
 			}
 			if (Ammotime >= 0.4f && Ammotime < 0.6f) {
-				vaobottleframe1->Render();
+				vaobottleframe3->Render();
 			}
 			if (Ammotime >= 0.6f && Ammotime < 0.8f) {
 				vaobottleframe4->Render();
@@ -1941,6 +1944,7 @@ int main() {
 				transforms[26]->MoveLocal(0.0f, 0.0f, 28.0f * dt);
 				shoot2 = true;
 				renderammo2 = false;
+				animatebottle2 = true;
 			}
 			else
 			{
@@ -1980,6 +1984,57 @@ int main() {
 					shoot2 = false;
 					ammo2 = false;
 				}
+			}
+		}
+
+		//bottle animation
+		materials[21].Albedo->Bind(0);
+		materials[21].Albedo2->Bind(1);
+		materials[21].Specular->Bind(2);
+		shader->SetUniform("u_Shininess", materials[21].Shininess);
+		shader->SetUniform("u_TextureMix", materials[21].TextureMix);
+		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[41]->LocalTransform());
+		shader->SetUniformMatrix("u_Model", transforms[41]->LocalTransform());
+		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[41]->LocalTransform()));
+		if (animatebottle2)
+		{
+			if (Ammotime2 < 0.2f) {
+				vaobottleframe1->Render();
+			}
+			if (Ammotime2 >= 0.2f && Ammotime2 < 0.4f) {
+				vaobottleframe2->Render();
+			}
+			if (Ammotime2 >= 0.4f && Ammotime2 < 0.6f) {
+				vaobottleframe3->Render();
+			}
+			if (Ammotime2 >= 0.6f && Ammotime2 < 0.8f) {
+				vaobottleframe4->Render();
+			}
+			if (Ammotime2 >= 0.8f && Ammotime2 < 1.0f) {
+				vaobottleframe5->Render();
+			}
+			if (Ammotime2 >= 1.0f && Ammotime2 < 1.2f) {
+				vaobottleframe6->Render();
+			}
+			if (Ammotime2 >= 1.2f && Ammotime2 < 1.4f) {
+				vaobottleframe7->Render();
+			}
+			if (Ammotime2 >= 1.4f && Ammotime2 < 1.6f) {
+				vaobottleframe8->Render();
+			}
+			if (Ammotime2 >= 1.6f && Ammotime2 < 1.8f) {
+				vaobottleframe9->Render();
+			}
+			if (Ammotime2 >= 1.8f && Ammotime2 < 2.0f) {
+				vaobottleframe10->Render();
+			}
+			if (Ammotime2 >= 2.2f && Ammotime2 < 2.4f) {
+				vaobottleframe11->Render();
+			}
+			if (Ammotime2 >= 2.4f)
+			{
+				Ammotime2 = 0.0f;
+				animatebottle2 = false;
 			}
 		}
 
