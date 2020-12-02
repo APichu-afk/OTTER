@@ -3,8 +3,6 @@ James Pham - 100
 Trey Cowell - 100
 Fredrick Lai - 100
 Anita Lim - 100
-
-
 */
 #include <Logging.h>
 #include <iostream>
@@ -47,6 +45,11 @@ Anita Lim - 100
 	@param length    The length of the message
 	@param message   The human readable message from OpenGL
 	@param userParam The pointer we set with glDebugMessageCallback (should be the game pointer)
+*/
+/*
+Controls
+Player 1 Yellow Left: WASD(Movement), E (Shoot).
+Player 2 Pink Right: IJKL(Movement), O (Shoot).
 */
 void GlDebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
 	std::string sourceTxt;
@@ -132,10 +135,10 @@ void positionVAO(
 void ManipulateTransformWithInput(const Transform::sptr& transformPlayer, const Transform::sptr& transformPlayer2, float dt) {
 	//first player
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		transformPlayer->RotateLocal(0.0f, 0.5f, 0.0f);
+		transformPlayer->RotateLocal(0.0f, 0.75f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		transformPlayer->RotateLocal(0.0f, -0.5, 0.0f);
+		transformPlayer->RotateLocal(0.0f, -0.75, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		transformPlayer->MoveLocal(0.0f, 0.0f, -18.0f * dt);
@@ -146,10 +149,10 @@ void ManipulateTransformWithInput(const Transform::sptr& transformPlayer, const 
 
 	//second player
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-		transformPlayer2->RotateLocal(0.0f, 0.5f, 0.0f);
+		transformPlayer2->RotateLocal(0.0f, 0.75f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-		transformPlayer2->RotateLocal(0.0f, -0.5f, 0.0f);
+		transformPlayer2->RotateLocal(0.0f, -0.75f, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
 		transformPlayer2->MoveLocal(0.0f, 0.0f, -18.0f * dt);
@@ -281,9 +284,9 @@ int main() {
 	float     lightSpecularPow = 1.0f;
 	glm::vec3 ambientCol = glm::vec3(1.0f);
 	float     ambientPow = 0.1f;
-	float     shininess = 4.0f;
+	float     shininess = 16.0f;//4
 	float     lightLinearFalloff = 0.09f;
-	float     lightQuadraticFalloff = 0.032f;
+	float     lightQuadraticFalloff = 0.032f;//0.032
 
 	// These are our application / scene level uniforms that don't necessarily update
 	// every frame
@@ -1934,8 +1937,8 @@ int main() {
 		/////////////////////player 2 stuff
 		//player 2 shooting
 		if (ammo2) {
-			if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS || shoot2) {
-				transforms[26]->MoveLocal(0.0f, 0.0f, -28.0f * dt);
+			if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS || shoot2) {
+				transforms[26]->MoveLocal(0.0f, 0.0f, 28.0f * dt);
 				shoot2 = true;
 				renderammo2 = false;
 			}
