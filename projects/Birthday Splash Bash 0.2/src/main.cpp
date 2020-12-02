@@ -1,8 +1,17 @@
-/*Alexander Chow - 100745472
-James Pham - 100
-Trey Cowell - 100
-Fredrick Lai - 100
-Anita Lim - 100
+/*Alexander Chow - 100749034
+James Pham - 100741773
+Trey Cowell - 100745472
+Frederic Lai - 100748388
+Anita Lim - 100754729
+
+Birthday Splash Bash (DEMO) is a 1v1 duel between 2 players.
+First player to hit their opponent 3 times is the winner!
+After you fire you water gun, you have to search and walk over a water bottle to reload.
+
+Player 1 Yellow Left: W (Forward), A (Left), S (Back), D (Right), E (Shoot).
+Player 2 Pink Right: I (Forward), J (Left), K (Back) L (Right), O (Shoot).
+
+We have been using Parsec, a screen sharing program, to play online "locally" with each other.
 */
 #include <Logging.h>
 #include <iostream>
@@ -46,11 +55,7 @@ Anita Lim - 100
 	@param message   The human readable message from OpenGL
 	@param userParam The pointer we set with glDebugMessageCallback (should be the game pointer)
 */
-/*
-Controls
-Player 1 Yellow Left: WASD(Movement), E (Shoot).
-Player 2 Pink Right: IJKL(Movement), O (Shoot).
-*/
+
 void GlDebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
 	std::string sourceTxt;
 	switch (source) {
@@ -179,7 +184,6 @@ glm::vec3 LERP(const Transform::sptr& start, const Transform::sptr& end, float t
 	return start->GetLocalPosition() * (1 - t) + end->GetLocalPosition() * t;
 }
 
-//hopefully this will work
 glm::vec3 Catmull(const Transform::sptr& p0, const Transform::sptr& p1, const Transform::sptr& p2, const Transform::sptr& p3, float t)
 {
 	return 0.5f *(2.0f * p1->GetLocalPosition() + t * (-p0->GetLocalPosition() + p2->GetLocalPosition())
@@ -242,7 +246,7 @@ int main() {
 	VertexArrayObject::sptr vaosmalltree = ObjLoader::LoadFromFile("models/TreeSmall.obj");//smalltree
 	VertexArrayObject::sptr vaoHitbox = ObjLoader::LoadFromFile("models/HitBox.obj");//Hitbox
 	VertexArrayObject::sptr vaowater = ObjLoader::LoadFromFile("models/WaterBeam.obj");//Hitbox
-
+	
 	//Animation key frames
 	VertexArrayObject::sptr vaoDuncetframe1 = ObjLoader::LoadFromFile("Animations/Duncet_frame_1_3.obj");//duncet animation frame 1 and 3
 	VertexArrayObject::sptr vaoDuncetframe2 = ObjLoader::LoadFromFile("Animations/Duncet_frame_2.obj");//duncet animation frame 2
@@ -252,14 +256,14 @@ int main() {
 	VertexArrayObject::sptr vaoDunceframe2 = ObjLoader::LoadFromFile("Animations/Dunce_frame_2.obj");//dunce animation frame 2
 	VertexArrayObject::sptr vaoDunceframe4 = ObjLoader::LoadFromFile("Animations/Dunce_frame_4.obj");//dunce animation frame 4
 	VertexArrayObject::sptr vaoDunceframe5 = ObjLoader::LoadFromFile("Animations/Dunce_frame_5.obj");//dunce animation frame 5
-	VertexArrayObject::sptr vaoPinwheelframe1 = ObjLoader::LoadFromFile("Animations/Pinwheel_1.obj");//pinwheel animation frame 1
-	VertexArrayObject::sptr vaoPinwheelframe2 = ObjLoader::LoadFromFile("Animations/Pinwheel_2.obj");//pinwheel animation frame 2
-	VertexArrayObject::sptr vaoPinwheelframe3 = ObjLoader::LoadFromFile("Animations/Pinwheel_3.obj");//pinwheel animation frame 3
-	VertexArrayObject::sptr vaoPinwheelframe4 = ObjLoader::LoadFromFile("Animations/Pinwheel_4.obj");//pinwheel animation frame 4
-	VertexArrayObject::sptr vaoPinwheelframe5 = ObjLoader::LoadFromFile("Animations/Pinwheel_5.obj");//pinwheel animation frame 5
-	VertexArrayObject::sptr vaoPinwheelframe6 = ObjLoader::LoadFromFile("Animations/Pinwheel_6.obj");//pinwheel animation frame 6
-	VertexArrayObject::sptr vaoPinwheelframe7 = ObjLoader::LoadFromFile("Animations/Pinwheel_7.obj");//pinwheel animation frame 7
-	VertexArrayObject::sptr vaoPinwheelframe8 = ObjLoader::LoadFromFile("Animations/Pinwheel_8.obj");//pinwheel animation frame 8
+	VertexArrayObject::sptr vaoPinwheelframe1 = ObjLoader::LoadFromFile("Animations/Pinwheel_frame_1.obj");//pinwheel animation frame 1
+	VertexArrayObject::sptr vaoPinwheelframe2 = ObjLoader::LoadFromFile("Animations/Pinwheel_frame_2.obj");//pinwheel animation frame 2
+	VertexArrayObject::sptr vaoPinwheelframe3 = ObjLoader::LoadFromFile("Animations/Pinwheel_frame_3.obj");//pinwheel animation frame 3
+	VertexArrayObject::sptr vaoPinwheelframe4 = ObjLoader::LoadFromFile("Animations/Pinwheel_frame_4.obj");//pinwheel animation frame 4
+	VertexArrayObject::sptr vaoPinwheelframe5 = ObjLoader::LoadFromFile("Animations/Pinwheel_frame_5.obj");//pinwheel animation frame 5
+	VertexArrayObject::sptr vaoPinwheelframe6 = ObjLoader::LoadFromFile("Animations/Pinwheel_frame_6.obj");//pinwheel animation frame 6
+	VertexArrayObject::sptr vaoPinwheelframe7 = ObjLoader::LoadFromFile("Animations/Pinwheel_frame_7.obj");//pinwheel animation frame 7
+	VertexArrayObject::sptr vaoPinwheelframe8 = ObjLoader::LoadFromFile("Animations/Pinwheel_frame_8.obj");//pinwheel animation frame 8
 	VertexArrayObject::sptr vaobottleframe1 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_1.obj");//bottle animation frame 1
 	VertexArrayObject::sptr vaobottleframe2 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_2.obj");//bottle animation frame 2
 	VertexArrayObject::sptr vaobottleframe3 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_3.obj");//bottle animation frame 3
@@ -288,7 +292,7 @@ int main() {
 	float     lightLinearFalloff = 0.09f;
 	float     lightQuadraticFalloff = 0.032f;
 
-	// These are our application / scene level uniforms that don't necessarily update
+	// These are our applications / scene level uniforms that don't necessarily update
 	// every frame
 	shader->SetUniform("u_LightPos", lightPos);
 	shader->SetUniform("u_LightCol", lightCol);
@@ -671,9 +675,8 @@ int main() {
 	Texture2D::sptr texture2 = Texture2D::Create(desc);
 	texture2->Clear(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	// TODO: store some info about our materials for each object
-	Material materials[34];
 	//materials
+	Material materials[34];
 	
 		//player1
 		materials[0].Albedo = diffuseDunce;
@@ -1051,7 +1054,6 @@ int main() {
 
 			}
 			else {
-				// TODO: Apply materials
 				materials[ix].Albedo->Bind(0);
 				materials[ix].Albedo2->Bind(1);
 				materials[ix].Specular->Bind(2);
@@ -1330,7 +1332,7 @@ int main() {
 			vaoballoonicon->Render();
 		}
 
-		//ill put these into a for loop later doesnt work well fix later
+		//test for loop
 		/*for (int ix = 38; ix < 68; ix++) {
 			if (ix < 40) {
 				materials[16].Albedo->Bind(0);
@@ -1397,7 +1399,7 @@ int main() {
 			}
 		}
 		*/
-		//rendering stuff
+		//rendering
 			//bottle word left
 			materials[30].Albedo->Bind(0);
 			materials[30].Albedo2->Bind(1);
@@ -1719,7 +1721,6 @@ int main() {
 		
 		//hitboxes viusals
 		/*for (int ix = 73; ix < 108; ix++) {
-			// TODO: Apply materials
 			materials[29].Albedo->Bind(0);
 			materials[29].Albedo2->Bind(1);
 			materials[29].Specular->Bind(2);
