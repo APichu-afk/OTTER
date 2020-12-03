@@ -143,7 +143,11 @@ void ManipulateTransformWithInput(const Transform::sptr& transformPlayer, const 
 		transformPlayer->RotateLocal(0.0f, 225.0f * dt, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+<<<<<<< HEAD
 		transformPlayer->RotateLocal(0.0f, -225.0 *dt, 0.0f);
+=======
+		transformPlayer->RotateLocal(0.0f, -225.0f * dt, 0.0f);
+>>>>>>> master
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		transformPlayer->MoveLocal(0.0f, 0.0f, -18.0f * dt);
@@ -154,10 +158,17 @@ void ManipulateTransformWithInput(const Transform::sptr& transformPlayer, const 
 
 	//second player
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
+<<<<<<< HEAD
 		transformPlayer2->RotateLocal(0.0f, 225.0f*dt, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
 		transformPlayer2->RotateLocal(0.0f, -225.0f*dt, 0.0f);
+=======
+		transformPlayer2->RotateLocal(0.0f, 225.0f * dt, 0.0f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+		transformPlayer2->RotateLocal(0.0f, -225.0f * dt, 0.0f);
+>>>>>>> master
 	}
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
 		transformPlayer2->MoveLocal(0.0f, 0.0f, -18.0f * dt);
@@ -346,12 +357,12 @@ int main() {
 	transforms[25]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 135.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bullethitboxplayer1
 	transforms[26]->SetLocalPosition(30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 225.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bullethitboxplayer2
 	transforms[31]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test hitbox
-	transforms[32]->SetLocalPosition(0.0f, 0.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//test start
-	transforms[33]->SetLocalPosition(10.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test end
-	transforms[34]->SetLocalPosition(20.0f, 20.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull start
-	transforms[35]->SetLocalPosition(15.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull mid1
-	transforms[36]->SetLocalPosition(-5.0f, -10.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull mid2
-	transforms[37]->SetLocalPosition(-5.0f, 0.0f, 0.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull end
+	transforms[32]->SetLocalPosition(-30.0f, 32.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//test start
+	transforms[33]->SetLocalPosition(-23.0f, 32.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test end
+	transforms[34]->SetLocalPosition(55.0f, 3.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull start
+	transforms[35]->SetLocalPosition(42.0f, 5.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull mid1
+	transforms[36]->SetLocalPosition(32.0f, -5.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull mid2
+	transforms[37]->SetLocalPosition(35.0f, -10.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//test catmull end
 	transforms[38]->SetLocalPosition(-37.0f, -39.0f, 5.0f)->SetLocalRotation(-10.0f, 180.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//bottle word left
 	transforms[39]->SetLocalPosition(10.0f, -39.0f, 5.0f)->SetLocalRotation(-10.0f, 180.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//bottle word right
 	transforms[40]->SetLocalPosition(-13.0f, -39.0f, 5.0f)->SetLocalRotation(-10.0f, 180.0f, 0.0f)->SetLocalScale(6.0f, 6.0f, 6.0f);//ammo left
@@ -976,7 +987,7 @@ int main() {
 
 		// Calculate the time since our last frame (dt)
 		double thisFrame = glfwGetTime();
-		float dt = static_cast<float>(thisFrame - lastFrame);
+		double dt = static_cast<float>(thisFrame - lastFrame);
 		//keeps track of time in our game
 		Duncettime += dt;
 		Duncetime += dt;
@@ -985,7 +996,7 @@ int main() {
 		Ammotime2 += dt;
 		//LERP
 		
-			tLERP += dt;
+			tLERP += dt * 0.5f;
 
 			//makes LERP switch
 			if (tLERP >= tlimitLERP)
@@ -995,39 +1006,39 @@ int main() {
 			}
 
 			//checks if the lerp should go backwards or forwards
-			/*if (forward) {
+			if (forward) {
 				transforms[8]->SetLocalPosition(LERP(transforms[32], transforms[33], tLERP));
 			}
 			else
 			{
 				transforms[8]->SetLocalPosition(LERP(transforms[33], transforms[32], tLERP));
-			}*/
+			}
 		
 
 		//Catmull-rom
 		
-			tCatmull += dt;
+			tCatmull += dt * 0.25f;
 
-			/*while (tCatmull > segmenttime)
-			{
-				tCatmull -= segmenttime;
-			}
+			//while (tCatmull > segmenttime)
+			//{
+				//tCatmull -= segmenttime;
+			//}
 
-			float t = tCatmull / segmenttime;
-			*/
+			//float t = tCatmull / segmenttime;
+			
 			if (tCatmull >= segmenttime)
 			{
 				tCatmull = 0.0f;
 				catforward = !catforward;
 			}
 
-			/*if (catforward) {
-				transforms[31]->SetLocalPosition(Catmull(transforms[34], transforms[35], transforms[36], transforms[37], tCatmull));
+			if (catforward) {
+				transforms[59]->SetLocalPosition(Catmull(transforms[34], transforms[35], transforms[36], transforms[37], tCatmull));
 			}
 			else
 			{
-				transforms[31]->SetLocalPosition(Catmull(transforms[37], transforms[36], transforms[35], transforms[34], tCatmull));
-			}*/
+				transforms[59]->SetLocalPosition(Catmull(transforms[37], transforms[36], transforms[35], transforms[34], tCatmull));
+			}
 
 			////////////////////////////////////////////////////////////////////////////////////////
 		
