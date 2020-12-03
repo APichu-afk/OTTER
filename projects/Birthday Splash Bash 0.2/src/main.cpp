@@ -140,10 +140,10 @@ void positionVAO(
 void ManipulateTransformWithInput(const Transform::sptr& transformPlayer, const Transform::sptr& transformPlayer2, float dt) {
 	//first player
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		transformPlayer->RotateLocal(0.0f, 0.75f, 0.0f);
+		transformPlayer->RotateLocal(0.0f, 225.0f * dt, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		transformPlayer->RotateLocal(0.0f, -0.75, 0.0f);
+		transformPlayer->RotateLocal(0.0f, -225.0 *dt, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		transformPlayer->MoveLocal(0.0f, 0.0f, -18.0f * dt);
@@ -154,10 +154,10 @@ void ManipulateTransformWithInput(const Transform::sptr& transformPlayer, const 
 
 	//second player
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-		transformPlayer2->RotateLocal(0.0f, 0.75f, 0.0f);
+		transformPlayer2->RotateLocal(0.0f, 225.0f*dt, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-		transformPlayer2->RotateLocal(0.0f, -0.75f, 0.0f);
+		transformPlayer2->RotateLocal(0.0f, -225.0f*dt, 0.0f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
 		transformPlayer2->MoveLocal(0.0f, 0.0f, -18.0f * dt);
@@ -1121,7 +1121,7 @@ int main() {
 			Duncettime = 0.0f;
 		}
 		
-		transforms[6]->RotateLocal(0.0f, 0.1f, 0.0f);
+		transforms[6]->RotateLocal(0.0f, 100.0f * dt, 0.0f);
 		
 		//Pinwheel animation
 		materials[15].Albedo->Bind(0);
