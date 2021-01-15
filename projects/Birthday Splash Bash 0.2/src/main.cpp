@@ -220,7 +220,7 @@ int main() {
 
 	//Vaos
 	VertexArrayObject::sptr vaoplayer = ObjLoader::LoadFromFile("models/Dunce.obj");//player 1
-	VertexArrayObject::sptr vaobackground = ObjLoader::LoadFromFile("models/Ground.obj");//Ground
+	VertexArrayObject::sptr vaobackground = ObjLoader::LoadFromFile("models/Ground2.obj");//Ground
 	VertexArrayObject::sptr vaomonkeybar = ObjLoader::LoadFromFile("models/MonkeyBar.obj");//MonkeyBars
 	VertexArrayObject::sptr vaosandbox = ObjLoader::LoadFromFile("models/SandBox.obj");//SandBox
 	VertexArrayObject::sptr vaoslide = ObjLoader::LoadFromFile("models/Slide.obj");//Slide
@@ -235,7 +235,7 @@ int main() {
 	VertexArrayObject::sptr vaobench = ObjLoader::LoadFromFile("models/Bench.obj");//bench
 	VertexArrayObject::sptr vaoduncetwin = ObjLoader::LoadFromFile("models/DuncetWin.obj");//duncetwin
 	VertexArrayObject::sptr vaoduncewin = ObjLoader::LoadFromFile("models/DunceWin.obj");//duncewin
-	VertexArrayObject::sptr vaoflower = ObjLoader::LoadFromFile("models/Flower1.obj");//flower
+	VertexArrayObject::sptr vaoflower = ObjLoader::LoadFromFile("models/Flower2.obj");//flower
 	VertexArrayObject::sptr vaograss1 = ObjLoader::LoadFromFile("models/Grass1.obj");//grass1
 	VertexArrayObject::sptr vaograss2 = ObjLoader::LoadFromFile("models/Grass2.obj");//grass2
 	VertexArrayObject::sptr vaohedge = ObjLoader::LoadFromFile("models/Hedge.obj");//Hedge
@@ -320,7 +320,7 @@ int main() {
 	//duplicate these to make more
 	transforms[0]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//Player1
 	transforms[1]->SetLocalPosition(30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//Player2
-	transforms[2]->SetLocalPosition(0.0f, 0.0f, -5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(2.0f, 1.0f, 2.5f);//Background
+	transforms[2]->SetLocalPosition(0.0f, 0.0f, -10.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 1.0f, 2.5f);//Background
 	transforms[3]->SetLocalPosition(0.0f, 0.0f, -3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//Sandbox
 	transforms[4]->SetLocalPosition(-8.0f, 8.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//slide
 	transforms[5]->SetLocalPosition(10.0f, -7.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//swing
@@ -329,7 +329,7 @@ int main() {
 	transforms[8]->SetLocalPosition(-29.0f, 10.0f, 3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//balloon blue
 	transforms[9]->SetLocalPosition(-30.0f, 5.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//table top left
 	transforms[10]->SetLocalPosition(10.0f, 28.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bench top right
-	transforms[11]->SetLocalPosition(-15.0f, -15.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.3f, 1.3f, 1.3f);//flower
+	transforms[11]->SetLocalPosition(0.0f, 0.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 270.0f)->SetLocalScale(1.f, 1.f, 1.f);//flower
 	transforms[12]->SetLocalPosition(15.0f, -15.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//grass1
 	transforms[13]->SetLocalPosition(17.0f, -14.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//grass2
 	transforms[14]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//hedge
@@ -456,7 +456,7 @@ int main() {
 
 	//need to somehow make this thing make multiple textures(hard for some reason)
 	// Load our texture data from a file
-	Texture2DData::sptr diffuseMapGround = Texture2DData::LoadFromFile("images/Ground.png");
+	Texture2DData::sptr diffuseMapGround = Texture2DData::LoadFromFile("images/Ground2.png");
 	Texture2DData::sptr diffuseMap2 = Texture2DData::LoadFromFile("images/red.png");//test map/default second texture on objects
 	Texture2DData::sptr diffuseMapSandBox = Texture2DData::LoadFromFile("images/SandBox.png");
 	Texture2DData::sptr diffuseMapSlide = Texture2DData::LoadFromFile("images/Slide.png");
