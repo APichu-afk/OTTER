@@ -246,6 +246,7 @@ int main() {
 	VertexArrayObject::sptr vaosmalltree = ObjLoader::LoadFromFile("models/TreeSmall.obj");//smalltree
 	VertexArrayObject::sptr vaoHitbox = ObjLoader::LoadFromFile("models/HitBox.obj");//Hitbox
 	VertexArrayObject::sptr vaowater = ObjLoader::LoadFromFile("models/WaterBeam.obj");//Hitbox
+	VertexArrayObject::sptr vaopause = ObjLoader::LoadFromFile("models/test.obj");//Hitbox
 	
 	//Animation key frames
 	VertexArrayObject::sptr vaoDuncetframe1 = ObjLoader::LoadFromFile("Animations/Duncet_frame_1_3.obj");//duncet animation frame 1 and 3
@@ -310,8 +311,8 @@ int main() {
 	glEnable(GL_CULL_FACE);
 
 	// Create some transforms and initialize them
-	Transform::sptr transforms[108];
-	for (int x = 0; x < 108; x++)
+	Transform::sptr transforms[109];
+	for (int x = 0; x < 109; x++)
 	{
 		transforms[x] = Transform::Create();
 	}
@@ -326,14 +327,14 @@ int main() {
 	transforms[5]->SetLocalPosition(10.0f, -7.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//swing
 	transforms[6]->SetLocalPosition(-5.0f, -7.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//roundabout
 	transforms[7]->SetLocalPosition(6.0f, 10.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//monkeybar
-	transforms[8]->SetLocalPosition(-29.0f, 10.0f, 3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//balloon blue
+	transforms[8]->SetLocalPosition(-29.0f, 10.0f, 3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//balloon blue changing atbles to 1 obj
 	transforms[9]->SetLocalPosition(-30.0f, 5.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//table top left
 	transforms[10]->SetLocalPosition(10.0f, 28.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bench top right
-	transforms[11]->SetLocalPosition(0.0f, 0.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 270.0f)->SetLocalScale(1.f, 1.f, 1.f);//flower
+	transforms[11]->SetLocalPosition(0.0f, 0.0f, 2.0f)->SetLocalRotation(90.0f, 0.0f, 270.0f)->SetLocalScale(0.75f, 0.75f, 0.75f);//flower
 	transforms[12]->SetLocalPosition(15.0f, -15.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//grass1
 	transforms[13]->SetLocalPosition(17.0f, -14.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//grass2
 	transforms[14]->SetLocalPosition(0.0f, 0.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//hedge
-	transforms[15]->SetLocalPosition(0.0f, 20.0f, 5.0f)->SetLocalRotation(90.0f, 180.0f, 90.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//pinwheel
+	transforms[15]->SetLocalPosition(0.0f, 20.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 90.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//pinwheel
 	transforms[16]->SetLocalPosition(-8.0f, 45.0f, 5.0f)->SetLocalRotation(-10.0f, 180.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//score
 	transforms[17]->SetLocalPosition(-29.0f, 5.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//slice
 	transforms[18]->SetLocalPosition(0.0f, 30.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bigtree Middle top
@@ -361,7 +362,7 @@ int main() {
 	transforms[44]->SetLocalPosition(10.0f, -28.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bench bot right
 	transforms[45]->SetLocalPosition(-30.0f, -7.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//table bot left
 	transforms[46]->SetLocalPosition(30.0f, 0.0f, 0.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//table right
-	transforms[47]->SetLocalPosition(-20.0f, 25.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 160.0f)->SetLocalScale(0.5f, 0.5f, 0.5f);//top mid left tree
+	transforms[47]->SetLocalPosition(-20.0f, 25.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 160.0f)->SetLocalScale(0.5f, 0.5f, 0.5f);//top mid left tree removing trees amd making them 1 obj
 	transforms[48]->SetLocalPosition(-45.0f, 30.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//top left tree
 	transforms[49]->SetLocalPosition(-40.0f, -30.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 180.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//bot left tree
 	transforms[50]->SetLocalPosition(-40.0f, -25.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 160.0f)->SetLocalScale(0.5f, 0.5f, 0.5f);//bot left up tree
@@ -373,7 +374,7 @@ int main() {
 	transforms[56]->SetLocalPosition(40.0f, 30.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//top right tree
 	transforms[57]->SetLocalPosition(40.0f, 15.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(0.5f, 0.5f, 0.5f);//top right down tree
 	transforms[58]->SetLocalPosition(30.0f, 25.0f, 5.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(0.5f, 0.5f, 0.5f);//top right left
-	transforms[59]->SetLocalPosition(-26.0f, -10.0f, 3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//purple balloon
+	transforms[59]->SetLocalPosition(-26.0f, -10.0f, 3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//purple balloon removing balloons 1 obj
 	transforms[60]->SetLocalPosition(7.0f, -30.0f, 3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//lime balloon mid
 	transforms[61]->SetLocalPosition(-7.0f, -30.0f, 3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//dark blue balloon
 	transforms[62]->SetLocalPosition(33.0f, 5.0f, 3.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//pink balloon right
@@ -387,6 +388,7 @@ int main() {
 	transforms[70]->SetLocalPosition(-14.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon first left
 	transforms[71]->SetLocalPosition(-20.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon second left
 	transforms[72]->SetLocalPosition(-26.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon third left
+	transforms[108]->SetLocalPosition(0.0f, 0.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//pause screen
 
 	//hitboxes
 	transforms[27]->SetLocalPosition(-45.0f, -30.0f, 1.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 70.0f, 1.0f);//left wall
@@ -430,7 +432,7 @@ int main() {
 	transforms[107]->SetLocalPosition(30.0f, 26.0f, -50.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//top right left tree
 
 	// We'll store all our VAOs into a nice array for easy access
-	VertexArrayObject::sptr vaos[22];
+	VertexArrayObject::sptr vaos[23];
 	vaos[0] = vaoplayer;
 	vaos[1] = vaoplayer2;
 	vaos[2] = vaobackground;
@@ -453,6 +455,7 @@ int main() {
 	vaos[19] = vaosmalltree;
 	vaos[20] = vaoballoonicon;
 	vaos[21] = vaoHitbox;
+	vaos[22] = vaopause;
 
 	//need to somehow make this thing make multiple textures(hard for some reason)
 	// Load our texture data from a file
@@ -1008,12 +1011,6 @@ int main() {
 		
 			tCatmull += dt * 0.25f;
 
-			//while (tCatmull > segmenttime)
-			//{
-				//tCatmull -= segmenttime;
-			//}
-
-			//float t = tCatmull / segmenttime;
 			
 			if (tCatmull >= segmenttime)
 			{
@@ -1718,6 +1715,8 @@ int main() {
 			shader->SetUniformMatrix("u_Model", transforms[31]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[31]->LocalTransform()));
 			//vaoHitbox->Render();	
+
+
 		
 		//hitboxes viusals
 		/*for (int ix = 73; ix < 108; ix++) {
