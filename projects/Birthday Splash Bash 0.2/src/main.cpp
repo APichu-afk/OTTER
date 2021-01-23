@@ -973,6 +973,8 @@ int main() {
 	bool animatebottle = false;
 	bool animatebottle2 = false;
 
+	//pause
+	bool pause = false;
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -1027,8 +1029,11 @@ int main() {
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////
-		
-		ManipulateTransformWithInput(transforms[0], transforms[1], dt);
+
+			if (!pause) {
+				//has to be above player 1 and 2 to work
+				ManipulateTransformWithInput(transforms[0], transforms[1], dt);
+			}
 
 		//colour of the background
 		glClearColor(0.08f, 0.17f, 0.31f, 1.0f);//rgba
@@ -1729,21 +1734,36 @@ int main() {
 		}*/
 
 		////////////////////player 1 stuff
+			//pause
+			if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+				pause = true;
+				std::cout << "pause\n";
+				
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
+				pause = false;
+				std::cout << "unpause\n";
+
+			}
+
 		//player1 shooting
-		if (ammo) {
-			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS || shoot) {
-				transforms[25]->MoveLocal(0.0f, 0.0f, 28.0f * dt);
-				shoot = true;
-				renderammo = false;					
-				animatebottle = true;
+			if (!pause) {
+				if (ammo) {
+					if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS || shoot) {
+						transforms[25]->MoveLocal(0.0f, 0.0f, 28.0f * dt);
+						shoot = true;
+						renderammo = false;
+						animatebottle = true;
+					}
+					else
+					{
+						transforms[25]->SetLocalPosition(transforms[0]->GetLocalPosition());
+						transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
+						shoot = false;
+					}
+				}
 			}
-			else
-			{
-				transforms[25]->SetLocalPosition(transforms[0]->GetLocalPosition());
-				transforms[25]->SetLocalRotation(transforms[0]->GetLocalRotation());
-				shoot = false;
-			}
-		}
 		
 		if (shoot) {
 			//bullet render
@@ -1939,18 +1959,20 @@ int main() {
 
 		/////////////////////player 2 stuff
 		//player 2 shooting
-		if (ammo2) {
-			if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS || shoot2) {
-				transforms[26]->MoveLocal(0.0f, 0.0f, 28.0f * dt);
-				shoot2 = true;
-				renderammo2 = false;
-				animatebottle2 = true;
-			}
-			else
-			{
-				transforms[26]->SetLocalPosition(transforms[1]->GetLocalPosition());
-				transforms[26]->SetLocalRotation(transforms[1]->GetLocalRotation());
-				shoot2 = false;
+		if (!pause) {
+			if (ammo2) {
+				if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS || shoot2) {
+					transforms[26]->MoveLocal(0.0f, 0.0f, 28.0f * dt);
+					shoot2 = true;
+					renderammo2 = false;
+					animatebottle2 = true;
+				}
+				else
+				{
+					transforms[26]->SetLocalPosition(transforms[1]->GetLocalPosition());
+					transforms[26]->SetLocalRotation(transforms[1]->GetLocalRotation());
+					shoot2 = false;
+				}
 			}
 		}
 
