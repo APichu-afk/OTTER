@@ -127,14 +127,12 @@ void RenderVAO(
 
 void positionVAO(
 	const Shader::sptr& shader,
-	//const VertexArrayObject::sptr& vao,
 	const Camera::sptr& camera,
 	const Transform::sptr& transform)
 {
 	shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transform->LocalTransform());
 	shader->SetUniformMatrix("u_Model", transform->LocalTransform());
 	shader->SetUniformMatrix("u_NormalMatrix", transform->NormalMatrix());
-	//vao->Render();
 }
 
 void ManipulateTransformWithInput(const Transform::sptr& transformPlayer, const Transform::sptr& transformPlayer2, float dt) {
@@ -276,6 +274,16 @@ int main() {
 	VertexArrayObject::sptr vaobottleframe9 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_9.obj");//bottle animation frame 9
 	VertexArrayObject::sptr vaobottleframe10 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_10.obj");//bottle animation frame 10
 	VertexArrayObject::sptr vaobottleframe11 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_11.obj");//bottle animation frame 11
+	/*VertexArrayObject::sptr vaowinscreenframe1= ObjLoader::LoadFromFile("Animations/p1wins_1.obj");//Win screen frame 1
+	VertexArrayObject::sptr vaowinscreenframe2 = ObjLoader::LoadFromFile("Animations/p1wins_2.obj");//Win screen frame 2
+	VertexArrayObject::sptr vaowinscreenframe3 = ObjLoader::LoadFromFile("Animations/p1wins_3.obj");//Win screen frame 3
+	VertexArrayObject::sptr vaowinscreenframe4 = ObjLoader::LoadFromFile("Animations/p1wins_4.obj");//Win screen frame 4
+	VertexArrayObject::sptr vaowinscreenframe5 = ObjLoader::LoadFromFile("Animations/p1wins_5.obj");//Win screen frame 5
+	VertexArrayObject::sptr vaowinscreenframe6 = ObjLoader::LoadFromFile("Animations/p1wins_6.obj");//Win screen frame 6
+	VertexArrayObject::sptr vaowinscreenframe7 = ObjLoader::LoadFromFile("Animations/p1wins_7.obj");//Win screen frame 7
+	VertexArrayObject::sptr vaowinscreenframe8 = ObjLoader::LoadFromFile("Animations/p1wins_8.obj");//Win screen frame 8
+	VertexArrayObject::sptr vaowinscreenframe9 = ObjLoader::LoadFromFile("Animations/p1wins_9.obj");//Win screen frame 9
+	VertexArrayObject::sptr vaowinscreenframe10 = ObjLoader::LoadFromFile("Animations/p1wins_10.obj");//Win screen frame 10*/
 
 	// Load our shaders
 	Shader::sptr shader = Shader::Create();
@@ -311,8 +319,8 @@ int main() {
 	glEnable(GL_CULL_FACE);
 
 	// Create some transforms and initialize them
-	Transform::sptr transforms[109];
-	for (int x = 0; x < 109; x++)
+	Transform::sptr transforms[111];
+	for (int x = 0; x < 111; x++)
 	{
 		transforms[x] = Transform::Create();
 	}
@@ -388,7 +396,9 @@ int main() {
 	transforms[70]->SetLocalPosition(-14.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon first left
 	transforms[71]->SetLocalPosition(-20.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon second left
 	transforms[72]->SetLocalPosition(-26.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon third left
-	transforms[108]->SetLocalPosition(0.0f, 0.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//pause screen
+	transforms[108]->SetLocalPosition(0.0f, 0.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//win screen
+	transforms[109]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//player 1 reset
+	transforms[110]->SetLocalPosition(30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//player 2 reset
 
 	//hitboxes
 	transforms[27]->SetLocalPosition(-45.0f, -30.0f, 1.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 70.0f, 1.0f);//left wall
@@ -951,7 +961,7 @@ int main() {
 	int countdunce = 0;
 	int countduncet = 0;
 
-	//renderer
+	//renderer(makes things appear and disappear)
 	bool renderammo = true;
 	bool renderammo2 = true;
 	bool renderammoground1 = true;
@@ -970,11 +980,19 @@ int main() {
 	float Ammotime2 = 0.0f;
 	float Pinwheeltime = 0.0f;
 	float RoundAbouttime = 0.0f;
+	float wins = 0.0f;
 	bool animatebottle = false;
 	bool animatebottle2 = false;
 
+	//Menu
+	bool menu = true;
+
 	//pause
 	bool pause = false;
+
+	//win game
+	bool win1 = false;
+	bool win2 = false;
 	///// Game loop /////
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -1049,6 +1067,16 @@ int main() {
 		shader->SetUniform("s_Diffuse2", 1);
 		shader->SetUniform("s_Specular", 2);
 
+		//menu screen
+		if (menu)
+		{
+			if (glfwGetKey(window, GLFW_KEY_SPACE) == true)
+			{
+				menu = false;
+			}
+		}
+		else
+		{
 		// Render all VAOs in our scene
 		for (int ix = 2; ix < 20; ix++)
 		{
@@ -1092,6 +1120,7 @@ int main() {
 		if (Duncetime >= 1.0f)
 		{
 			Duncetime = 0.0f;
+			vaoDunceframe1->Render();
 		}
 		
 		//Player 2 animation
@@ -1121,6 +1150,7 @@ int main() {
 		if (Duncettime >= 1.0f)
 		{
 			Duncettime = 0.0f;
+			vaoDuncetframe1->Render();
 		}
 		
 		transforms[6]->RotateLocal(0.0f, 100.0f * dt, 0.0f);
@@ -1161,6 +1191,7 @@ int main() {
 		if (Pinwheeltime >= 1.6f)
 		{
 			Pinwheeltime = 0.0f;
+			vaoPinwheelframe1->Render();
 		}
 
 		//rerenders bottles
@@ -1721,8 +1752,6 @@ int main() {
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[31]->LocalTransform()));
 			//vaoHitbox->Render();	
 
-
-		
 		//hitboxes viusals
 		/*for (int ix = 73; ix < 108; ix++) {
 			materials[29].Albedo->Bind(0);
@@ -1734,19 +1763,6 @@ int main() {
 		}*/
 
 		////////////////////player 1 stuff
-			//pause
-			if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-				pause = true;
-				std::cout << "pause\n";
-				
-			}
-
-			if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
-				pause = false;
-				std::cout << "unpause\n";
-
-			}
-
 		//player1 shooting
 			if (!pause) {
 				if (ammo) {
@@ -1937,25 +1953,27 @@ int main() {
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[40]->LocalTransform()));
 			vaobottle->Render();
 		}
-		////////////////////////////////////////////////////////////////
 
-		if (Collision(transforms[0], transforms[1])) {
-			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+		//win screen
+		if (countdunce == 3)
+		{
+			win1 = true;
+			pause = true;
+			if (glfwGetKey(window, GLFW_KEY_ENTER) == true)
+			{
+				menu = true;
+				pause = false;
+				win1 = false;
+				ammo = true;
+				countdunce = 0;
+				countduncet = 0;
+				//breaks the game if used very interesting
+				transforms[0] = transforms[109];
+				transforms[1] = transforms[110];
 			}
-			
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				transforms[0]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
-			}
-			
-			if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
-			}
-			
-			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-				transforms[1]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
-			}
+			std::cout << "1\n";
 		}
+		////////////////////////////////////////////////////////////////
 
 		/////////////////////player 2 stuff
 		//player 2 shooting
@@ -2144,7 +2162,63 @@ int main() {
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[41]->LocalTransform()));
 			vaobottle->Render();
 		}
+
+		//win screen
+		if (countduncet == 3)
+		{
+			win2 = true;
+			pause = true;
+			if (glfwGetKey(window, GLFW_KEY_ENTER) == true)
+			{
+				menu = true;
+			}
+			std::cout << "2\n";
+			materials[28].Albedo->Bind(0);
+			materials[28].Albedo2->Bind(1);
+			materials[28].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[28].Shininess);
+			shader->SetUniform("u_TextureMix", materials[28].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[108]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[108]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[108]->LocalTransform()));
+			
+		}
 		////////////////////////////////////////////////////////////////
+
+		//pause
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+			pause = true;
+			std::cout << "pause\n";
+
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
+			if (!win1 && !win2) {
+				pause = false;
+				std::cout << "unpause\n";
+			}
+		}
+
+		//player1 and player2 collision
+		if (Collision(transforms[0], transforms[1])) {
+			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+				transforms[0]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+				transforms[0]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+				transforms[1]->MoveLocal(0.0f, 0.0f, 18.0f * dt);
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+				transforms[1]->MoveLocal(0.0f, 0.0f, -18.0f * dt);
+			}
+		}
+		}
+
 		glfwSwapBuffers(window);
 		lastFrame = thisFrame;
 	}
