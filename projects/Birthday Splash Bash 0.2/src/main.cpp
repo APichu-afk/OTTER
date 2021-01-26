@@ -247,14 +247,14 @@ int main() {
 	VertexArrayObject::sptr vaopause = ObjLoader::LoadFromFile("models/test.obj");//Hitbox
 	
 	//Animation key frames
-	VertexArrayObject::sptr vaoDuncetframe1 = ObjLoader::LoadFromFile("Animations/Duncet_frame_1_3.obj");//duncet animation frame 1 and 3
-	VertexArrayObject::sptr vaoDuncetframe2 = ObjLoader::LoadFromFile("Animations/Duncet_frame_2.obj");//duncet animation frame 2
-	VertexArrayObject::sptr vaoDuncetframe4 = ObjLoader::LoadFromFile("Animations/Duncet_frame_4.obj");//duncet animation frame 4
-	VertexArrayObject::sptr vaoDuncetframe5 = ObjLoader::LoadFromFile("Animations/Duncet_frame_5.obj");//duncet animation frame 5
-	VertexArrayObject::sptr vaoDunceframe1 = ObjLoader::LoadFromFile("Animations/Dunce_frame_1_3.obj");//dunce animation frame 1 and 3
-	VertexArrayObject::sptr vaoDunceframe2 = ObjLoader::LoadFromFile("Animations/Dunce_frame_2.obj");//dunce animation frame 2
-	VertexArrayObject::sptr vaoDunceframe4 = ObjLoader::LoadFromFile("Animations/Dunce_frame_4.obj");//dunce animation frame 4
-	VertexArrayObject::sptr vaoDunceframe5 = ObjLoader::LoadFromFile("Animations/Dunce_frame_5.obj");//dunce animation frame 5
+	VertexArrayObject::sptr vaoDuncetframe1 = ObjLoader::LoadFromFile("Animations/Duncet_1.obj");//duncet animation frame 1 and 3 Animations/Duncet_frame_1_3.obj
+	VertexArrayObject::sptr vaoDuncetframe2 = ObjLoader::LoadFromFile("Animations/Duncet_2.obj");//duncet animation frame 2
+	VertexArrayObject::sptr vaoDuncetframe4 = ObjLoader::LoadFromFile("Animations/Duncet_4.obj");//duncet animation frame 4
+	VertexArrayObject::sptr vaoDuncetframe5 = ObjLoader::LoadFromFile("Animations/Duncet_5.obj");//duncet animation frame 5
+	VertexArrayObject::sptr vaoDunceframe1 = ObjLoader::LoadFromFile("Animations/Dunce_1.obj");//dunce animation frame 1 and 3
+	VertexArrayObject::sptr vaoDunceframe2 = ObjLoader::LoadFromFile("Animations/Dunce_2.obj");//dunce animation frame 2
+	VertexArrayObject::sptr vaoDunceframe4 = ObjLoader::LoadFromFile("Animations/Dunce_4.obj");//dunce animation frame 4
+	VertexArrayObject::sptr vaoDunceframe5 = ObjLoader::LoadFromFile("Animations/Dunce_5.obj");//dunce animation frame 5
 	VertexArrayObject::sptr vaoPinwheelframe1 = ObjLoader::LoadFromFile("Animations/Pinwheel_frame_1.obj");//pinwheel animation frame 1
 	VertexArrayObject::sptr vaoPinwheelframe2 = ObjLoader::LoadFromFile("Animations/Pinwheel_frame_2.obj");//pinwheel animation frame 2
 	VertexArrayObject::sptr vaoPinwheelframe3 = ObjLoader::LoadFromFile("Animations/Pinwheel_frame_3.obj");//pinwheel animation frame 3
