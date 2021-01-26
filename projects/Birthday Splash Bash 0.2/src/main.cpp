@@ -1967,9 +1967,8 @@ int main() {
 				ammo = true;
 				countdunce = 0;
 				countduncet = 0;
-				//breaks the game if used very interesting
-				transforms[0] = transforms[109];
-				transforms[1] = transforms[110];
+				transforms[0]->SetLocalPosition(transforms[109]->GetLocalPosition());
+				transforms[1]->SetLocalPosition(transforms[110]->GetLocalPosition());
 			}
 			std::cout << "1\n";
 		}
