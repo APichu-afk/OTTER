@@ -1964,10 +1964,16 @@ int main() {
 				menu = true;
 				pause = false;
 				win1 = false;
+				win2 = false;
 				ammo = true;
+				ammo2 = true;
+				renderammo = true;
+				renderammo2 = true;
 				countdunce = 0;
 				countduncet = 0;
+				transforms[0]->SetLocalRotation(transforms[109]->GetLocalRotation());
 				transforms[0]->SetLocalPosition(transforms[109]->GetLocalPosition());
+				transforms[1]->SetLocalRotation(transforms[110]->GetLocalRotation());
 				transforms[1]->SetLocalPosition(transforms[110]->GetLocalPosition());
 			}
 			std::cout << "1\n";
@@ -2170,6 +2176,19 @@ int main() {
 			if (glfwGetKey(window, GLFW_KEY_ENTER) == true)
 			{
 				menu = true;
+				pause = false;
+				win1 = false;
+				win2 = false;
+				ammo = true;
+				ammo2 = true;
+				renderammo = true;
+				renderammo2 = true;
+				countdunce = 0;
+				countduncet = 0;
+				transforms[0]->SetLocalRotation(transforms[109]->GetLocalRotation());
+				transforms[0]->SetLocalPosition(transforms[109]->GetLocalPosition());
+				transforms[1]->SetLocalRotation(transforms[110]->GetLocalRotation());
+				transforms[1]->SetLocalPosition(transforms[110]->GetLocalPosition());
 			}
 			std::cout << "2\n";
 			materials[28].Albedo->Bind(0);
