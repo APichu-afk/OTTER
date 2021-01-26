@@ -496,8 +496,8 @@ int main() {
 	Texture2DData::sptr diffuseMapSliceofcake = Texture2DData::LoadFromFile("images/Slice of Cake.png");
 	Texture2DData::sptr diffuseMapTreeBig = Texture2DData::LoadFromFile("images/TreeBig.png");
 	Texture2DData::sptr diffuseMapTreeSmall = Texture2DData::LoadFromFile("images/TreeSmall.png");
-	Texture2DData::sptr diffuseMapDunce = Texture2DData::LoadFromFile("images/Dunce.png");
-	Texture2DData::sptr diffuseMapDuncet = Texture2DData::LoadFromFile("images/Duncet.png");
+	Texture2DData::sptr diffuseMapDunce = Texture2DData::LoadFromFile("images/SkinPNG.png");//Dunce.png
+	Texture2DData::sptr diffuseMapDuncet = Texture2DData::LoadFromFile("images/Skin2PNG.png");//Duncet.png
 	Texture2DData::sptr diffuseMapYellowBalloonicon = Texture2DData::LoadFromFile("images/Balloon Icon/BalloonIconDunce.png");
 	Texture2DData::sptr diffuseMapPinkBalloonicon = Texture2DData::LoadFromFile("images/Balloon Icon/BalloonIconDuncet.png");
 	Texture2DData::sptr diffuseMapPinwheel = Texture2DData::LoadFromFile("images/PinWheel/PinWheel.png");
