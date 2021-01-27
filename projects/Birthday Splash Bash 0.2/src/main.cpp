@@ -245,8 +245,9 @@ int main() {
 	VertexArrayObject::sptr vaoHitbox = ObjLoader::LoadFromFile("models/HitBox.obj");//Hitbox
 	VertexArrayObject::sptr vaowater = ObjLoader::LoadFromFile("models/WaterBeam.obj");//water thing
 	VertexArrayObject::sptr vaopause = ObjLoader::LoadFromFile("models/pausescreen.obj");//pause screen text
-	VertexArrayObject::sptr vaowinscreen = ObjLoader::LoadFromFile("models/p1wins.obj");//Win screen frame 1
-	VertexArrayObject::sptr vaowinscreen2 = ObjLoader::LoadFromFile("models/p2wins.obj");//Win screen frame 1
+	VertexArrayObject::sptr vaowinscreen = ObjLoader::LoadFromFile("models/p1wins.obj");//Win screen
+	VertexArrayObject::sptr vaowinscreen2 = ObjLoader::LoadFromFile("models/p2wins.obj");//Win screen
+	VertexArrayObject::sptr vaotitle = ObjLoader::LoadFromFile("models/title.obj");//title (placeholder)
 	
 	//Animation key frames
 	VertexArrayObject::sptr vaoDuncetframe1 = ObjLoader::LoadFromFile("Animations/Duncet_1.obj");//duncet animation frame 1 and 3 Animations/Duncet_frame_1_3.obj
@@ -312,8 +313,8 @@ int main() {
 	glEnable(GL_CULL_FACE);
 
 	// Create some transforms and initialize them
-	Transform::sptr transforms[111];
-	for (int x = 0; x < 111; x++)
+	Transform::sptr transforms[112];
+	for (int x = 0; x < 112; x++)
 	{
 		transforms[x] = Transform::Create();
 	}
@@ -389,9 +390,10 @@ int main() {
 	transforms[70]->SetLocalPosition(-14.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon first left
 	transforms[71]->SetLocalPosition(-20.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon second left
 	transforms[72]->SetLocalPosition(-26.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon third left
-	transforms[108]->SetLocalPosition(0.0f, 0.0f, 10.0f)->SetLocalRotation(-10.0f, 0.0f, 0.0f)->SetLocalScale(16.0f, 16.0f, 16.0f);//win screen
+	transforms[108]->SetLocalPosition(0.0f, 0.0f, 1.0f)->SetLocalRotation(-10.0f, 0.0f, 0.0f)->SetLocalScale(16.0f, 16.0f, 16.0f);//win screen
 	transforms[109]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//player 1 reset
 	transforms[110]->SetLocalPosition(30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//player 2 reset
+	transforms[111]->SetLocalPosition(0.0f, 0.0f, 1.0f)->SetLocalRotation(0.0f, 90.0f, 0.0f)->SetLocalScale(12.0f, 12.0f, 12.0f);//player 2 reset
 
 	//hitboxes
 	transforms[27]->SetLocalPosition(-45.0f, -30.0f, 1.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 70.0f, 1.0f);//left wall
@@ -503,12 +505,17 @@ int main() {
 	Texture2DData::sptr diffuseMapyellow = Texture2DData::LoadFromFile("images/Yellow.png");
 	Texture2DData::sptr diffuseMappink = Texture2DData::LoadFromFile("images/Pink.png");
 	Texture2DData::sptr diffuseMapwater = Texture2DData::LoadFromFile("images/waterBeamTex.png");
+	Texture2DData::sptr diffuseMaptitle = Texture2DData::LoadFromFile("images/titleScreenPNG.jpg");
 	Texture2DData::sptr specularMap = Texture2DData::LoadFromFile("images/Stone_001_Specular.png");
 
 	// Create a texture from the data
 		//Ground texture
 		Texture2D::sptr diffuseGround = Texture2D::Create();
 		diffuseGround->LoadData(diffuseMapGround);
+		
+		//title screen (placeholder)
+		Texture2D::sptr diffusetitle = Texture2D::Create();
+		diffusetitle->LoadData(diffuseMaptitle);
 
 		//Player1 texture
 		Texture2D::sptr diffuseDunce = Texture2D::Create();
@@ -682,7 +689,7 @@ int main() {
 	texture2->Clear(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	//materials
-	Material materials[34];
+	Material materials[35];
 	
 		//player1
 		materials[0].Albedo = diffuseDunce;
@@ -921,6 +928,13 @@ int main() {
 		materials[33].Specular = specular;
 		materials[33].Shininess = 32.0f;
 		materials[33].TextureMix = 0.0f;
+		
+		//Pinwheel
+		materials[34].Albedo = diffusetitle;
+		materials[34].Albedo2 = diffusewater;
+		materials[34].Specular = specular;
+		materials[34].Shininess = 32.0f;
+		materials[34].TextureMix = 0.0f;
 
 	//Camera
 	camera = Camera::Create();
@@ -1064,10 +1078,19 @@ int main() {
 		//menu screen
 		if (menu)
 		{
+			materials[34].Albedo->Bind(0);
+			materials[34].Albedo2->Bind(1);
+			materials[34].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[34].Shininess);
+			shader->SetUniform("u_TextureMix", materials[34].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[111]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[111]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[111]->LocalTransform()));
+			vaotitle->Render();
+			
 			if (glfwGetKey(window, GLFW_KEY_SPACE) == true)
 			{
 				menu = false;
-				//vaoplane->Render();
 			}
 		}
 		else
