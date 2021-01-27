@@ -243,8 +243,10 @@ int main() {
 	VertexArrayObject::sptr vaobigtree = ObjLoader::LoadFromFile("models/TreeBig.obj");//bigtree
 	VertexArrayObject::sptr vaosmalltree = ObjLoader::LoadFromFile("models/TreeSmall.obj");//smalltree
 	VertexArrayObject::sptr vaoHitbox = ObjLoader::LoadFromFile("models/HitBox.obj");//Hitbox
-	VertexArrayObject::sptr vaowater = ObjLoader::LoadFromFile("models/WaterBeam.obj");//Hitbox
-	VertexArrayObject::sptr vaopause = ObjLoader::LoadFromFile("models/test.obj");//Hitbox
+	VertexArrayObject::sptr vaowater = ObjLoader::LoadFromFile("models/WaterBeam.obj");//water thing
+	VertexArrayObject::sptr vaopause = ObjLoader::LoadFromFile("models/pausescreen.obj");//pause screen text
+	VertexArrayObject::sptr vaowinscreen = ObjLoader::LoadFromFile("models/p1wins.obj");//Win screen frame 1
+	VertexArrayObject::sptr vaowinscreen2 = ObjLoader::LoadFromFile("models/p2wins.obj");//Win screen frame 1
 	
 	//Animation key frames
 	VertexArrayObject::sptr vaoDuncetframe1 = ObjLoader::LoadFromFile("Animations/Duncet_1.obj");//duncet animation frame 1 and 3 Animations/Duncet_frame_1_3.obj
@@ -274,16 +276,7 @@ int main() {
 	VertexArrayObject::sptr vaobottleframe9 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_9.obj");//bottle animation frame 9
 	VertexArrayObject::sptr vaobottleframe10 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_10.obj");//bottle animation frame 10
 	VertexArrayObject::sptr vaobottleframe11 = ObjLoader::LoadFromFile("Animations/WaterBottle_frame_11.obj");//bottle animation frame 11
-	/*VertexArrayObject::sptr vaowinscreenframe1= ObjLoader::LoadFromFile("Animations/p1wins_1.obj");//Win screen frame 1
-	VertexArrayObject::sptr vaowinscreenframe2 = ObjLoader::LoadFromFile("Animations/p1wins_2.obj");//Win screen frame 2
-	VertexArrayObject::sptr vaowinscreenframe3 = ObjLoader::LoadFromFile("Animations/p1wins_3.obj");//Win screen frame 3
-	VertexArrayObject::sptr vaowinscreenframe4 = ObjLoader::LoadFromFile("Animations/p1wins_4.obj");//Win screen frame 4
-	VertexArrayObject::sptr vaowinscreenframe5 = ObjLoader::LoadFromFile("Animations/p1wins_5.obj");//Win screen frame 5
-	VertexArrayObject::sptr vaowinscreenframe6 = ObjLoader::LoadFromFile("Animations/p1wins_6.obj");//Win screen frame 6
-	VertexArrayObject::sptr vaowinscreenframe7 = ObjLoader::LoadFromFile("Animations/p1wins_7.obj");//Win screen frame 7
-	VertexArrayObject::sptr vaowinscreenframe8 = ObjLoader::LoadFromFile("Animations/p1wins_8.obj");//Win screen frame 8
-	VertexArrayObject::sptr vaowinscreenframe9 = ObjLoader::LoadFromFile("Animations/p1wins_9.obj");//Win screen frame 9
-	VertexArrayObject::sptr vaowinscreenframe10 = ObjLoader::LoadFromFile("Animations/p1wins_10.obj");//Win screen frame 10*/
+
 
 	// Load our shaders
 	Shader::sptr shader = Shader::Create();
@@ -396,7 +389,7 @@ int main() {
 	transforms[70]->SetLocalPosition(-14.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon first left
 	transforms[71]->SetLocalPosition(-20.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon second left
 	transforms[72]->SetLocalPosition(-26.0f, 47.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(8.0f, 8.0f, 8.0f);//balloonicon third left
-	transforms[108]->SetLocalPosition(0.0f, 0.0f, 5.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//win screen
+	transforms[108]->SetLocalPosition(0.0f, 0.0f, 10.0f)->SetLocalRotation(-10.0f, 0.0f, 0.0f)->SetLocalScale(16.0f, 16.0f, 16.0f);//win screen
 	transforms[109]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//player 1 reset
 	transforms[110]->SetLocalPosition(30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//player 2 reset
 
@@ -465,7 +458,7 @@ int main() {
 	vaos[19] = vaosmalltree;
 	vaos[20] = vaoballoonicon;
 	vaos[21] = vaoHitbox;
-	vaos[22] = vaopause;
+	//vaos[22] = vaopause;
 
 	//need to somehow make this thing make multiple textures(hard for some reason)
 	// Load our texture data from a file
@@ -988,7 +981,8 @@ int main() {
 	bool menu = true;
 
 	//pause
-	bool pause = false;
+	bool pause = false; //win
+	bool pausePause = false;
 
 	//win game
 	bool win1 = false;
@@ -1073,6 +1067,7 @@ int main() {
 			if (glfwGetKey(window, GLFW_KEY_SPACE) == true)
 			{
 				menu = false;
+				//vaoplane->Render();
 			}
 		}
 		else
@@ -1977,6 +1972,16 @@ int main() {
 				transforms[1]->SetLocalPosition(transforms[110]->GetLocalPosition());
 			}
 			std::cout << "1\n";
+			materials[16].Albedo->Bind(0);
+			materials[16].Albedo2->Bind(1);
+			materials[16].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[16].Shininess);
+			shader->SetUniform("u_TextureMix", materials[16].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[108]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[108]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[108]->LocalTransform()));
+
+			vaowinscreen->Render();
 		}
 		////////////////////////////////////////////////////////////////
 
@@ -2191,30 +2196,45 @@ int main() {
 				transforms[1]->SetLocalPosition(transforms[110]->GetLocalPosition());
 			}
 			std::cout << "2\n";
-			materials[28].Albedo->Bind(0);
-			materials[28].Albedo2->Bind(1);
-			materials[28].Specular->Bind(2);
-			shader->SetUniform("u_Shininess", materials[28].Shininess);
-			shader->SetUniform("u_TextureMix", materials[28].TextureMix);
+			materials[16].Albedo->Bind(0);
+			materials[16].Albedo2->Bind(1);
+			materials[16].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[16].Shininess);
+			shader->SetUniform("u_TextureMix", materials[16].TextureMix);
 			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection()* transforms[108]->LocalTransform());
 			shader->SetUniformMatrix("u_Model", transforms[108]->LocalTransform());
 			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[108]->LocalTransform()));
-			
+
+			vaowinscreen2->Render();
 		}
 		////////////////////////////////////////////////////////////////
 
 		//pause
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			pause = true;
+			pausePause = true;
 			std::cout << "pause\n";
-
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
 			if (!win1 && !win2) {
 				pause = false;
+				pausePause = false;
 				std::cout << "unpause\n";
 			}
+		}
+
+		if (pausePause) {
+			materials[16].Albedo->Bind(0);
+			materials[16].Albedo2->Bind(1);
+			materials[16].Specular->Bind(2);
+			shader->SetUniform("u_Shininess", materials[16].Shininess);
+			shader->SetUniform("u_TextureMix", materials[16].TextureMix);
+			shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transforms[108]->LocalTransform());
+			shader->SetUniformMatrix("u_Model", transforms[108]->LocalTransform());
+			shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transforms[108]->LocalTransform()));
+
+			vaopause->Render();
 		}
 
 		//player1 and player2 collision
