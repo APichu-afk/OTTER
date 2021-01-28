@@ -393,7 +393,7 @@ int main() {
 	transforms[108]->SetLocalPosition(0.0f, 0.0f, 1.0f)->SetLocalRotation(-10.0f, 0.0f, 0.0f)->SetLocalScale(16.0f, 16.0f, 16.0f);//win screen
 	transforms[109]->SetLocalPosition(-30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//player 1 reset
 	transforms[110]->SetLocalPosition(30.0f, -20.0f, 1.0f)->SetLocalRotation(90.0f, 0.0f, 0.0f)->SetLocalScale(3.0f, 3.0f, 3.0f);//player 2 reset
-	transforms[111]->SetLocalPosition(0.0f, 0.0f, 1.0f)->SetLocalRotation(0.0f, 90.0f, 0.0f)->SetLocalScale(12.0f, 12.0f, 12.0f);//player 2 reset
+	transforms[111]->SetLocalPosition(0.0f, 0.0f, 1.0f)->SetLocalRotation(0.0f, 90.0f, 0.0f)->SetLocalScale(1.0f, 1.0f, 1.0f);//player 2 reset
 
 	//hitboxes
 	transforms[27]->SetLocalPosition(-45.0f, -30.0f, 1.0f)->SetLocalRotation(0.0f, 0.0f, 0.0f)->SetLocalScale(1.0f, 70.0f, 1.0f);//left wall
