@@ -218,7 +218,7 @@ int main() {
 
 	//Vaos
 	VertexArrayObject::sptr vaoplayer = ObjLoader::LoadFromFile("models/Dunce.obj");//player 1
-	VertexArrayObject::sptr vaobackground = ObjLoader::LoadFromFile("models/Ground2.obj");//Ground
+	VertexArrayObject::sptr vaobackground = ObjLoader::LoadFromFile("models/Ground.obj");//Ground
 	VertexArrayObject::sptr vaomonkeybar = ObjLoader::LoadFromFile("models/MonkeyBar.obj");//MonkeyBars
 	VertexArrayObject::sptr vaosandbox = ObjLoader::LoadFromFile("models/SandBox.obj");//SandBox
 	VertexArrayObject::sptr vaoslide = ObjLoader::LoadFromFile("models/Slide.obj");//Slide
@@ -464,7 +464,7 @@ int main() {
 
 	//need to somehow make this thing make multiple textures(hard for some reason)
 	// Load our texture data from a file
-	Texture2DData::sptr diffuseMapGround = Texture2DData::LoadFromFile("images/Ground2.png");
+	Texture2DData::sptr diffuseMapGround = Texture2DData::LoadFromFile("images/Ground.png");
 	Texture2DData::sptr diffuseMap2 = Texture2DData::LoadFromFile("images/red.png");//test map/default second texture on objects
 	Texture2DData::sptr diffuseMapSandBox = Texture2DData::LoadFromFile("images/SandBox.png");
 	Texture2DData::sptr diffuseMapSlide = Texture2DData::LoadFromFile("images/Slide.png");
