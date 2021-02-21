@@ -1,4 +1,5 @@
-/*Alexander Chow - 100749034
+/*
+Alexander Chow - 100749034
 James Pham - 100741773
 Trey Cowell - 100745472
 Frederic Lai - 100748388
@@ -298,6 +299,7 @@ int main() {
 		Texture2D::sptr diffusesandbox = Texture2D::LoadFromFile("images/Arena1/SandBox.png");
 		Texture2D::sptr diffuseroundabout = Texture2D::LoadFromFile("images/Arena1/RoundAbout.png");
 		Texture2D::sptr diffusepinwheel = Texture2D::LoadFromFile("images/Arena1/Pinwheel.png");
+		Texture2D::sptr diffuseBench = Texture2D::LoadFromFile("images/Arena1/Bench.png");
 		#pragma endregion Arena1 diffuses
 
 		// Load the cube map
@@ -532,6 +534,14 @@ int main() {
 		materialBottlepink->Set("u_Shininess", 8.0f);
 		materialBottlepink->Set("u_TextureMix", 0.0f);
 
+		ShaderMaterial::sptr materialBench = ShaderMaterial::Create();
+		materialBench->Shader = shader;
+		materialBench->Set("s_Diffuse", diffuseBench);
+		materialBench->Set("s_Diffuse2", diffuse2);
+		materialBench->Set("s_Specular", specular);
+		materialBench->Set("u_Shininess", 8.0f);
+		materialBench->Set("u_TextureMix", 0.0f);
+
 		// 
 		ShaderMaterial::sptr material1 = ShaderMaterial::Create();
 		material1->Shader = reflective;
@@ -665,12 +675,13 @@ int main() {
 
 		GameObject objTable = scene->CreateEntity("table");
 		{
-			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/Table.obj");
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/TableS.obj");
 			objTable.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialTable);
 			objTable.get<Transform>().SetLocalPosition(5.0f, 0.0f, 1.25f);
 			objTable.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
 			objTable.get<Transform>().SetLocalScale(0.35f, 0.35f, 0.35f);
 		}
+		
 		
 		//HitBoxes generated using a for loop then each one is given a position
 		std::vector<GameObject> Hitboxes;
@@ -780,14 +791,14 @@ int main() {
 			objTables.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
 		}
 		
-		/*GameObject objBenches = Arena1->CreateEntity("Benches");
+		GameObject objBenches = Arena1->CreateEntity("Benches");
 		{
-			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/Table.obj");
-			objBenches.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialTable);
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/Bench.obj");
+			objBenches.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialBench);
 			objBenches.get<Transform>().SetLocalPosition(0.0f, 0.0f, 0.0f);
 			objBenches.get<Transform>().SetLocalRotation(90.0f, 0.0f, 270.0f);
 			objBenches.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
-		}*/
+		}
 		
 		GameObject objBalloons = Arena1->CreateEntity("Balloons");
 		{
