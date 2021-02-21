@@ -612,7 +612,7 @@ int main() {
 			objDuncet.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
 			BehaviourBinding::BindDisabled<SimpleMoveBehaviour>(objDuncet);
 		}
-
+		
 
 		GameObject objSlide = scene->CreateEntity("Slide");
 		{
@@ -811,7 +811,7 @@ int main() {
 		
 		GameObject objTrees = Arena1->CreateEntity("trees");
 		{
-			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/Trees.obj");
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/Tree.obj");
 			objTrees.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialtrees);
 			objTrees.get<Transform>().SetLocalPosition(0.0f, 0.0f, 0.0f);
 			objTrees.get<Transform>().SetLocalRotation(90.0f, 0.0f, 270.0f);
