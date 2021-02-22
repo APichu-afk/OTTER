@@ -723,8 +723,8 @@ int main() {
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/Slide.obj");
 			objSlideArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialSlide);
-			objSlideArena.get<Transform>().SetLocalPosition(-2.0f, -2.0f, 2.0f);
-			objSlideArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
+			objSlideArena.get<Transform>().SetLocalPosition(2.0f, -2.0f, 2.0f);
+			objSlideArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
 			objSlideArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
 		}
 		
@@ -732,7 +732,7 @@ int main() {
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/swing.obj");
 			objSwingArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialSwing);
-			objSwingArena.get<Transform>().SetLocalPosition(-4.0f, 2.0f, 2.0f);
+			objSwingArena.get<Transform>().SetLocalPosition(-2.0f, 1.0f, 2.0f);
 			objSwingArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
 			objSwingArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
 		}
@@ -741,8 +741,8 @@ int main() {
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/MonkeyBar.obj");
 			objMonkeyBarArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialMonkeyBar);
-			objMonkeyBarArena.get<Transform>().SetLocalPosition(2.0f, 2.0f, 2.0f);
-			objMonkeyBarArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
+			objMonkeyBarArena.get<Transform>().SetLocalPosition(-2.0f, -2.5f, 2.0f);
+			objMonkeyBarArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
 			objMonkeyBarArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
 		}
 
@@ -768,7 +768,7 @@ int main() {
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/RoundAbout.obj");
 			objraArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialRA);
-			objraArena.get<Transform>().SetLocalPosition(2.0f, 3.0f, 2.0f);
+			objraArena.get<Transform>().SetLocalPosition(2.0f, 2.0f, 2.0f);
 			objraArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
 			objraArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
 		}
@@ -777,8 +777,8 @@ int main() {
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/PinWheel.obj");
 			objpinwheelArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialPinwheel);
-			objpinwheelArena.get<Transform>().SetLocalPosition(3.0f, 0.0f, 2.0f);
-			objpinwheelArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
+			objpinwheelArena.get<Transform>().SetLocalPosition(0.0f, -4.0f, 2.0f);
+			objpinwheelArena.get<Transform>().SetLocalRotation(0.0f, -90.0f, 180.0f);
 			objpinwheelArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
 		}
 
@@ -788,7 +788,7 @@ int main() {
 			objTables.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialTable);
 			objTables.get<Transform>().SetLocalPosition(0.0f, 0.0f, 0.0f);
 			objTables.get<Transform>().SetLocalRotation(90.0f, 0.0f, 270.0f);
-			objTables.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
+			objTables.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.28f);
 		}
 		
 		GameObject objBenches = Arena1->CreateEntity("Benches");
@@ -806,7 +806,7 @@ int main() {
 			objBalloons.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialBalloons);
 			objBalloons.get<Transform>().SetLocalPosition(0.0f, 0.0f, 0.0f);
 			objBalloons.get<Transform>().SetLocalRotation(90.0f, 0.0f, 270.0f);
-			objBalloons.get<Transform>().SetLocalScale(0.23f, 0.25f, 0.25f);
+			objBalloons.get<Transform>().SetLocalScale(0.23f, 0.22f, 0.28f);
 		}
 		
 		GameObject objTrees = Arena1->CreateEntity("trees");
@@ -1072,13 +1072,13 @@ int main() {
 					Application::Instance().ActiveScene = Pause;
 				}
 
+				//Player Movemenet(seperate from camera controls)
+				PlayerMovement::player1and2move(objDunce.get<Transform>(), objDuncet.get<Transform>(), time.DeltaTime);
+
 				//Hit detection test
 				if (Collision(objDuncet.get<Transform>(), Hitboxes[0].get<Transform>())) {
 					PlayerMovement::Player2vswall(objDuncet.get<Transform>(), time.DeltaTime);
 				}
-
-				//Player Movemenet(seperate from camera controls)
-				PlayerMovement::player1and2move(objDunce.get<Transform>(), objDuncet.get<Transform>(), time.DeltaTime);
 
 				// Iterate over all the behaviour binding components
 				scene->Registry().view<BehaviourBinding>().each([&](entt::entity entity, BehaviourBinding& binding) {
@@ -1129,6 +1129,7 @@ int main() {
 					// Render the mesh
 					BackendHandler::RenderVAO(renderer.Material->Shader, renderer.Mesh, viewProjection, transform);
 				});
+				BackendHandler::RenderImGui();
 			}
 			#pragma endregion scene(testing)
 
@@ -1144,14 +1145,14 @@ int main() {
 					Application::Instance().ActiveScene = Pause;
 				}
 
-				//Player Movemenet(seperate from camera controls)
+				//Player Movemenet(seperate from camera controls) has to be above collisions or wont work
 				PlayerMovement::player1and2move(objDunceArena.get<Transform>(), objDuncetArena.get<Transform>(), time.DeltaTime);
 
 				//Hit detection test
-				/*if (Collision(objDuncet.get<Transform>(), objTables.get<Transform>())) {
-					PlayerMovement::Player2vswall(objDuncetArena.get<Transform>(), time.DeltaTime);
-				}*/
-
+				if (Collision(objDuncetArena.get<Transform>(), objTables.get<Transform>())) {
+					PlayerMovement::Player2vswall(objDuncetArena.get<Transform>(), time.DeltaTime);	
+				}
+				
 				// Iterate over all the behaviour binding components
 				Arena1->Registry().view<BehaviourBinding>().each([&](entt::entity entity, BehaviourBinding& binding) {
 					// Iterate over all the behaviour scripts attached to the entity, and update them in sequence (if enabled)
@@ -1270,6 +1271,7 @@ int main() {
 					// Render the mesh
 					BackendHandler::RenderVAO(renderer.Material->Shader, renderer.Mesh, viewProjection, transform);
 					});
+				BackendHandler::RenderImGui();
 			}
 			#pragma endregion Pause
 
