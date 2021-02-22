@@ -68,6 +68,7 @@ We have been using Parsec, a screen sharing program, to play online "locally" wi
 #define DNS_X 3.0f
 #define DNS_Y 3.0f
 #define NUM_HITBOXES_TEST 2
+#define NUM_HITBOXES 20
 
 // Borrowed collision from https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-detection AABB collision
 bool Collision(Transform& hitbox1, Transform& hitbox2)
@@ -681,26 +682,13 @@ int main() {
 			objTable.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
 			objTable.get<Transform>().SetLocalScale(0.35f, 0.35f, 0.35f);
 		}
-		
-		
-		//HitBoxes generated using a for loop then each one is given a position
-		std::vector<GameObject> Hitboxes;
-		{
-			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/HitBox.obj");
-			for (int i = 0; i < NUM_HITBOXES_TEST; i++)//NUM_HITBOXES_TEST is located at the top of the code
-			{
-				Hitboxes.push_back(scene->CreateEntity("Hitbox" + (std::to_string(i + 1))));
-				Hitboxes[i].emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialTreeBig);//Material does not matter just invisable hitboxes
-			}
-
-			Hitboxes[0].get<Transform>().SetLocalPosition(4.0f, 4.0f, 2.0f);
-			Hitboxes[1].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 2.0f);
-		}
 
 		#pragma endregion Test(scene) Objects
 
 		#pragma region Arena1 Objects
 
+		/*VertexArrayObject::sptr vaoy = ObjLoader::LoadFromFile("models/TestScene/Dunce.obj");
+		VertexArrayObject::sptr vaox = ObjLoader::LoadFromFile("models/TestScene/Duncet.obj");*/
 		GameObject objDunceArena = Arena1->CreateEntity("Dunce");
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/Dunce.obj");
@@ -768,7 +756,7 @@ int main() {
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/RoundAbout.obj");
 			objraArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialRA);
-			objraArena.get<Transform>().SetLocalPosition(2.0f, 2.0f, 2.0f);
+			objraArena.get<Transform>().SetLocalPosition(2.0f, 2.0f, 1.0f);
 			objraArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
 			objraArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
 		}
@@ -862,6 +850,54 @@ int main() {
 			objBottleText2.get<Transform>().SetLocalRotation(0.0f, 180.0f, 180.0f);
 			objBottleText2.get<Transform>().SetLocalScale(3.0f, 3.0f, 3.0f);
 		}
+		
+		GameObject objBullet = Arena1->CreateEntity("Bullet1");
+		{
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/HitBox.obj");
+			objBullet.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialBottlepink);
+			objBullet.get<Transform>().SetLocalPosition(8.0f, 6.0f, 0.0f);
+			objBullet.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
+		}
+		
+		GameObject objBullet2 = Arena1->CreateEntity("Bullet2");
+		{
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/BottleText.obj");
+			objBullet2.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialBottlepink);
+			objBullet2.get<Transform>().SetLocalPosition(-8.0f, 6.0f, 0.0f);
+			objBullet2.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
+		}
+
+		//HitBoxes generated using a for loop then each one is given a position
+		std::vector<GameObject> HitboxesArena;
+		{
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/HitBox.obj");
+			for (int i = 0; i < NUM_HITBOXES; i++)//NUM_HITBOXES_TEST is located at the top of the code
+			{
+				HitboxesArena.push_back(Arena1->CreateEntity("Hitbox" + (std::to_string(i + 1))));
+				HitboxesArena[i].emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialTreeBig);//Material does not matter just invisable hitboxes
+			}
+
+			HitboxesArena[0].get<Transform>().SetLocalPosition(2.0f, 2.0f, 0.0f);//Roundabout
+			HitboxesArena[1].get<Transform>().SetLocalPosition(2.0f, -2.0f, 0.0f);//Slide
+			HitboxesArena[2].get<Transform>().SetLocalPosition(-1.0f, -2.5f, 0.0f);//leftmonkeybar
+			HitboxesArena[3].get<Transform>().SetLocalPosition(-3.0f, -2.5f, 0.0f);//rightmonkebar
+			HitboxesArena[4].get<Transform>().SetLocalPosition(-2.0f, 1.0f, 0.0f);//swing
+			HitboxesArena[5].get<Transform>().SetLocalPosition(9.0f, -2.0f, 0.0f);//table left up
+			HitboxesArena[6].get<Transform>().SetLocalPosition(9.0f, 2.0f, 0.0f);//table left down
+			HitboxesArena[7].get<Transform>().SetLocalPosition(-9.0f, 0.0f, 0.0f);//table right
+			HitboxesArena[8].get<Transform>().SetLocalPosition(2.0f, 7.0f, 0.0f);//Bench left down
+			HitboxesArena[9].get<Transform>().SetLocalPosition(2.0f, -6.0f, 0.0f);//bench left up
+			HitboxesArena[10].get<Transform>().SetLocalPosition(-2.0f, 7.0f, 0.0f);//bench right down
+			HitboxesArena[11].get<Transform>().SetLocalPosition(-2.5f, -6.0f, 0.0f);//bench right up
+			HitboxesArena[12].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 0.0f);//bottle middle
+			HitboxesArena[13].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 0.0f);//bottle top left
+			HitboxesArena[14].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 0.0f);//bottle top right
+			HitboxesArena[15].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 0.0f);//bottle bottom
+			HitboxesArena[16].get<Transform>().SetLocalPosition(0.0f, -10.0f, 0.0f);//top wall
+			HitboxesArena[17].get<Transform>().SetLocalPosition(0.0f, 10.0f, 0.0f);//bot wall
+			HitboxesArena[18].get<Transform>().SetLocalPosition(-14.0f, 0.0f, 0.0f);//left wall
+			HitboxesArena[19].get<Transform>().SetLocalPosition(14.0f, 0.0f, 0.0f);//right wall
+		}
 		#pragma endregion Arena1 Objects
 
 		#pragma region PostEffects
@@ -948,6 +984,9 @@ int main() {
 		Timing& time = Timing::Instance();
 		time.LastFrame = glfwGetTime();
 
+		//float yes = 0.0f;
+		bool shoot = false;
+		bool shoot2 = false;
 		///// Game loop /////
 		while (!glfwWindowShouldClose(BackendHandler::window)) {
 			glfwPollEvents();
@@ -1075,11 +1114,6 @@ int main() {
 				//Player Movemenet(seperate from camera controls)
 				PlayerMovement::player1and2move(objDunce.get<Transform>(), objDuncet.get<Transform>(), time.DeltaTime);
 
-				//Hit detection test
-				if (Collision(objDuncet.get<Transform>(), Hitboxes[0].get<Transform>())) {
-					PlayerMovement::Player2vswall(objDuncet.get<Transform>(), time.DeltaTime);
-				}
-
 				// Iterate over all the behaviour binding components
 				scene->Registry().view<BehaviourBinding>().each([&](entt::entity entity, BehaviourBinding& binding) {
 					// Iterate over all the behaviour scripts attached to the entity, and update them in sequence (if enabled)
@@ -1145,14 +1179,91 @@ int main() {
 					Application::Instance().ActiveScene = Pause;
 				}
 
+				//yes += time.DeltaTime;
+
 				//Player Movemenet(seperate from camera controls) has to be above collisions or wont work
 				PlayerMovement::player1and2move(objDunceArena.get<Transform>(), objDuncetArena.get<Transform>(), time.DeltaTime);
 
+				#pragma region Shooting
+				//Player 1
+				PlayerMovement::Shoot(objBullet.get<Transform>(), objDunceArena.get<Transform>(), time.DeltaTime, shoot);
+				int controller1 = glfwJoystickPresent(GLFW_JOYSTICK_1);
+
+				//controller input
+				if (1 == controller1) {
+					int buttonCount;
+					const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+
+					if (GLFW_PRESS == buttons[0]) {
+						shoot = true;
+					}
+				}
+				//Keyboard input
+				else {
+					if (glfwGetKey(BackendHandler::window, GLFW_KEY_E) == GLFW_PRESS)
+					{
+						shoot = true;
+					}
+				}
+				//Resets bullet position
+				for (int i = 0; i < NUM_HITBOXES; i++) {
+					if (Collision(objBullet.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+						shoot = false;
+					}
+				}
+				//Player2
+				PlayerMovement::Shoot2(objBullet2.get<Transform>(), objDuncetArena.get<Transform>(), time.DeltaTime, shoot2);
+				int controller2 = glfwJoystickPresent(GLFW_JOYSTICK_2);
+
+				//controller input
+				if (1 == controller2) {
+					int buttonCount2;
+					const unsigned char* buttons2 = glfwGetJoystickButtons(GLFW_JOYSTICK_2, &buttonCount2);
+
+					if (GLFW_PRESS == buttons2[0]) {
+						shoot2 = true;
+					}
+				}
+				//Keyboard input
+				else {
+					if (glfwGetKey(BackendHandler::window, GLFW_KEY_O) == GLFW_PRESS)
+					{
+						shoot2 = true;
+					}
+				}
+				for (int i = 0; i < NUM_HITBOXES; i++) {
+					if (Collision(objBullet2.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+						shoot2 = false;
+					}
+				}
+
+				#pragma endregion Shooting
 				//Hit detection test
-				if (Collision(objDuncetArena.get<Transform>(), objTables.get<Transform>())) {
-					PlayerMovement::Player2vswall(objDuncetArena.get<Transform>(), time.DeltaTime);	
+				for (int i = 0; i < NUM_HITBOXES; i++) {
+					if (Collision(objDuncetArena.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+						PlayerMovement::Player2vswall(objDuncetArena.get<Transform>(), time.DeltaTime);
+					}
 				}
 				
+				for (int i = 0; i < NUM_HITBOXES; i++) {
+					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+						PlayerMovement::Player1vswall(objDunceArena.get<Transform>(), time.DeltaTime);
+					}
+				}
+				
+				/*if (yes < 0.2) {
+					objDunceArena.get<RendererComponent>().SetMesh(vaoy).SetMaterial(materialDunceArena);
+				}
+				if (yes >= 0.2f && yes < 0.4f)
+				{
+					objDunceArena.get<RendererComponent>().SetMesh(vaox).SetMaterial(materialDunceArena);
+				}
+				if (yes >= 0.4f)
+				{
+					objDunceArena.get<RendererComponent>().SetMesh(vaoy).SetMaterial(materialDunceArena);
+					yes = 0.0f;
+				}*/
+
 				// Iterate over all the behaviour binding components
 				Arena1->Registry().view<BehaviourBinding>().each([&](entt::entity entity, BehaviourBinding& binding) {
 					// Iterate over all the behaviour scripts attached to the entity, and update them in sequence (if enabled)
@@ -1198,7 +1309,7 @@ int main() {
 						currentMat->Apply();
 					}
 					// Render the mesh
-					BackendHandler::RenderVAO(renderer.Material->Shader, renderer.Mesh, viewProjection, transform);
+						BackendHandler::RenderVAO(renderer.Material->Shader, renderer.Mesh, viewProjection, transform);
 				});
 
 				basicEffect->UnbindBuffer();
