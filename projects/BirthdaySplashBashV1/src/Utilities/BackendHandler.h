@@ -3,6 +3,7 @@
 #include "Utilities/Util.h"
 #include "Utilities/EnvironmentGenerator.h"
 #include "Graphics/Post/BlurEffect.h"
+#include "Graphics/Post/ColorCorrectEffect.h"
 
 #include <iostream>
 #include <Logging.h>

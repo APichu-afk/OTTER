@@ -32,6 +32,7 @@ uniform int u_ambient;
 uniform int u_specular;
 uniform int u_ambientspecular;
 uniform int u_ambientspeculartoon;
+uniform int u_Textures;
 
 out vec4 frag_color;
 
@@ -97,6 +98,18 @@ void main() {
 	
 	if(u_ambientspeculartoon == 1){
 		 result = ((u_AmbientCol * u_AmbientStrength) + (ambient + diffuse + specular) * attenuation) * inColor * textureColor.rgb;
+	}
+
+	if (u_Textures == 1){
+		result = (
+		(u_AmbientCol * u_AmbientStrength) + // global ambient light
+		(ambient + diffuse + specular) * attenuation // light factors from our single light
+		) * inColor * textureColor.rgb; // Object color
+	}
+
+	if (u_Textures == 0)
+	{
+		result = (ambient + diffuse + specular) * inColor;
 	}
 
 	frag_color = vec4(result, textureColor.a);

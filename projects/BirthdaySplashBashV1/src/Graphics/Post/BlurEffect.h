@@ -26,7 +26,7 @@ public:
 private:
 
 	float m_downscale = 2.0f;
-	float m_threshold = 0.01f;
+	float m_threshold = 0.00f;
 	unsigned m_passes = 0;
 	glm::vec2 direction;
 };

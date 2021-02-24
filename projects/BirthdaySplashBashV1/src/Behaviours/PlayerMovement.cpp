@@ -23,20 +23,27 @@ void PlayerMovement::player1and2move(Transform& Player1, Transform& Player2, flo
 	int controller2 = glfwJoystickPresent(GLFW_JOYSTICK_2);
 
 	//player 1 controller
-	if (1 == controller1)
+	if (controller1 == 1)
 	{
 		int axesCount;
 		const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
 		const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
 
 		if (axes[1] >= -1 && axes[1] <= -0.2) {
-			Player1.MoveLocal(0.0f, 0.0f, 5.0f*dt);
+			Player1.MoveLocal(0.0f, 0.0f, 8.0f*dt);
 		}
 		if (axes[1] <= 1 && axes[1] >= 0.2) {
-			Player1.MoveLocal(0.0f, 0.0f, -5.0f*dt);
+			Player1.MoveLocal(0.0f, 0.0f, -8.0f*dt);
 		}
 
-		if (name == "Wireless Controller")
+		if (axes[2] >= -1 && axes[2] <= -0.2) {
+			Player1.RotateLocal(0.0f, 225.0f * dt, 0.0f);
+		}
+		if (axes[2] <= 1 && axes[2] >= 0.2) {
+			Player1.RotateLocal(0.0f, -225.0f * dt, 0.0f);
+		}
+	
+		/*if (name == "Wireless Controller")
 		{
 			if (axes[3] > -1)
 			{
@@ -57,22 +64,45 @@ void PlayerMovement::player1and2move(Transform& Player1, Transform& Player2, flo
 			{
 				Player1.RotateLocal(0.0f, -225.0f * dt, 0.0f);
 			}
+		}*/
+	}
+	else
+	{
+		// Keyboard controls
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			Player1.MoveLocal(0.0f, 0.0f, 8.0f * dt);
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			Player1.RotateLocal(0.0f, 225.0f * dt, 0.0f);
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			Player1.MoveLocal(0.0f, 0.0f, -8.0f * dt);
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			Player1.RotateLocal(0.0f, -225.0f * dt, 0.0f);
 		}
 	}
 	//player2 controller
-	if (1 == controller2)
+	if (controller2 == 1)
 	{
 		int axesCount2;
 		const float* axes2 = glfwGetJoystickAxes(GLFW_JOYSTICK_2, &axesCount2);
 		const char* name2 = glfwGetJoystickName(GLFW_JOYSTICK_2);
 
 		if (axes2[1] >= -1 && axes2[1] <= -0.2) {
-			Player2.MoveLocal(0.0f, 0.0f, 5.0f*dt);
+			Player2.MoveLocal(0.0f, 0.0f, 8.0f*dt);
 		}
 		if (axes2[1] <= 1 && axes2[1] >= 0.2) {
-			Player2.MoveLocal(0.0f, 0.0f, -5.0f * dt);
+			Player2.MoveLocal(0.0f, 0.0f, -8.0f * dt);
 		}
-
+		
+		if (axes2[2] >= -1 && axes2[2] <= -0.2) {
+			Player2.RotateLocal(0.0f, 225.0f * dt, 0.0f);
+		}
+		if (axes2[2] <= 1 && axes2[2] >= 0.2) {
+			Player2.RotateLocal(0.0f, -225.0f * dt, 0.0f);
+		}
+		std::cout << name2 << "\n";
 		if (name2 == "Wireless Controller")
 		{
 			if (axes2[3] > -1)
@@ -85,42 +115,32 @@ void PlayerMovement::player1and2move(Transform& Player1, Transform& Player2, flo
 			}
 		}
 		else {
-			if (axes2[3] > -1)
+			if (axes2[4] > -1)
 			{
 				Player2.RotateLocal(0.0f, 225.0f * dt, 0.0f);
 			}
-			if (axes2[4] > -1)
+			if (axes2[5] > -1)
 			{
 				Player2.RotateLocal(0.0f, -225.0f * dt, 0.0f);
 			}
 		}
 	}
-
-	// Keyboard controls
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		Player1.MoveLocal(0.0f, 0.0f, 5.0f * dt);
+	else
+	{
+		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+			Player2.MoveLocal(0.0f, 0.0f, 8.0f * dt);
+		}
+		if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
+			Player2.RotateLocal(0.0f, 225.0f * dt, 0.0f);
+		}
+		if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+			Player2.MoveLocal(0.0f, 0.0f, -8.0f * dt);
+		}
+		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+			Player2.RotateLocal(0.0f, -225.0f * dt, 0.0f);
+		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		Player1.RotateLocal(0.0f, 225.0f * dt, 0.0f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		Player1.MoveLocal(0.0f, 0.0f, -5.0f * dt);
-	}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		Player1.RotateLocal(0.0f, -225.0f * dt, 0.0f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-		Player2.MoveLocal(0.0f, 0.0f, 5.0f * dt);
-	}
-	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-		Player2.RotateLocal(0.0f, 225.0f * dt, 0.0f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-		Player2.MoveLocal(0.0f, 0.0f, -5.0f * dt);
-	}
-	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-		Player2.RotateLocal(0.0f, -225.0f * dt, 0.0f);
-	}
+	
 }
 
 //Only called if colliding with a wall or player 2
@@ -137,18 +157,18 @@ void PlayerMovement::Player1vswall(Transform& Player1, float dt)
 		const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
 
 		if (axes[1] >= -1 && axes[1] <= -0.2) {
-			Player1.MoveLocal(0.0f, 0.0f, -5.0f * dt);
+			Player1.MoveLocal(0.0f, 0.0f, -8.0f * dt);
 		}
 		if (axes[1] <= 1 && axes[1] >= 0.2) {
-			Player1.MoveLocal(0.0f, 0.0f, 5.0f * dt);
+			Player1.MoveLocal(0.0f, 0.0f, 8.0f * dt);
 		}
 	}
 	else {
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			Player1.MoveLocal(0.0f, 0.0f, -5.0f * dt);
+			Player1.MoveLocal(0.0f, 0.0f, -8.0f * dt);
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			Player1.MoveLocal(0.0f, 0.0f, 5.0f * dt);
+			Player1.MoveLocal(0.0f, 0.0f, 8.0f * dt);
 		}
 	}
 }
@@ -166,18 +186,18 @@ void PlayerMovement::Player2vswall(Transform& Player2, float dt)
 		const char* name2 = glfwGetJoystickName(GLFW_JOYSTICK_2);
 
 		if (axes2[1] >= -1 && axes2[1] <= -0.2) {
-			Player2.MoveLocal(0.0f, 0.0f, -5.0f * dt);
+			Player2.MoveLocal(0.0f, 0.0f, -8.0f * dt);
 		}
 		if (axes2[1] <= 1 && axes2[1] >= 0.2) {
-			Player2.MoveLocal(0.0f, 0.0f, 5.0f * dt);
+			Player2.MoveLocal(0.0f, 0.0f, 8.0f * dt);
 		}
 	}
 	else {
 		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-			Player2.MoveLocal(0.0f, 0.0f, -5.0f * dt);
+			Player2.MoveLocal(0.0f, 0.0f, -8.0f * dt);
 		}
 		if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-			Player2.MoveLocal(0.0f, 0.0f, 5.0f * dt);
+			Player2.MoveLocal(0.0f, 0.0f, 8.0f * dt);
 		}
 	}
 }
@@ -195,7 +215,7 @@ void PlayerMovement::Shoot(Transform& Bullet1, Transform& Player1, float dt, boo
 
 		if (GLFW_PRESS == buttons[0] || shoot)
 		{
-			Bullet1.MoveLocal(0.0f, 0.0f, 5.0f * dt);
+			Bullet1.MoveLocal(0.0f, 0.0f, 10.0f * dt);
 		}
 		else
 		{
@@ -205,7 +225,7 @@ void PlayerMovement::Shoot(Transform& Bullet1, Transform& Player1, float dt, boo
 	}
 	else {
 		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS || shoot) {
-			Bullet1.MoveLocal(0.0f, 0.0f, 5.0f * dt);
+			Bullet1.MoveLocal(0.0f, 0.0f, 10.0f * dt);
 		}
 		else
 		{
@@ -228,7 +248,7 @@ void PlayerMovement::Shoot2(Transform& Bullet2, Transform& Player2, float dt, bo
 
 		if (GLFW_PRESS == buttons[0] || shoot)
 		{
-			Bullet2.MoveLocal(0.0f, 0.0f, 5.0f * dt);
+			Bullet2.MoveLocal(0.0f, 0.0f, 10.0f * dt);
 		}
 		else
 		{
@@ -238,7 +258,7 @@ void PlayerMovement::Shoot2(Transform& Bullet2, Transform& Player2, float dt, bo
 	}
 	else {
 		if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS || shoot) {
-			Bullet2.MoveLocal(0.0f, 0.0f, 5.0f * dt);
+			Bullet2.MoveLocal(0.0f, 0.0f, 10.0f * dt);
 		}
 		else
 		{

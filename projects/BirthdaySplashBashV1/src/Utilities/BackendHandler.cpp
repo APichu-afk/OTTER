@@ -58,6 +58,10 @@ void BackendHandler::GlfwWindowResizedCallback(GLFWwindow* window, int width, in
 	{
 		buf.Reshape(width, height);
 	});
+	Application::Instance().ActiveScene->Registry().view<ColorCorrectEffect>().each([=](ColorCorrectEffect& buf)
+	{
+		buf.Reshape(width, height);
+	});
 	Application::Instance().ActiveScene->Registry().view<BlurEffect>().each([=](BlurEffect& buf)
 	{
 		buf.Reshape(width, height);

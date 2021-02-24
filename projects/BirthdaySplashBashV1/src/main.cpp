@@ -133,6 +133,8 @@ int main() {
 		int		  specularonly = 0;
 		int		  ambientandspecular = 0;
 		int		  ambientspeculartoon = 0;
+		int		  Textures = 1;
+		bool	  OnOff = true;
 
 		// These are our application / scene level uniforms that don't necessarily update
 		// every frame
@@ -150,6 +152,7 @@ int main() {
 		shader->SetUniform("u_specular", specularonly);
 		shader->SetUniform("u_ambientspecular", ambientandspecular);
 		shader->SetUniform("u_ambientspeculartoon", ambientspeculartoon);
+		shader->SetUniform("u_Textures", Textures);
 
 		PostEffect* basicEffect;
 
@@ -157,6 +160,7 @@ int main() {
 		std::vector<PostEffect*> effects;
 
 		BlurEffect* blureffect;
+		ColorCorrectEffect* colorCorrectioneffect;
 
 		// We'll add some ImGui controls to control our shader
 		BackendHandler::imGuiCallbacks.push_back([&]() {
@@ -191,12 +195,48 @@ int main() {
 				}
 			}
 
-			/*Toggle buttons
-			No lighting
-			Ambient only
-			specular only
-			Ambient and specular
-			Ambient, Specular, and Toon Shader*/
+			if (ImGui::CollapsingHeader("Effect controls"))
+			{
+				ImGui::SliderInt("Chosen Effect", &activeEffect, 0, effects.size() - 1);
+
+				if (activeEffect == 0)
+				{
+					ImGui::Text("Active Effect: Bloom Effect");
+
+					BlurEffect* temp = (BlurEffect*)effects[activeEffect];
+					float threshold = temp->GetThreshold();
+
+					if (ImGui::SliderFloat("Threshold", &threshold, 0.0f, 1.0f))
+					{
+						temp->SetThreshold(threshold);
+					}
+
+					BlurEffect* tempa = (BlurEffect*)effects[activeEffect];
+					float Passes = tempa->GetPasses();
+
+					if (ImGui::SliderFloat("Blur", &Passes, 0.0f, 10.0f))
+					{
+						tempa->SetPasses(Passes);
+					}
+				}
+
+				if (activeEffect == 1)
+				{
+					ImGui::Text("Active Effect: Color Correct Effect");
+
+					ColorCorrectEffect* temp = (ColorCorrectEffect*)effects[activeEffect];
+					static char input[BUFSIZ];
+					ImGui::InputText("Lut File to Use", input, BUFSIZ);
+
+					if (ImGui::Button("SetLUT", ImVec2(200.0f, 40.0f)))
+					{
+						temp->SetLUT(LUT3D(std::string(input)));
+					}
+				}
+			}
+
+			//Toggle buttons
+	
 			if (ImGui::CollapsingHeader("Toggle buttons")) {
 				if (ImGui::Button("No Lighting")) {
 					shader->SetUniform("u_lightoff", lightoff = 1);
@@ -204,6 +244,7 @@ int main() {
 					shader->SetUniform("u_specular", specularonly = 0);
 					shader->SetUniform("u_ambientspecular", ambientandspecular = 0);
 					shader->SetUniform("u_ambientspeculartoon", ambientspeculartoon = 0);
+					shader->SetUniform("u_Textures", Textures = 2);
 				}
 
 				if (ImGui::Button("Ambient only")) {
@@ -212,6 +253,7 @@ int main() {
 					shader->SetUniform("u_specular", specularonly = 0);
 					shader->SetUniform("u_ambientspecular", ambientandspecular = 0);
 					shader->SetUniform("u_ambientspeculartoon", ambientspeculartoon = 0);
+					shader->SetUniform("u_Textures", Textures = 2);
 				}
 
 				if (ImGui::Button("specular only")) {
@@ -220,6 +262,7 @@ int main() {
 					shader->SetUniform("u_specular", specularonly = 1);
 					shader->SetUniform("u_ambientspecular", ambientandspecular = 0);
 					shader->SetUniform("u_ambientspeculartoon", ambientspeculartoon = 0);
+					shader->SetUniform("u_Textures", Textures = 2);
 				}
 
 				if (ImGui::Button("Ambient and Specular")) {
@@ -228,6 +271,7 @@ int main() {
 					shader->SetUniform("u_specular", specularonly = 0);
 					shader->SetUniform("u_ambientspecular", ambientandspecular = 1);
 					shader->SetUniform("u_ambientspeculartoon", ambientspeculartoon = 0);
+					shader->SetUniform("u_Textures", Textures = 2);
 				}
 
 				if (ImGui::Button("Ambient, Specular, and Toon Shading")) {
@@ -236,6 +280,22 @@ int main() {
 					shader->SetUniform("u_specular", specularonly = 0);
 					shader->SetUniform("u_ambientspecular", ambientandspecular = 0);
 					shader->SetUniform("u_ambientspeculartoon", ambientspeculartoon = 1);
+					shader->SetUniform("u_Textures", Textures = 2);
+				}
+
+				if (OnOff) {
+					if (ImGui::Button("Textures Off"))
+					{
+						shader->SetUniform("u_Textures", Textures = 0);
+						OnOff = false;
+					}
+				}
+				else {
+					if (ImGui::Button("Textures On"))
+					{
+						shader->SetUniform("u_Textures", Textures = 1);
+						OnOff = true;
+					}
 				}
 			}
 
@@ -266,6 +326,19 @@ int main() {
 		glDepthFunc(GL_LEQUAL); // New 
 
 		#pragma region TEXTURE LOADING
+
+		#pragma region Menu diffuse
+
+		Texture2D::sptr diffuseMenu = Texture2D::LoadFromFile("images/Menu/TitleText.PNG");
+		Texture2D::sptr diffuseInstructions = Texture2D::LoadFromFile("images/Menu/IntroText.PNG");
+
+		#pragma endregion Menu diffuse
+		
+		#pragma region Pause diffuse
+
+		Texture2D::sptr diffusePause = Texture2D::LoadFromFile("images/Menu/IntroScene.PNG");
+
+		#pragma endregion Pause diffuse
 
 		#pragma region testing scene difuses
 		// Load some textures from files
@@ -304,8 +377,8 @@ int main() {
 		#pragma endregion Arena1 diffuses
 
 		// Load the cube map
-		//TextureCubeMap::sptr environmentMap = TextureCubeMap::LoadFromImages("images/cubemaps/skybox/sample.jpg");
 		TextureCubeMap::sptr environmentMap = TextureCubeMap::LoadFromImages("images/cubemaps/skybox/ocean.jpg"); 
+		LUT3D test("cubes/BrightenedCorrection.cube");
 
 		// Creating an empty texture
 		Texture2DDescription desc = Texture2DDescription();  
@@ -542,6 +615,22 @@ int main() {
 		materialBench->Set("s_Specular", specular);
 		materialBench->Set("u_Shininess", 8.0f);
 		materialBench->Set("u_TextureMix", 0.0f);
+		
+		ShaderMaterial::sptr materialMenu = ShaderMaterial::Create();
+		materialMenu->Shader = shader;
+		materialMenu->Set("s_Diffuse", diffuseMenu);
+		materialMenu->Set("s_Diffuse2", diffuseInstructions);
+		materialMenu->Set("s_Specular", specular);
+		materialMenu->Set("u_Shininess", 8.0f);
+		materialMenu->Set("u_TextureMix", 0.0f);
+
+		ShaderMaterial::sptr materialPause = ShaderMaterial::Create();
+		materialPause->Shader = shader;
+		materialPause->Set("s_Diffuse", diffusePause);
+		materialPause->Set("s_Diffuse2", diffuseInstructions);
+		materialPause->Set("s_Specular", specular);
+		materialPause->Set("u_Shininess", 8.0f);
+		materialPause->Set("u_TextureMix", 0.0f);
 
 		// 
 		ShaderMaterial::sptr material1 = ShaderMaterial::Create();
@@ -572,7 +661,7 @@ int main() {
 		// Create an object to be our camera
 		GameObject cameraObject = scene->CreateEntity("Camera");
 		{
-			cameraObject.get<Transform>().SetLocalPosition(0, 1, 17).LookAt(glm::vec3(0, 0, 0));
+			cameraObject.get<Transform>().SetLocalPosition(0, 0.1, 17).LookAt(glm::vec3(0, 0, 0));
 
 			// We'll make our camera a component of the camera object
 			Camera& camera = cameraObject.emplace<Camera>();// Camera::Create();
@@ -583,6 +672,34 @@ int main() {
 			camera.SetOrthoHeight(3.0f);
 			BehaviourBinding::Bind<CameraControlBehaviour>(cameraObject);
 		}
+
+		#pragma region Menu Objects
+
+		GameObject objMenu = Menu->CreateEntity("Main Menu");
+		{
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Menu/Plane.obj");
+			objMenu.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialMenu);
+			objMenu.get<Transform>().SetLocalPosition(0.0f, 0.0f, 2.0f);
+			objMenu.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
+			objMenu.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
+			BehaviourBinding::BindDisabled<SimpleMoveBehaviour>(objMenu);
+		}
+
+		#pragma endregion Menu Objects
+
+		#pragma region Pause Objects
+
+		GameObject objPause = Pause->CreateEntity("Pause Menu");
+		{
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Menu/Plane.obj");
+			objPause.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialPause);
+			objPause.get<Transform>().SetLocalPosition(0.0f, 0.0f, 2.0f);
+			objPause.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
+			objPause.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
+			BehaviourBinding::BindDisabled<SimpleMoveBehaviour>(objPause);
+		}
+
+		#pragma endregion Pause Objects
 
 		#pragma region Test(scene) Objects
 
@@ -856,15 +973,15 @@ int main() {
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/HitBox.obj");
 			objBullet.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialBottlepink);
 			objBullet.get<Transform>().SetLocalPosition(8.0f, 6.0f, 0.0f);
-			objBullet.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
+			objBullet.get<Transform>().SetLocalScale(0.5f, 0.5f, 0.5f);
 		}
 		
 		GameObject objBullet2 = Arena1->CreateEntity("Bullet2");
 		{
-			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/BottleText.obj");
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/HitBox.obj");
 			objBullet2.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialBottlepink);
 			objBullet2.get<Transform>().SetLocalPosition(-8.0f, 6.0f, 0.0f);
-			objBullet2.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
+			objBullet2.get<Transform>().SetLocalScale(0.5f, 0.5f, 0.5f);
 		}
 
 		//HitBoxes generated using a for loop then each one is given a position
@@ -874,7 +991,7 @@ int main() {
 			for (int i = 0; i < NUM_HITBOXES; i++)//NUM_HITBOXES_TEST is located at the top of the code
 			{
 				HitboxesArena.push_back(Arena1->CreateEntity("Hitbox" + (std::to_string(i + 1))));
-				HitboxesArena[i].emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialTreeBig);//Material does not matter just invisable hitboxes
+				//HitboxesArena[i].emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialTreeBig);//Material does not matter just invisable hitboxes
 			}
 
 			HitboxesArena[0].get<Transform>().SetLocalPosition(2.0f, 2.0f, 0.0f);//Roundabout
@@ -893,10 +1010,14 @@ int main() {
 			HitboxesArena[13].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 0.0f);//bottle top left
 			HitboxesArena[14].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 0.0f);//bottle top right
 			HitboxesArena[15].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 0.0f);//bottle bottom
-			HitboxesArena[16].get<Transform>().SetLocalPosition(0.0f, -10.0f, 0.0f);//top wall
-			HitboxesArena[17].get<Transform>().SetLocalPosition(0.0f, 10.0f, 0.0f);//bot wall
-			HitboxesArena[18].get<Transform>().SetLocalPosition(-14.0f, 0.0f, 0.0f);//left wall
-			HitboxesArena[19].get<Transform>().SetLocalPosition(14.0f, 0.0f, 0.0f);//right wall
+			HitboxesArena[16].get<Transform>().SetLocalPosition(-15.0f, -10.0f, 0.0f);//top wall
+			HitboxesArena[16].get<Transform>().SetLocalScale(30.0f, 1.0f, 1.0f);//top wall scale
+			HitboxesArena[17].get<Transform>().SetLocalPosition(-15.0f, 10.0f, 0.0f);//bot wall
+			HitboxesArena[17].get<Transform>().SetLocalScale(30.0f, 1.0f, 1.0f);//bot wall scale
+			HitboxesArena[18].get<Transform>().SetLocalPosition(-14.0f, -10.0f, 0.0f);//left wall
+			HitboxesArena[18].get<Transform>().SetLocalScale(1.0f, 20.0f, 1.0f);//left wall scale
+			HitboxesArena[19].get<Transform>().SetLocalPosition(14.0f, -10.0f, 0.0f);//right wall
+			HitboxesArena[19].get<Transform>().SetLocalScale(1.0f, 20.0f, 1.0f);//right wall
 		}
 		#pragma endregion Arena1 Objects
 
@@ -917,6 +1038,13 @@ int main() {
 			blureffect->Init(width, height);
 		}
 		effects.push_back(blureffect);
+		
+		GameObject colorcorrectioneffectObject = scene->CreateEntity("color correction Effect");
+		{
+			colorCorrectioneffect = &colorcorrectioneffectObject.emplace<ColorCorrectEffect>();
+			colorCorrectioneffect->Init(width, height);
+		}
+		effects.push_back(colorCorrectioneffect);
 
 		#pragma endregion PostEffects
 
@@ -987,6 +1115,8 @@ int main() {
 		//float yes = 0.0f;
 		bool shoot = false;
 		bool shoot2 = false;
+		bool instructions = false;
+		bool instructionspause = false;
 		///// Game loop /////
 		while (!glfwWindowShouldClose(BackendHandler::window)) {
 			glfwPollEvents();
@@ -1043,13 +1173,31 @@ int main() {
 
 				if (glfwGetKey(BackendHandler::window, GLFW_KEY_ENTER) == GLFW_PRESS)
 				{
-					Application::Instance().ActiveScene = Arena1;//just to test change to arena1 later
+					Application::Instance().ActiveScene = Arena1;
 				}
 				
 				if (glfwGetKey(BackendHandler::window,GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS)
 				{
 					Application::Instance().ActiveScene = scene;//just to test change to arena1 later
 				}
+				
+				if (!instructions) {
+					if (glfwGetKey(BackendHandler::window, GLFW_KEY_SPACE) == GLFW_PRESS)
+					{
+						instructions = true;
+						materialMenu->Set("u_TextureMix", 1.0f);
+					}
+				}
+				else
+				{
+					if (glfwGetKey(BackendHandler::window, GLFW_KEY_BACKSPACE) == GLFW_PRESS)
+					{
+						instructions = false;
+						materialMenu->Set("u_TextureMix", 0.0f);
+					}
+				}
+
+				shader->SetUniform("u_AmbientLightStrength", lightAmbientPow = 4.1);
 
 				// Iterate over all the behaviour binding components
 				Menu->Registry().view<BehaviourBinding>().each([&](entt::entity entity, BehaviourBinding& binding) {
@@ -1111,6 +1259,8 @@ int main() {
 					Application::Instance().ActiveScene = Pause;
 				}
 
+				shader->SetUniform("u_AmbientLightStrength", lightAmbientPow = 2.1);
+
 				//Player Movemenet(seperate from camera controls)
 				PlayerMovement::player1and2move(objDunce.get<Transform>(), objDuncet.get<Transform>(), time.DeltaTime);
 
@@ -1147,6 +1297,8 @@ int main() {
 					return false;
 					});
 
+				basicEffect->BindBuffer(0);
+
 				// Iterate over the render group components and draw them
 				renderGroup.each([&](entt::entity e, RendererComponent& renderer, Transform& transform) {
 					// If the shader has changed, set up it's uniforms
@@ -1163,6 +1315,13 @@ int main() {
 					// Render the mesh
 					BackendHandler::RenderVAO(renderer.Material->Shader, renderer.Mesh, viewProjection, transform);
 				});
+
+				basicEffect->UnbindBuffer();
+
+				effects[activeEffect]->ApplyEffect(basicEffect);
+
+				effects[activeEffect]->DrawToScreen();
+
 				BackendHandler::RenderImGui();
 			}
 			#pragma endregion scene(testing)
@@ -1178,6 +1337,8 @@ int main() {
 				{
 					Application::Instance().ActiveScene = Pause;
 				}
+
+				shader->SetUniform("u_AmbientLightStrength", lightAmbientPow = 2.1);
 
 				//yes += time.DeltaTime;
 
@@ -1330,8 +1491,28 @@ int main() {
 
 				if (glfwGetKey(BackendHandler::window, GLFW_KEY_ENTER) == GLFW_PRESS)
 				{
+					instructionspause = false;
+					materialPause->Set("u_TextureMix", 0.0f);
 					Application::Instance().ActiveScene = Arena1;//just to test change to arena1 later
 				}
+				
+				if (!instructionspause) {
+					if (glfwGetKey(BackendHandler::window, GLFW_KEY_SPACE) == GLFW_PRESS)
+					{
+						instructionspause = true;
+						materialPause->Set("u_TextureMix", 1.0f);
+					}
+				}
+				else
+				{
+					if (glfwGetKey(BackendHandler::window, GLFW_KEY_BACKSPACE) == GLFW_PRESS)
+					{
+						instructionspause = false;
+						materialPause->Set("u_TextureMix", 0.0f);
+					}
+				}
+
+				shader->SetUniform("u_AmbientLightStrength", lightAmbientPow = 4.1);
 
 				// Iterate over all the behaviour binding components
 				Pause->Registry().view<BehaviourBinding>().each([&](entt::entity entity, BehaviourBinding& binding) {
