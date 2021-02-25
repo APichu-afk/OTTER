@@ -1387,76 +1387,43 @@ int main() {
 
 				//yes += time.DeltaTime;
 
+				#pragma region BIG MESSY SPAGHETTI CODE AGAIN
 				#pragma region animations and switching textures
 				//rerenders bottles checks
 				if (!renderammoground1)
 				{
 					bottletime1 += time.DeltaTime;
-					if (bottletime1 >= 5)
+					if (bottletime1 >= 5.0f)
 					{
 						renderammoground1 = true;
-						bottletime1 = 0;
+						bottletime1 = 0.0f;
 					}
 				}
 				if (!renderammoground2)
 				{
 					bottletime2 += time.DeltaTime;
-					if (bottletime2 >= 5)
+					if (bottletime2 >= 5.0f)
 					{
 						renderammoground2 = true;
-						bottletime2 = 0;
+						bottletime2 = 0.0f;
 					}
 				}
 				if (!renderammoground3)
 				{
 					bottletime3 += time.DeltaTime;
-					if (bottletime3 >= 5)
+					if (bottletime3 >= 5.0f)
 					{
 						renderammoground3 = true;
-						bottletime3 = 0;
+						bottletime3 = 0.0f;
 					}
 				}
 				if (!renderammoground4)
 				{
 					bottletime4 += time.DeltaTime;
-					if (bottletime4 >= 5)
+					if (bottletime4 >= 5.0f)
 					{
 						renderammoground4 = true;
-						bottletime4 = 0;
-					}
-				}
-
-				//ammo hitboxes p1
-				if (renderammoground1) {
-					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[12].get<Transform>()) && ammo == false)
-					{
-						ammo = true;
-						renderammo = true;
-						renderammoground1 = false;
-					}
-				}
-				if (renderammoground2) {
-					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[13].get<Transform>()) && ammo == false)
-					{
-						ammo = true;
-						renderammo = true;
-						renderammoground2 = false;
-					}
-				}
-				if (renderammoground3) {
-					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[14].get<Transform>()) && ammo == false)
-					{
-						ammo = true;
-						renderammo = true;
-						renderammoground3 = false;
-					}
-				}
-				if (renderammoground4) {
-					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[15].get<Transform>()) && ammo == false)
-					{
-						ammo = true;
-						renderammo = true;
-						renderammoground4 = false;
+						bottletime4 = 0.0f;
 					}
 				}
 				#pragma endregion animations and switching textures
@@ -1545,11 +1512,13 @@ int main() {
 				}
 
 				#pragma endregion Shooting
+
+				#pragma region Player 1 and 2 Collision
 				//Hit detection test
 				for (int i = 0; i < NUM_HITBOXES; i++) {
 					if (i == 12 || i == 13 || i == 14 || i == 15) {
 						if (Collision(objDuncetArena.get<Transform>(), HitboxesArena[i].get<Transform>())) {
-							ammo2 = true;
+							//yes
 						}
 					}
 					else {
@@ -1562,7 +1531,7 @@ int main() {
 				for (int i = 0; i < NUM_HITBOXES; i++) {
 					if (i == 12 || i == 13 || i == 14 || i == 15) {
 						if (Collision(objDunceArena.get<Transform>(), HitboxesArena[i].get<Transform>())) {
-							ammo = true;
+							//yes
 						}
 					}
 					else {
@@ -1572,6 +1541,116 @@ int main() {
 					}
 				}
 
+				if (renderammoground1) {
+					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[12].get<Transform>()) && ammo == false) {
+						renderammoground1 = false;
+						ammo = true;
+						renderammo = true;
+					}
+				}
+				if (renderammoground2) {
+					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[13].get<Transform>()) && ammo == false) {
+						renderammoground2 = false;
+						ammo = true;
+						renderammo = true;
+					}
+				}
+				if (renderammoground3) {
+					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[14].get<Transform>()) && ammo == false) {
+						renderammoground3 = false;
+						ammo = true;
+						renderammo = true;
+					}
+				}
+				if (renderammoground4) {
+					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[15].get<Transform>()) && ammo == false) {
+						renderammoground4 = false;
+						ammo = true;
+						renderammo = true;
+					}
+				}
+				
+				if (renderammoground1) {
+					if (Collision(objDuncetArena.get<Transform>(), HitboxesArena[12].get<Transform>()) && ammo2 == false) {
+						renderammoground1 = false;
+						ammo2 = true;
+						renderammo2 = true;
+					}
+				}
+				if (renderammoground2) {
+					if (Collision(objDuncetArena.get<Transform>(), HitboxesArena[13].get<Transform>()) && ammo2 == false) {
+						renderammoground2 = false;
+						ammo2 = true;
+						renderammo2 = true;
+					}
+				}
+				if (renderammoground3) {
+					if (Collision(objDuncetArena.get<Transform>(), HitboxesArena[14].get<Transform>()) && ammo2 == false) {
+						renderammoground3 = false;
+						ammo2 = true;
+						renderammo2 = true;
+					}
+				}
+				if (renderammoground4) {
+					if (Collision(objDuncetArena.get<Transform>(), HitboxesArena[15].get<Transform>()) && ammo2 == false) {
+						renderammoground4 = false;
+						ammo2 = true;
+						renderammo2 = true;
+					}
+				}
+
+				if (Collision(objDuncetArena.get<Transform>(), objDunceArena.get<Transform>())) {
+					PlayerMovement::Player2vswall(objDuncetArena.get<Transform>(), time.DeltaTime);
+				}
+				if (Collision(objDuncetArena.get<Transform>(), objDunceArena.get<Transform>())) {
+					PlayerMovement::Player1vswall(objDunceArena.get<Transform>(), time.DeltaTime);
+				}
+				if (renderammoground1)
+				{
+					std::cout << "yes\n";
+				}
+				#pragma endregion Player 1 and 2 Collision
+				
+				if (!renderammoground1)
+				{
+					Bottles[0].get<RendererComponent>().SetMesh(EmptyBottle);
+					Bottles[0].get<Transform>().SetLocalPosition(0.0f, 1.0f, 2.0f);
+				}
+				else
+				{
+					Bottles[0].get<RendererComponent>().SetMesh(FullBottle);
+					Bottles[0].get<Transform>().SetLocalPosition(0.0f, 0.0f, 2.0f);
+				}
+				if (!renderammoground2)
+				{
+					Bottles[1].get<RendererComponent>().SetMesh(EmptyBottle);
+					Bottles[1].get<Transform>().SetLocalPosition(-10.0f, -5.0f, 2.0f);
+				}
+				else
+				{
+					Bottles[1].get<RendererComponent>().SetMesh(FullBottle);
+					Bottles[1].get<Transform>().SetLocalPosition(-10.0f, -5.0f, 2.0f);
+				}
+				if (!renderammoground3)
+				{
+					Bottles[2].get<RendererComponent>().SetMesh(EmptyBottle);
+					Bottles[2].get<Transform>().SetLocalPosition(10.0f, -5.0f, 2.0f);
+				}
+				else
+				{
+					Bottles[2].get<RendererComponent>().SetMesh(FullBottle);
+					Bottles[2].get<Transform>().SetLocalPosition(10.0f, -5.0f, 2.0f);
+				}
+				if (!renderammoground4)
+				{
+					Bottles[3].get<RendererComponent>().SetMesh(EmptyBottle);
+					Bottles[3].get<Transform>().SetLocalPosition(0.0f, 5.0f, 2.0f);
+				}
+				else
+				{
+					Bottles[3].get<RendererComponent>().SetMesh(FullBottle);
+					Bottles[3].get<Transform>().SetLocalPosition(0.0f, 4.0f, 2.0f);
+				}
 				if (!ammo)
 				{
 					Bottles[4].get<RendererComponent>().SetMesh(EmptyBottle);
@@ -1582,7 +1661,6 @@ int main() {
 					Bottles[4].get<RendererComponent>().SetMesh(FullBottle);
 					Bottles[4].get<Transform>().SetLocalPosition(4.0f, 14.0f, 2.0f);
 				}
-				
 				if (!ammo2)
 				{
 					Bottles[5].get<RendererComponent>().SetMesh(EmptyBottle);
@@ -1593,6 +1671,8 @@ int main() {
 					Bottles[5].get<RendererComponent>().SetMesh(FullBottle);
 					Bottles[5].get<Transform>().SetLocalPosition(-12.0f, 14.0f, 2.0f);
 				}
+
+				#pragma region BIG MESSY SPAGHETTI CODE AGAIN
 
 				// Iterate over all the behaviour binding components
 				Arena1->Registry().view<BehaviourBinding>().each([&](entt::entity entity, BehaviourBinding& binding) {
