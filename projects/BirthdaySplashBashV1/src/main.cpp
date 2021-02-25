@@ -69,6 +69,7 @@ We have been using Parsec, a screen sharing program, to play online "locally" wi
 #define DNS_Y 3.0f
 #define NUM_HITBOXES_TEST 2
 #define NUM_HITBOXES 20
+#define NUM_BOTTLES_ARENA 6
 
 // Borrowed collision from https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-detection AABB collision
 bool Collision(Transform& hitbox1, Transform& hitbox2)
@@ -374,6 +375,8 @@ int main() {
 		Texture2D::sptr diffuseroundabout = Texture2D::LoadFromFile("images/Arena1/RoundAbout.png");
 		Texture2D::sptr diffusepinwheel = Texture2D::LoadFromFile("images/Arena1/Pinwheel.png");
 		Texture2D::sptr diffuseBench = Texture2D::LoadFromFile("images/Arena1/Bench.png");
+		Texture2D::sptr diffuseBottle = Texture2D::LoadFromFile("images/Arena1/Bottle.png");
+		Texture2D::sptr diffuseBottleEmpty = Texture2D::LoadFromFile("images/Arena1/Blue.png");
 		#pragma endregion Arena1 diffuses
 
 		// Load the cube map
@@ -632,6 +635,14 @@ int main() {
 		materialPause->Set("u_Shininess", 8.0f);
 		materialPause->Set("u_TextureMix", 0.0f);
 
+		ShaderMaterial::sptr materialwaterbottle = ShaderMaterial::Create();
+		materialwaterbottle->Shader = shader;
+		materialwaterbottle->Set("s_Diffuse", diffuseBottle);
+		materialwaterbottle->Set("s_Diffuse2", diffuseBottleEmpty);
+		materialwaterbottle->Set("s_Specular", specular);
+		materialwaterbottle->Set("u_Shininess", 8.0f);
+		materialwaterbottle->Set("u_TextureMix", 0.0f);
+
 		// 
 		ShaderMaterial::sptr material1 = ShaderMaterial::Create();
 		material1->Shader = reflective;
@@ -810,7 +821,7 @@ int main() {
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/Dunce.obj");
 			objDunceArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialDunceArena);
-			objDunceArena.get<Transform>().SetLocalPosition(8.0f, 6.0f, 0.0f);
+			objDunceArena.get<Transform>().SetLocalPosition(8.0f, 6.0f, 1.0f);
 			objDunceArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
 			objDunceArena.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
 		}
@@ -819,7 +830,7 @@ int main() {
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/Duncet.obj");
 			objDuncetArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialDuncetArena);
-			objDuncetArena.get<Transform>().SetLocalPosition(-8.0f, 6.0f, 0.0f);
+			objDuncetArena.get<Transform>().SetLocalPosition(-8.0f, 6.0f, 1.0f);
 			objDuncetArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
 			objDuncetArena.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
 		}
@@ -828,18 +839,18 @@ int main() {
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/Slide.obj");
 			objSlideArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialSlide);
-			objSlideArena.get<Transform>().SetLocalPosition(2.0f, -2.0f, 2.0f);
+			objSlideArena.get<Transform>().SetLocalPosition(3.0f, -2.0f, 2.0f);
 			objSlideArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
-			objSlideArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
+			objSlideArena.get<Transform>().SetLocalScale(0.3f, 0.3f, 0.3f);
 		}
 		
 		GameObject objSwingArena = Arena1->CreateEntity("swing");
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/swing.obj");
 			objSwingArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialSwing);
-			objSwingArena.get<Transform>().SetLocalPosition(-2.0f, 1.0f, 2.0f);
+			objSwingArena.get<Transform>().SetLocalPosition(-3.0f, 1.0f, 2.0f);
 			objSwingArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
-			objSwingArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
+			objSwingArena.get<Transform>().SetLocalScale(0.3f, 0.3f, 0.3f);
 		}
 
 		GameObject objMonkeyBarArena = Arena1->CreateEntity("monkeybar");
@@ -848,14 +859,14 @@ int main() {
 			objMonkeyBarArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialMonkeyBar);
 			objMonkeyBarArena.get<Transform>().SetLocalPosition(-2.0f, -2.5f, 2.0f);
 			objMonkeyBarArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
-			objMonkeyBarArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
+			objMonkeyBarArena.get<Transform>().SetLocalScale(0.3f, 0.3f, 0.3f);
 		}
 
 		GameObject objcakeArena = Arena1->CreateEntity("cake");
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/SliceofCake.obj");
 			objcakeArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialSliceOfCake);
-			objcakeArena.get<Transform>().SetLocalPosition(6.0f, -2.0f, 0.0f);
+			objcakeArena.get<Transform>().SetLocalPosition(7.5f, -2.0f, 4.0f);
 			objcakeArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
 			objcakeArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
 		}
@@ -866,7 +877,7 @@ int main() {
 			objSandBoxArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialSandBox);
 			objSandBoxArena.get<Transform>().SetLocalPosition(0.0f, 0.0f, 0.0f);
 			objSandBoxArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
-			objSandBoxArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
+			objSandBoxArena.get<Transform>().SetLocalScale(0.3f, 0.3f, 0.3f);
 		}
 		
 		GameObject objraArena = Arena1->CreateEntity("roundabout");
@@ -874,15 +885,15 @@ int main() {
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/RoundAbout.obj");
 			objraArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialRA);
 			objraArena.get<Transform>().SetLocalPosition(2.0f, 2.0f, 1.0f);
-			objraArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
-			objraArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
+			objraArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
+			objraArena.get<Transform>().SetLocalScale(0.3f, 0.3f, 0.3f);
 		}
 
 		GameObject objpinwheelArena = Arena1->CreateEntity("pinwheel");
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/PinWheel.obj");
 			objpinwheelArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialPinwheel);
-			objpinwheelArena.get<Transform>().SetLocalPosition(0.0f, -4.0f, 2.0f);
+			objpinwheelArena.get<Transform>().SetLocalPosition(0.0f, -5.0f, 2.0f);
 			objpinwheelArena.get<Transform>().SetLocalRotation(0.0f, -90.0f, 180.0f);
 			objpinwheelArena.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
 		}
@@ -902,7 +913,7 @@ int main() {
 			objBenches.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialBench);
 			objBenches.get<Transform>().SetLocalPosition(0.0f, 0.0f, 0.0f);
 			objBenches.get<Transform>().SetLocalRotation(90.0f, 0.0f, 270.0f);
-			objBenches.get<Transform>().SetLocalScale(0.25f, 0.25f, 0.25f);
+			objBenches.get<Transform>().SetLocalScale(0.25f, 0.4f, 0.25f);
 		}
 		
 		GameObject objBalloons = Arena1->CreateEntity("Balloons");
@@ -911,7 +922,7 @@ int main() {
 			objBalloons.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialBalloons);
 			objBalloons.get<Transform>().SetLocalPosition(0.0f, 0.0f, 0.0f);
 			objBalloons.get<Transform>().SetLocalRotation(90.0f, 0.0f, 270.0f);
-			objBalloons.get<Transform>().SetLocalScale(0.23f, 0.22f, 0.28f);
+			objBalloons.get<Transform>().SetLocalScale(0.22f, 0.23f, 0.28f);
 		}
 		
 		GameObject objTrees = Arena1->CreateEntity("trees");
@@ -967,6 +978,40 @@ int main() {
 			objBottleText2.get<Transform>().SetLocalRotation(0.0f, 180.0f, 180.0f);
 			objBottleText2.get<Transform>().SetLocalScale(3.0f, 3.0f, 3.0f);
 		}
+
+		VertexArrayObject::sptr FullBottle = ObjLoader::LoadFromFile("models/Arena1/waterBottle.obj");
+		VertexArrayObject::sptr EmptyBottle = ObjLoader::LoadFromFile("models/Arena1/BottleOutline.obj");
+		std::vector<GameObject> Bottles;
+		{
+			for (int i = 0; i < NUM_BOTTLES_ARENA; i++)//NUM_HITBOXES_TEST is located at the top of the code
+			{
+				Bottles.push_back(Arena1->CreateEntity("Bottle" + (std::to_string(i + 1))));
+				Bottles[i].emplace<RendererComponent>().SetMesh(FullBottle).SetMaterial(materialwaterbottle);
+			}
+
+			Bottles[0].get<Transform>().SetLocalPosition(0.0f, 0.0f, 2.0f);//Middle
+			Bottles[0].get<Transform>().SetLocalScale(0.75f, 0.75f, 0.75f);
+
+			Bottles[1].get<Transform>().SetLocalPosition(-10.0f, -5.0f, 2.0f);//Top left
+			Bottles[1].get<Transform>().SetLocalRotation(0.0f, 0.0f, 90.0f);
+			Bottles[1].get<Transform>().SetLocalScale(0.75f, 0.75f, 0.75f);
+
+			Bottles[2].get<Transform>().SetLocalPosition(10.0f, -5.0f, 2.0f);//Top right
+			Bottles[2].get<Transform>().SetLocalRotation(0.0f, 0.0f, -75.0f);
+			Bottles[2].get<Transform>().SetLocalScale(0.75f, 0.75f, 0.75f);
+
+			Bottles[3].get<Transform>().SetLocalPosition(0.0f, 5.0f, 2.0f);//Bottom
+			Bottles[3].get<Transform>().SetLocalRotation(0.0f, 0.0f, 15.0f);
+			Bottles[3].get<Transform>().SetLocalScale(0.75f, 0.75f, 0.75f);
+
+			Bottles[4].get<Transform>().SetLocalPosition(4.0f, 14.0f, 2.0f);//Player 1 ammo
+			Bottles[4].get<Transform>().SetLocalRotation(0.0f, 0.0f, 180.0f);
+			Bottles[4].get<Transform>().SetLocalScale(2.3f, 2.3f, 2.3f);
+			
+			Bottles[5].get<Transform>().SetLocalPosition(-12.0f, 14.0f, 2.0f);//Player 2 ammo
+			Bottles[5].get<Transform>().SetLocalRotation(0.0f, 0.0f, 180.0f);
+			Bottles[5].get<Transform>().SetLocalScale(2.3f, 2.3f, 2.3f);
+		}
 		
 		GameObject objBullet = Arena1->CreateEntity("Bullet1");
 		{
@@ -991,7 +1036,7 @@ int main() {
 			for (int i = 0; i < NUM_HITBOXES; i++)//NUM_HITBOXES_TEST is located at the top of the code
 			{
 				HitboxesArena.push_back(Arena1->CreateEntity("Hitbox" + (std::to_string(i + 1))));
-				//HitboxesArena[i].emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialTreeBig);//Material does not matter just invisable hitboxes
+				HitboxesArena[i].emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialTreeBig);//Material does not matter just invisable hitboxes
 			}
 
 			HitboxesArena[0].get<Transform>().SetLocalPosition(2.0f, 2.0f, 0.0f);//Roundabout
@@ -1006,10 +1051,10 @@ int main() {
 			HitboxesArena[9].get<Transform>().SetLocalPosition(2.0f, -6.0f, 0.0f);//bench left up
 			HitboxesArena[10].get<Transform>().SetLocalPosition(-2.0f, 7.0f, 0.0f);//bench right down
 			HitboxesArena[11].get<Transform>().SetLocalPosition(-2.5f, -6.0f, 0.0f);//bench right up
-			HitboxesArena[12].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 0.0f);//bottle middle
-			HitboxesArena[13].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 0.0f);//bottle top left
-			HitboxesArena[14].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 0.0f);//bottle top right
-			HitboxesArena[15].get<Transform>().SetLocalPosition(-4.0f, -4.0f, 0.0f);//bottle bottom
+			HitboxesArena[12].get<Transform>().SetLocalPosition(0.0f, 0.0f, 0.0f);//bottle middle
+			HitboxesArena[13].get<Transform>().SetLocalPosition(-10.0f, -5.0f, 0.0f);//bottle top left
+			HitboxesArena[14].get<Transform>().SetLocalPosition(10.0f, -5.0f, 0.0f);//bottle top right
+			HitboxesArena[15].get<Transform>().SetLocalPosition(0.0f, 5.0f, 0.0f);//bottle bottom
 			HitboxesArena[16].get<Transform>().SetLocalPosition(-15.0f, -10.0f, 0.0f);//top wall
 			HitboxesArena[16].get<Transform>().SetLocalScale(30.0f, 1.0f, 1.0f);//top wall scale
 			HitboxesArena[17].get<Transform>().SetLocalPosition(-15.0f, 10.0f, 0.0f);//bot wall
@@ -1113,10 +1158,10 @@ int main() {
 		time.LastFrame = glfwGetTime();
 
 		//float yes = 0.0f;
-		bool shoot = false;
-		bool shoot2 = false;
-		bool instructions = false;
-		bool instructionspause = false;
+		bool shoot = false, shoot2 = false, instructions = false, instructionspause = false;
+		bool renderammoground1 = true, renderammoground2 = true, renderammoground3 = true, renderammoground4 = true, renderammo = true, renderammo2 = true, ammo = true, ammo2 = true;
+		float bottletime1 = 0.0f, bottletime2 = 0.0f, bottletime3 = 0.0f, bottletime4 = 0.0f;
+
 		///// Game loop /////
 		while (!glfwWindowShouldClose(BackendHandler::window)) {
 			glfwPollEvents();
@@ -1342,6 +1387,80 @@ int main() {
 
 				//yes += time.DeltaTime;
 
+				#pragma region animations and switching textures
+				//rerenders bottles checks
+				if (!renderammoground1)
+				{
+					bottletime1 += time.DeltaTime;
+					if (bottletime1 >= 5)
+					{
+						renderammoground1 = true;
+						bottletime1 = 0;
+					}
+				}
+				if (!renderammoground2)
+				{
+					bottletime2 += time.DeltaTime;
+					if (bottletime2 >= 5)
+					{
+						renderammoground2 = true;
+						bottletime2 = 0;
+					}
+				}
+				if (!renderammoground3)
+				{
+					bottletime3 += time.DeltaTime;
+					if (bottletime3 >= 5)
+					{
+						renderammoground3 = true;
+						bottletime3 = 0;
+					}
+				}
+				if (!renderammoground4)
+				{
+					bottletime4 += time.DeltaTime;
+					if (bottletime4 >= 5)
+					{
+						renderammoground4 = true;
+						bottletime4 = 0;
+					}
+				}
+
+				//ammo hitboxes p1
+				if (renderammoground1) {
+					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[12].get<Transform>()) && ammo == false)
+					{
+						ammo = true;
+						renderammo = true;
+						renderammoground1 = false;
+					}
+				}
+				if (renderammoground2) {
+					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[13].get<Transform>()) && ammo == false)
+					{
+						ammo = true;
+						renderammo = true;
+						renderammoground2 = false;
+					}
+				}
+				if (renderammoground3) {
+					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[14].get<Transform>()) && ammo == false)
+					{
+						ammo = true;
+						renderammo = true;
+						renderammoground3 = false;
+					}
+				}
+				if (renderammoground4) {
+					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[15].get<Transform>()) && ammo == false)
+					{
+						ammo = true;
+						renderammo = true;
+						renderammoground4 = false;
+					}
+				}
+				#pragma endregion animations and switching textures
+
 				//Player Movemenet(seperate from camera controls) has to be above collisions or wont work
 				PlayerMovement::player1and2move(objDunceArena.get<Transform>(), objDuncetArena.get<Transform>(), time.DeltaTime);
 
@@ -1355,21 +1474,35 @@ int main() {
 					int buttonCount;
 					const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 
-					if (GLFW_PRESS == buttons[0]) {
-						shoot = true;
+					if (ammo) {
+						if (GLFW_PRESS == buttons[0]) {
+							shoot = true;
+							
+						}
+					}
+					else {
+						objBullet.get<Transform>().SetLocalPosition(objDunceArena.get<Transform>().GetLocalPosition());
 					}
 				}
 				//Keyboard input
 				else {
-					if (glfwGetKey(BackendHandler::window, GLFW_KEY_E) == GLFW_PRESS)
-					{
-						shoot = true;
+					if (ammo) {
+						if (glfwGetKey(BackendHandler::window, GLFW_KEY_E) == GLFW_PRESS)
+						{
+							shoot = true;
+						}
+					}
+					else {
+						objBullet.get<Transform>().SetLocalPosition(objDunceArena.get<Transform>().GetLocalPosition());
 					}
 				}
 				//Resets bullet position
 				for (int i = 0; i < NUM_HITBOXES; i++) {
-					if (Collision(objBullet.get<Transform>(), HitboxesArena[i].get<Transform>())) {
-						shoot = false;
+					if (i != 12 && i != 13 && i != 14 && i != 15) {
+						if (Collision(objBullet.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+							shoot = false;
+							ammo = false;
+						}
 					}
 				}
 				//Player2
@@ -1381,49 +1514,85 @@ int main() {
 					int buttonCount2;
 					const unsigned char* buttons2 = glfwGetJoystickButtons(GLFW_JOYSTICK_2, &buttonCount2);
 
-					if (GLFW_PRESS == buttons2[0]) {
-						shoot2 = true;
+					if (ammo2) {
+						if (GLFW_PRESS == buttons2[0]) {
+							shoot2 = true;
+						}
+					}
+					else {
+						objBullet2.get<Transform>().SetLocalPosition(objDuncetArena.get<Transform>().GetLocalPosition());
 					}
 				}
 				//Keyboard input
 				else {
-					if (glfwGetKey(BackendHandler::window, GLFW_KEY_O) == GLFW_PRESS)
-					{
-						shoot2 = true;
+					if (ammo2) {
+						if (glfwGetKey(BackendHandler::window, GLFW_KEY_O) == GLFW_PRESS)
+						{
+							shoot2 = true;
+						}
+					}
+					else {
+						objBullet2.get<Transform>().SetLocalPosition(objDuncetArena.get<Transform>().GetLocalPosition());
 					}
 				}
 				for (int i = 0; i < NUM_HITBOXES; i++) {
-					if (Collision(objBullet2.get<Transform>(), HitboxesArena[i].get<Transform>())) {
-						shoot2 = false;
+					if (i != 12 && i != 13 && i != 14 && i != 15) {
+						if (Collision(objBullet2.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+							shoot2 = false;
+							ammo2 = false;
+						}
 					}
 				}
 
 				#pragma endregion Shooting
 				//Hit detection test
 				for (int i = 0; i < NUM_HITBOXES; i++) {
-					if (Collision(objDuncetArena.get<Transform>(), HitboxesArena[i].get<Transform>())) {
-						PlayerMovement::Player2vswall(objDuncetArena.get<Transform>(), time.DeltaTime);
+					if (i == 12 || i == 13 || i == 14 || i == 15) {
+						if (Collision(objDuncetArena.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+							ammo2 = true;
+						}
+					}
+					else {
+						if (Collision(objDuncetArena.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+							PlayerMovement::Player2vswall(objDuncetArena.get<Transform>(), time.DeltaTime);
+						}
 					}
 				}
 				
 				for (int i = 0; i < NUM_HITBOXES; i++) {
-					if (Collision(objDunceArena.get<Transform>(), HitboxesArena[i].get<Transform>())) {
-						PlayerMovement::Player1vswall(objDunceArena.get<Transform>(), time.DeltaTime);
+					if (i == 12 || i == 13 || i == 14 || i == 15) {
+						if (Collision(objDunceArena.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+							ammo = true;
+						}
+					}
+					else {
+						if (Collision(objDunceArena.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+							PlayerMovement::Player1vswall(objDunceArena.get<Transform>(), time.DeltaTime);
+						}
 					}
 				}
+
+				if (!ammo)
+				{
+					Bottles[4].get<RendererComponent>().SetMesh(EmptyBottle);
+					Bottles[4].get<Transform>().SetLocalPosition(4.0f, 13.0f, 2.0f);
+				}
+				else
+				{
+					Bottles[4].get<RendererComponent>().SetMesh(FullBottle);
+					Bottles[4].get<Transform>().SetLocalPosition(4.0f, 14.0f, 2.0f);
+				}
 				
-				/*if (yes < 0.2) {
-					objDunceArena.get<RendererComponent>().SetMesh(vaoy).SetMaterial(materialDunceArena);
-				}
-				if (yes >= 0.2f && yes < 0.4f)
+				if (!ammo2)
 				{
-					objDunceArena.get<RendererComponent>().SetMesh(vaox).SetMaterial(materialDunceArena);
+					Bottles[5].get<RendererComponent>().SetMesh(EmptyBottle);
+					Bottles[5].get<Transform>().SetLocalPosition(-12.0f, 13.0f, 2.0f);
 				}
-				if (yes >= 0.4f)
+				else
 				{
-					objDunceArena.get<RendererComponent>().SetMesh(vaoy).SetMaterial(materialDunceArena);
-					yes = 0.0f;
-				}*/
+					Bottles[5].get<RendererComponent>().SetMesh(FullBottle);
+					Bottles[5].get<Transform>().SetLocalPosition(-12.0f, 14.0f, 2.0f);
+				}
 
 				// Iterate over all the behaviour binding components
 				Arena1->Registry().view<BehaviourBinding>().each([&](entt::entity entity, BehaviourBinding& binding) {
