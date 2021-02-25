@@ -377,6 +377,7 @@ int main() {
 		Texture2D::sptr diffuseBench = Texture2D::LoadFromFile("images/Arena1/Bench.png");
 		Texture2D::sptr diffuseBottle = Texture2D::LoadFromFile("images/Arena1/Bottle.png");
 		Texture2D::sptr diffuseBottleEmpty = Texture2D::LoadFromFile("images/Arena1/Blue.png");
+		Texture2D::sptr diffuseWaterBeam = Texture2D::LoadFromFile("images/Arena1/waterBeamTex.png");
 		#pragma endregion Arena1 diffuses
 
 		// Load the cube map
@@ -642,6 +643,38 @@ int main() {
 		materialwaterbottle->Set("s_Specular", specular);
 		materialwaterbottle->Set("u_Shininess", 8.0f);
 		materialwaterbottle->Set("u_TextureMix", 0.0f);
+		
+		ShaderMaterial::sptr materialred = ShaderMaterial::Create();
+		materialred->Shader = shader;
+		materialred->Set("s_Diffuse", diffusered);
+		materialred->Set("s_Diffuse2", diffuseBottleEmpty);
+		materialred->Set("s_Specular", specular);
+		materialred->Set("u_Shininess", 8.0f);
+		materialred->Set("u_TextureMix", 0.0f);
+		
+		ShaderMaterial::sptr materialyellow = ShaderMaterial::Create();
+		materialyellow->Shader = shader;
+		materialyellow->Set("s_Diffuse", diffuseyellow);
+		materialyellow->Set("s_Diffuse2", diffuseBottleEmpty);
+		materialyellow->Set("s_Specular", specular);
+		materialyellow->Set("u_Shininess", 8.0f);
+		materialyellow->Set("u_TextureMix", 0.0f);
+		
+		ShaderMaterial::sptr materialpink = ShaderMaterial::Create();
+		materialpink->Shader = shader;
+		materialpink->Set("s_Diffuse", diffusepink);
+		materialpink->Set("s_Diffuse2", diffuseBottleEmpty);
+		materialpink->Set("s_Specular", specular);
+		materialpink->Set("u_Shininess", 8.0f);
+		materialpink->Set("u_TextureMix", 0.0f);
+		
+		ShaderMaterial::sptr materialdropwater = ShaderMaterial::Create();
+		materialdropwater->Shader = shader;
+		materialdropwater->Set("s_Diffuse", diffuseWaterBeam);
+		materialdropwater->Set("s_Diffuse2", diffuseBottleEmpty);
+		materialdropwater->Set("s_Specular", specular);
+		materialdropwater->Set("u_Shininess", 8.0f);
+		materialdropwater->Set("u_TextureMix", 0.0f);
 
 		// 
 		ShaderMaterial::sptr material1 = ShaderMaterial::Create();
@@ -978,6 +1011,74 @@ int main() {
 			objBottleText2.get<Transform>().SetLocalRotation(0.0f, 180.0f, 180.0f);
 			objBottleText2.get<Transform>().SetLocalScale(3.0f, 3.0f, 3.0f);
 		}
+		
+		GameObject ScoreText = Arena1->CreateEntity("Scoretext");
+		{
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/Score.obj");
+			ScoreText.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialred);
+			ScoreText.get<Transform>().SetLocalPosition(3.0f, -13.5f, 0.0f);
+			ScoreText.get<Transform>().SetLocalRotation(0.0f, 180.0f, 180.0f);
+			ScoreText.get<Transform>().SetLocalScale(3.0f, 3.0f, 3.0f);
+		}
+		
+		GameObject player1w = Arena1->CreateEntity("player1 win");
+		{
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/p1wins.obj");
+			player1w.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialyellow);
+			player1w.get<Transform>().SetLocalPosition(0.0f, 0.0f, -2.0f);
+			player1w.get<Transform>().SetLocalRotation(0.0f, 0.0f, 180.0f);
+			player1w.get<Transform>().SetLocalScale(3.0f, 3.0f, 3.0f);
+		}
+		
+		GameObject player2w = Arena1->CreateEntity("player2 win");
+		{
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/p2wins.obj");
+			player2w.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialpink);
+			player2w.get<Transform>().SetLocalPosition(0.0f, 0.0f, -2.0f);
+			player2w.get<Transform>().SetLocalRotation(0.0f, 0.0f, 180.0f);
+			player2w.get<Transform>().SetLocalScale(3.0f, 3.0f, 3.0f);
+		}
+		
+		
+
+		VertexArrayObject::sptr Fullscore = ObjLoader::LoadFromFile("models/Arena1/BalloonIcon.obj");
+		VertexArrayObject::sptr Emptyscore = ObjLoader::LoadFromFile("models/Arena1/ScoreOutline.obj");
+
+		std::vector<GameObject> scorecounter;
+		{
+			for (int i = 0; i < NUM_BOTTLES_ARENA; i++)//NUM_HITBOXES_TEST is located at the top of the code
+			{
+				scorecounter.push_back(Arena1->CreateEntity("scorecounter" + (std::to_string(i + 1))));
+				if (i < 3)
+				scorecounter[i].emplace<RendererComponent>().SetMesh(Emptyscore).SetMaterial(materialyellow);
+				else
+				scorecounter[i].emplace<RendererComponent>().SetMesh(Emptyscore).SetMaterial(materialpink);
+			}
+
+			scorecounter[0].get<Transform>().SetLocalPosition(4.5f, -13.0f, 2.0f);//Score1
+			scorecounter[0].get<Transform>().SetLocalScale(2.5f, 2.5f, 2.5f);
+			scorecounter[0].get<Transform>().SetLocalRotation(0.0f, 0.0f, 180.0f);
+
+			scorecounter[1].get<Transform>().SetLocalPosition(6.5f, -13.0f, 2.0f);//Score2
+			scorecounter[1].get<Transform>().SetLocalScale(2.5f, 2.5f, 2.5f);
+			scorecounter[1].get<Transform>().SetLocalRotation(0.0f, 0.0f, 180.0f);
+
+			scorecounter[2].get<Transform>().SetLocalPosition(8.5f, -13.0f, 2.0f);//Score3
+			scorecounter[2].get<Transform>().SetLocalScale(2.5f, 2.5f, 2.5f);
+			scorecounter[2].get<Transform>().SetLocalRotation(0.0f, 0.0f, 180.0f);
+
+			scorecounter[3].get<Transform>().SetLocalPosition(-4.5f, -13.0f, 2.0f);//Score4
+			scorecounter[3].get<Transform>().SetLocalScale(2.5f, 2.5f, 2.5f);
+			scorecounter[3].get<Transform>().SetLocalRotation(0.0f, 0.0f, 180.0f);
+
+			scorecounter[4].get<Transform>().SetLocalPosition(-6.5f, -13.0f, 2.0f);//Score5
+			scorecounter[4].get<Transform>().SetLocalScale(2.5f, 2.5f, 2.5f);
+			scorecounter[4].get<Transform>().SetLocalRotation(0.0f, 0.0f, 180.0f);
+
+			scorecounter[5].get<Transform>().SetLocalPosition(-8.5f, -13.0f, 2.0f);//Score5
+			scorecounter[5].get<Transform>().SetLocalScale(2.5f, 2.5f, 2.5f);
+			scorecounter[5].get<Transform>().SetLocalRotation(0.0f, 0.0f, 180.0f);
+		}
 
 		VertexArrayObject::sptr FullBottle = ObjLoader::LoadFromFile("models/Arena1/waterBottle.obj");
 		VertexArrayObject::sptr EmptyBottle = ObjLoader::LoadFromFile("models/Arena1/BottleOutline.obj");
@@ -1015,18 +1116,18 @@ int main() {
 		
 		GameObject objBullet = Arena1->CreateEntity("Bullet1");
 		{
-			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/HitBox.obj");
-			objBullet.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialBottlepink);
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam1.obj");
+			objBullet.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialdropwater);
 			objBullet.get<Transform>().SetLocalPosition(8.0f, 6.0f, 0.0f);
-			objBullet.get<Transform>().SetLocalScale(0.5f, 0.5f, 0.5f);
+			objBullet.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
 		}
 		
 		GameObject objBullet2 = Arena1->CreateEntity("Bullet2");
 		{
-			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/TestScene/HitBox.obj");
-			objBullet2.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialBottlepink);
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam1.obj");
+			objBullet2.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialdropwater);
 			objBullet2.get<Transform>().SetLocalPosition(-8.0f, 6.0f, 0.0f);
-			objBullet2.get<Transform>().SetLocalScale(0.5f, 0.5f, 0.5f);
+			objBullet2.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
 		}
 
 		//HitBoxes generated using a for loop then each one is given a position
@@ -1158,9 +1259,10 @@ int main() {
 		time.LastFrame = glfwGetTime();
 
 		//float yes = 0.0f;
-		bool shoot = false, shoot2 = false, instructions = false, instructionspause = false;
+		bool shoot = false, shoot2 = false, instructions = false, instructionspause = false, p1win = false, p2win = false;
 		bool renderammoground1 = true, renderammoground2 = true, renderammoground3 = true, renderammoground4 = true, renderammo = true, renderammo2 = true, ammo = true, ammo2 = true;
 		float bottletime1 = 0.0f, bottletime2 = 0.0f, bottletime3 = 0.0f, bottletime4 = 0.0f;
+		int score1 = 0, score2 = 0;
 
 		///// Game loop /////
 		while (!glfwWindowShouldClose(BackendHandler::window)) {
@@ -1219,6 +1321,18 @@ int main() {
 				if (glfwGetKey(BackendHandler::window, GLFW_KEY_ENTER) == GLFW_PRESS)
 				{
 					Application::Instance().ActiveScene = Arena1;
+					p1win = false;
+					p2win = false;
+					score1 = 0;
+					score2 = 0;
+					player1w.get<Transform>().SetLocalPosition(0.0f, 0.0f, -2.0f);
+					player2w.get<Transform>().SetLocalPosition(0.0f, 0.0f, -2.0f);
+					objDunceArena.get<Transform>().SetLocalPosition(8.0f, 6.0f, 1.0f);
+					objDuncetArena.get<Transform>().SetLocalPosition(-8.0f, 6.0f, 1.0f);
+					objDunceArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
+					objDuncetArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
+					ammo = true;
+					ammo2 = true;
 				}
 				
 				if (glfwGetKey(BackendHandler::window,GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS)
@@ -1472,6 +1586,46 @@ int main() {
 						}
 					}
 				}
+				if (Collision(objBullet.get<Transform>(), objDuncetArena.get<Transform>())) {
+					shoot = false;
+					ammo = false;
+					score1 += 1;
+				}
+
+				if (score1 >= 1)
+				{
+					scorecounter[0].get<RendererComponent>().SetMesh(Fullscore);
+				}
+				else
+				{
+					scorecounter[0].get<RendererComponent>().SetMesh(Emptyscore);
+
+				}
+				if (score1 >= 2)
+				{
+					scorecounter[1].get<RendererComponent>().SetMesh(Fullscore);
+				}
+				else {
+					scorecounter[1].get<RendererComponent>().SetMesh(Emptyscore);
+				}
+				if (score1 >= 3)
+				{
+					scorecounter[2].get<RendererComponent>().SetMesh(Fullscore);
+					p1win = true;
+				}
+				else
+				{
+					scorecounter[2].get<RendererComponent>().SetMesh(Emptyscore);
+				}
+				if (p1win)
+				{
+					player1w.get<Transform>().SetLocalPosition(0.0f, 0.0f, 2.0f);
+					if (glfwGetKey(BackendHandler::window, GLFW_KEY_B) == GLFW_PRESS)
+					{
+						Application::Instance().ActiveScene = Menu;
+					}
+				}
+
 				//Player2
 				PlayerMovement::Shoot2(objBullet2.get<Transform>(), objDuncetArena.get<Transform>(), time.DeltaTime, shoot2);
 				int controller2 = glfwJoystickPresent(GLFW_JOYSTICK_2);
@@ -1508,6 +1662,48 @@ int main() {
 							shoot2 = false;
 							ammo2 = false;
 						}
+					}
+				}
+				if (Collision(objBullet2.get<Transform>(), objDunceArena.get<Transform>())) {
+					shoot2 = false;
+					ammo2 = false;
+					score2 += 1;
+				}
+
+				if (score2 >= 1)
+				{
+					scorecounter[3].get<RendererComponent>().SetMesh(Fullscore);
+				}
+				else
+				{
+					scorecounter[3].get<RendererComponent>().SetMesh(Emptyscore);
+
+				}
+				if (score2 >= 2)
+				{
+					scorecounter[4].get<RendererComponent>().SetMesh(Fullscore);
+				}
+				else
+				{
+					scorecounter[4].get<RendererComponent>().SetMesh(Emptyscore);
+
+				}
+				if (score2 >= 3)
+				{
+					scorecounter[5].get<RendererComponent>().SetMesh(Fullscore);
+					p2win = true;
+				}
+				else
+				{
+					scorecounter[5].get<RendererComponent>().SetMesh(Emptyscore);
+
+				}
+				if (p2win)
+				{
+					player2w.get<Transform>().SetLocalPosition(0.0f, 0.0f, 2.0f);
+					if (glfwGetKey(BackendHandler::window, GLFW_KEY_B) == GLFW_PRESS)
+					{
+						Application::Instance().ActiveScene = Menu;
 					}
 				}
 
@@ -1605,10 +1801,7 @@ int main() {
 				if (Collision(objDuncetArena.get<Transform>(), objDunceArena.get<Transform>())) {
 					PlayerMovement::Player1vswall(objDunceArena.get<Transform>(), time.DeltaTime);
 				}
-				if (renderammoground1)
-				{
-					std::cout << "yes\n";
-				}
+
 				#pragma endregion Player 1 and 2 Collision
 				
 				if (!renderammoground1)
@@ -1672,7 +1865,7 @@ int main() {
 					Bottles[5].get<Transform>().SetLocalPosition(-12.0f, 14.0f, 2.0f);
 				}
 
-				#pragma region BIG MESSY SPAGHETTI CODE AGAIN
+				#pragma endregion BIG MESSY SPAGHETTI CODE AGAIN
 
 				// Iterate over all the behaviour binding components
 				Arena1->Registry().view<BehaviourBinding>().each([&](entt::entity entity, BehaviourBinding& binding) {
@@ -1796,6 +1989,8 @@ int main() {
 					return false;
 					});
 
+				basicEffect->BindBuffer(0);
+
 				// Iterate over the render group components and draw them
 				renderGroupPause.each([&](entt::entity e, RendererComponent& renderer, Transform& transform) {
 					// If the shader has changed, set up it's uniforms
@@ -1812,6 +2007,12 @@ int main() {
 					// Render the mesh
 					BackendHandler::RenderVAO(renderer.Material->Shader, renderer.Mesh, viewProjection, transform);
 					});
+				basicEffect->UnbindBuffer();
+
+				effects[activeEffect]->ApplyEffect(basicEffect);
+
+				effects[activeEffect]->DrawToScreen();
+
 				BackendHandler::RenderImGui();
 			}
 			#pragma endregion Pause
