@@ -345,7 +345,7 @@ int main() {
 		// Load some textures from files
 		Texture2D::sptr diffuse = Texture2D::LoadFromFile("images/TestScene/Stone_001_Diffuse.png");
 		Texture2D::sptr diffuseGround = Texture2D::LoadFromFile("images/TestScene/grass.jpg");
-		Texture2D::sptr diffuseDunce = Texture2D::LoadFromFile("images/TestScene/Dunce.png");
+		Texture2D::sptr diffuseDunce = Texture2D::LoadFromFile("images/TestScene/SkinPNG.png");
 		Texture2D::sptr diffuseDuncet = Texture2D::LoadFromFile("images/TestScene/Duncet.png");
 		Texture2D::sptr diffuseSlide = Texture2D::LoadFromFile("images/TestScene/Slide.png");
 		Texture2D::sptr diffuseSwing = Texture2D::LoadFromFile("images/TestScene/Swing.png");
@@ -364,7 +364,7 @@ int main() {
 		Texture2D::sptr diffuseGroundArena = Texture2D::LoadFromFile("images/Arena1/Ground.png");
 		Texture2D::sptr diffuseHedge = Texture2D::LoadFromFile("images/Arena1/Hedge.png");
 		Texture2D::sptr diffuseBalloons = Texture2D::LoadFromFile("images/Arena1/Ballons.png");
-		Texture2D::sptr diffuseDunceArena = Texture2D::LoadFromFile("images/Arena1/Dunce.png");
+		Texture2D::sptr diffuseDunceArena = Texture2D::LoadFromFile("images/Arena1/SkinPNG.png");
 		Texture2D::sptr diffuseDuncetArena = Texture2D::LoadFromFile("images/Arena1/Duncet.png");
 		Texture2D::sptr diffusered = Texture2D::LoadFromFile("images/Arena1/red.png");
 		Texture2D::sptr diffuseyellow = Texture2D::LoadFromFile("images/Arena1/yellow.png");
@@ -1116,7 +1116,7 @@ int main() {
 		
 		GameObject objBullet = Arena1->CreateEntity("Bullet1");
 		{
-			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam1.obj");
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam2.obj");
 			objBullet.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialdropwater);
 			objBullet.get<Transform>().SetLocalPosition(8.0f, 6.0f, 0.0f);
 			objBullet.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
@@ -1124,7 +1124,7 @@ int main() {
 		
 		GameObject objBullet2 = Arena1->CreateEntity("Bullet2");
 		{
-			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam1.obj");
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam2.obj");
 			objBullet2.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialdropwater);
 			objBullet2.get<Transform>().SetLocalPosition(-8.0f, 6.0f, 0.0f);
 			objBullet2.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
