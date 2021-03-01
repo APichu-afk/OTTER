@@ -890,7 +890,7 @@ int main() {
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/MonkeyBar.obj");
 			objMonkeyBarArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialMonkeyBar);
-			objMonkeyBarArena.get<Transform>().SetLocalPosition(-2.0f, -2.5f, 2.0f);
+			objMonkeyBarArena.get<Transform>().SetLocalPosition(-2.0f, -2.5f, 3.0f);
 			objMonkeyBarArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
 			objMonkeyBarArena.get<Transform>().SetLocalScale(0.3f, 0.3f, 0.3f);
 		}
@@ -944,7 +944,7 @@ int main() {
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/Bench.obj");
 			objBenches.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialBench);
-			objBenches.get<Transform>().SetLocalPosition(0.0f, 0.0f, 0.0f);
+			objBenches.get<Transform>().SetLocalPosition(0.0f, 0.0f, -1.0f);
 			objBenches.get<Transform>().SetLocalRotation(90.0f, 0.0f, 270.0f);
 			objBenches.get<Transform>().SetLocalScale(0.25f, 0.4f, 0.25f);
 		}
@@ -1119,7 +1119,6 @@ int main() {
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam.obj");
 			objBullet.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialdropwater);
 			objBullet.get<Transform>().SetLocalPosition(8.0f, 6.0f, 0.0f);
-			objBullet.get<Transform>().SetLocalRotation(90.0f, 90.0f, 90.0f);
 			objBullet.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
 		}
 		
@@ -1128,7 +1127,6 @@ int main() {
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam.obj");
 			objBullet2.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialdropwater);
 			objBullet2.get<Transform>().SetLocalPosition(-8.0f, 6.0f, 0.0f);
-			objBullet.get<Transform>().SetLocalRotation(90.0f, 90.0f, 90.0f);
 			objBullet2.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
 		}
 
@@ -1143,28 +1141,39 @@ int main() {
 			}
 
 			HitboxesArena[0].get<Transform>().SetLocalPosition(2.0f, 2.0f, 0.0f);//Roundabout
-			HitboxesArena[1].get<Transform>().SetLocalPosition(2.0f, -2.0f, 0.0f);//Slide
-			HitboxesArena[2].get<Transform>().SetLocalPosition(-1.0f, -2.5f, 0.0f);//leftmonkeybar
-			HitboxesArena[3].get<Transform>().SetLocalPosition(-3.0f, -2.5f, 0.0f);//rightmonkebar
-			HitboxesArena[4].get<Transform>().SetLocalPosition(-2.0f, 1.0f, 0.0f);//swing
-			HitboxesArena[5].get<Transform>().SetLocalPosition(9.0f, -2.0f, 0.0f);//table left up
-			HitboxesArena[6].get<Transform>().SetLocalPosition(9.0f, 2.0f, 0.0f);//table left down
-			HitboxesArena[7].get<Transform>().SetLocalPosition(-9.0f, 0.0f, 0.0f);//table right
-			HitboxesArena[8].get<Transform>().SetLocalPosition(2.0f, 7.0f, 0.0f);//Bench left down
-			HitboxesArena[9].get<Transform>().SetLocalPosition(2.0f, -6.0f, 0.0f);//bench left up
-			HitboxesArena[10].get<Transform>().SetLocalPosition(-2.0f, 7.0f, 0.0f);//bench right down
-			HitboxesArena[11].get<Transform>().SetLocalPosition(-2.5f, -6.0f, 0.0f);//bench right up
+			HitboxesArena[1].get<Transform>().SetLocalPosition(3.0f, -2.5f, 0.0f);//Slide
+			HitboxesArena[1].get<Transform>().SetLocalScale(0.75f, 2.0f, 1.0f);//Slide scale
+			HitboxesArena[2].get<Transform>().SetLocalPosition(0.0f, -2.5f, 0.0f);//leftmonkeybar
+			HitboxesArena[2].get<Transform>().SetLocalScale(0.5f, 0.75f, 1.0f);//leftmonkeybar scale
+			HitboxesArena[3].get<Transform>().SetLocalPosition(-3.5f, -2.5f, 0.0f);//rightmonkebar
+			HitboxesArena[3].get<Transform>().SetLocalScale(0.5f, 0.75f, 1.0f);//rightmonkebar scale
+			HitboxesArena[4].get<Transform>().SetLocalPosition(-3.0f, 0.0f, 0.0f);//swing
+			HitboxesArena[4].get<Transform>().SetLocalScale(1.0f, 3.0f, 1.0f);//swing scale
+			HitboxesArena[5].get<Transform>().SetLocalPosition(8.0f, -2.5f, -1.0f);//table left up
+			HitboxesArena[5].get<Transform>().SetLocalScale(1.5f, 1.75f, 1.5f);//table left up scale
+			HitboxesArena[6].get<Transform>().SetLocalPosition(8.0f, 1.5f, -1.0f);//table left down
+			HitboxesArena[6].get<Transform>().SetLocalScale(1.5f, 1.75f, 1.5f);//table left down scale
+			HitboxesArena[7].get<Transform>().SetLocalPosition(-9.0f, -0.5f, 0.0f);//table right
+			HitboxesArena[7].get<Transform>().SetLocalScale(1.75f, 2.0f, 1.0f);//table right scale
+			HitboxesArena[8].get<Transform>().SetLocalPosition(1.5f, 7.0f, 0.0f);//Bench left down
+			HitboxesArena[8].get<Transform>().SetLocalScale(2.5f, 1.0f, 1.0f);//Bench left down scale
+			HitboxesArena[9].get<Transform>().SetLocalPosition(1.5f, -6.0f, 0.0f);//bench left up
+			HitboxesArena[9].get<Transform>().SetLocalScale(2.5f, 1.0f, 1.0f);//bench left up scale
+			HitboxesArena[10].get<Transform>().SetLocalPosition(-3.0f, 7.0f, 0.0f);//bench right down
+			HitboxesArena[10].get<Transform>().SetLocalScale(2.5f, 1.0f, 1.0f);//bench right down scale
+			HitboxesArena[11].get<Transform>().SetLocalPosition(-3.5f, -6.0f, 0.0f);//bench right up
+			HitboxesArena[11].get<Transform>().SetLocalScale(2.5f, 1.0f, 1.0f);//bench right up scale
 			HitboxesArena[12].get<Transform>().SetLocalPosition(0.0f, 0.0f, 0.0f);//bottle middle
-			HitboxesArena[13].get<Transform>().SetLocalPosition(-10.0f, -5.0f, 0.0f);//bottle top left
-			HitboxesArena[14].get<Transform>().SetLocalPosition(10.0f, -5.0f, 0.0f);//bottle top right
+			HitboxesArena[13].get<Transform>().SetLocalPosition(-11.0f, -5.0f, 0.0f);//bottle top left
+			HitboxesArena[14].get<Transform>().SetLocalPosition(11.0f, -5.0f, 0.0f);//bottle top right
 			HitboxesArena[15].get<Transform>().SetLocalPosition(0.0f, 5.0f, 0.0f);//bottle bottom
-			HitboxesArena[16].get<Transform>().SetLocalPosition(-15.0f, -10.0f, 0.0f);//top wall
+			HitboxesArena[16].get<Transform>().SetLocalPosition(-15.0f, -9.0f, 0.0f);//top wall
 			HitboxesArena[16].get<Transform>().SetLocalScale(30.0f, 1.0f, 1.0f);//top wall scale
-			HitboxesArena[17].get<Transform>().SetLocalPosition(-15.0f, 10.0f, 0.0f);//bot wall
+			HitboxesArena[17].get<Transform>().SetLocalPosition(-15.0f, 9.0f, 0.0f);//bot wall
 			HitboxesArena[17].get<Transform>().SetLocalScale(30.0f, 1.0f, 1.0f);//bot wall scale
-			HitboxesArena[18].get<Transform>().SetLocalPosition(-14.0f, -10.0f, 0.0f);//left wall
+			HitboxesArena[18].get<Transform>().SetLocalPosition(-13.1f, -10.0f, 0.0f);//left wall
 			HitboxesArena[18].get<Transform>().SetLocalScale(1.0f, 20.0f, 1.0f);//left wall scale
-			HitboxesArena[19].get<Transform>().SetLocalPosition(14.0f, -10.0f, 0.0f);//right wall
+			HitboxesArena[19].get<Transform>().SetLocalPosition(13.25f, -10.0f, 0.0f);//right wall
 			HitboxesArena[19].get<Transform>().SetLocalScale(1.0f, 20.0f, 1.0f);//right wall
 		}
 		#pragma endregion Arena1 Objects
@@ -1336,7 +1345,14 @@ int main() {
 					ammo = true;
 					ammo2 = true;
 				}
-				
+
+				shader->SetUniform("u_lightoff", lightoff = 1);
+				shader->SetUniform("u_ambient", ambientonly = 0);
+				shader->SetUniform("u_specular", specularonly = 0);
+				shader->SetUniform("u_ambientspecular", ambientandspecular = 0);
+				shader->SetUniform("u_ambientspeculartoon", ambientspeculartoon = 0);
+				shader->SetUniform("u_Textures", Textures = 2);
+
 				if (glfwGetKey(BackendHandler::window,GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS)
 				{
 					Application::Instance().ActiveScene = scene;//just to test change to arena1 later
@@ -1357,8 +1373,6 @@ int main() {
 						materialMenu->Set("u_TextureMix", 0.0f);
 					}
 				}
-
-				shader->SetUniform("u_AmbientLightStrength", lightAmbientPow = 4.1);
 
 				// Iterate over all the behaviour binding components
 				Menu->Registry().view<BehaviourBinding>().each([&](entt::entity entity, BehaviourBinding& binding) {
@@ -1420,6 +1434,12 @@ int main() {
 					Application::Instance().ActiveScene = Pause;
 				}
 
+				shader->SetUniform("u_lightoff", lightoff = 0);
+				shader->SetUniform("u_ambient", ambientonly = 0);
+				shader->SetUniform("u_specular", specularonly = 0);
+				shader->SetUniform("u_ambientspecular", ambientandspecular = 0);
+				shader->SetUniform("u_ambientspeculartoon", ambientspeculartoon = 1);
+				shader->SetUniform("u_Textures", Textures = 2);
 				shader->SetUniform("u_AmbientLightStrength", lightAmbientPow = 2.1);
 
 				//Player Movemenet(seperate from camera controls)
@@ -1499,6 +1519,12 @@ int main() {
 					Application::Instance().ActiveScene = Pause;
 				}
 
+				shader->SetUniform("u_lightoff", lightoff = 0);
+				shader->SetUniform("u_ambient", ambientonly = 0);
+				shader->SetUniform("u_specular", specularonly = 0);
+				shader->SetUniform("u_ambientspecular", ambientandspecular = 0);
+				shader->SetUniform("u_ambientspeculartoon", ambientspeculartoon = 1);
+				shader->SetUniform("u_Textures", Textures = 2);
 				shader->SetUniform("u_AmbientLightStrength", lightAmbientPow = 2.1);
 
 				//yes += time.DeltaTime;
@@ -1582,16 +1608,20 @@ int main() {
 				//Resets bullet position
 				for (int i = 0; i < NUM_HITBOXES; i++) {
 					if (i != 12 && i != 13 && i != 14 && i != 15) {
-						if (Collision(objBullet.get<Transform>(), HitboxesArena[i].get<Transform>())) {
-							shoot = false;
-							ammo = false;
+						if (shoot) {
+							if (Collision(objBullet.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+								shoot = false;
+								ammo = false;
+							}
 						}
 					}
 				}
-				if (Collision(objBullet.get<Transform>(), objDuncetArena.get<Transform>())) {
-					shoot = false;
-					ammo = false;
-					score1 += 1;
+				if (shoot) {
+					if (Collision(objBullet.get<Transform>(), objDuncetArena.get<Transform>())) {
+						shoot = false;
+						ammo = false;
+						score1 += 1;
+					}
 				}
 
 				if (score1 >= 1)
@@ -1660,16 +1690,20 @@ int main() {
 				}
 				for (int i = 0; i < NUM_HITBOXES; i++) {
 					if (i != 12 && i != 13 && i != 14 && i != 15) {
-						if (Collision(objBullet2.get<Transform>(), HitboxesArena[i].get<Transform>())) {
-							shoot2 = false;
-							ammo2 = false;
+						if (shoot2) {
+							if (Collision(objBullet2.get<Transform>(), HitboxesArena[i].get<Transform>())) {
+								shoot2 = false;
+								ammo2 = false;
+							}
 						}
 					}
 				}
-				if (Collision(objBullet2.get<Transform>(), objDunceArena.get<Transform>())) {
-					shoot2 = false;
-					ammo2 = false;
-					score2 += 1;
+				if (shoot2) {
+					if (Collision(objBullet2.get<Transform>(), objDunceArena.get<Transform>())) {
+						shoot2 = false;
+						ammo2 = false;
+						score2 += 1;
+					}
 				}
 
 				if (score2 >= 1)
@@ -1956,7 +1990,12 @@ int main() {
 					}
 				}
 
-				shader->SetUniform("u_AmbientLightStrength", lightAmbientPow = 4.1);
+				shader->SetUniform("u_lightoff", lightoff = 1);
+				shader->SetUniform("u_ambient", ambientonly = 0);
+				shader->SetUniform("u_specular", specularonly = 0);
+				shader->SetUniform("u_ambientspecular", ambientandspecular = 0);
+				shader->SetUniform("u_ambientspeculartoon", ambientspeculartoon = 0);
+				shader->SetUniform("u_Textures", Textures = 2);
 
 				// Iterate over all the behaviour binding components
 				Pause->Registry().view<BehaviourBinding>().each([&](entt::entity entity, BehaviourBinding& binding) {
