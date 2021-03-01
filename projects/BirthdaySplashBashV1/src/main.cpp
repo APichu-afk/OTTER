@@ -1116,17 +1116,19 @@ int main() {
 		
 		GameObject objBullet = Arena1->CreateEntity("Bullet1");
 		{
-			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam2.obj");
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam.obj");
 			objBullet.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialdropwater);
 			objBullet.get<Transform>().SetLocalPosition(8.0f, 6.0f, 0.0f);
+			objBullet.get<Transform>().SetLocalRotation(90.0f, 90.0f, 90.0f);
 			objBullet.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
 		}
 		
 		GameObject objBullet2 = Arena1->CreateEntity("Bullet2");
 		{
-			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam2.obj");
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/waterBeam.obj");
 			objBullet2.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialdropwater);
 			objBullet2.get<Transform>().SetLocalPosition(-8.0f, 6.0f, 0.0f);
+			objBullet.get<Transform>().SetLocalRotation(90.0f, 90.0f, 90.0f);
 			objBullet2.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
 		}
 
@@ -1619,7 +1621,7 @@ int main() {
 				}
 				if (p1win)
 				{
-					player1w.get<Transform>().SetLocalPosition(0.0f, 0.0f, 2.0f);
+					player1w.get<Transform>().SetLocalPosition(0.0f, 0.0f, 4.0f);
 					if (glfwGetKey(BackendHandler::window, GLFW_KEY_B) == GLFW_PRESS)
 					{
 						Application::Instance().ActiveScene = Menu;
@@ -1700,7 +1702,7 @@ int main() {
 				}
 				if (p2win)
 				{
-					player2w.get<Transform>().SetLocalPosition(0.0f, 0.0f, 2.0f);
+					player2w.get<Transform>().SetLocalPosition(0.0f, 0.0f, 4.0f);
 					if (glfwGetKey(BackendHandler::window, GLFW_KEY_B) == GLFW_PRESS)
 					{
 						Application::Instance().ActiveScene = Menu;
