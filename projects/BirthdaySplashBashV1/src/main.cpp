@@ -991,7 +991,7 @@ int main() {
 			objGroundArena.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialGroundArena);
 			objGroundArena.get<Transform>().SetLocalPosition(0.0f, 0.0f, -4.0f);
 			objGroundArena.get<Transform>().SetLocalRotation(90.0f, 0.0f, 0.0f);
-			objGroundArena.get<Transform>().SetLocalScale(0.5f, 0.5f, 0.5f);
+			objGroundArena.get<Transform>().SetLocalScale(1.5f, 0.5f, 1.5f);
 		}	
 		
 		GameObject objBottleText1 = Arena1->CreateEntity("BottleUItext");
@@ -1039,6 +1039,23 @@ int main() {
 			player2w.get<Transform>().SetLocalScale(3.0f, 3.0f, 3.0f);
 		}
 		
+		GameObject objDunceAim = Arena1->CreateEntity("DunceAim");
+		{
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/aimAssist.obj");
+			objDunceAim.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialred);
+			objDunceAim.get<Transform>().SetLocalPosition(8.0f, 6.0f, 1.0f);
+			objDunceAim.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
+			objDunceAim.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
+		}
+
+		GameObject objDuncetAim = Arena1->CreateEntity("DuncetAim");
+		{
+			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/aimAssist.obj");
+			objDuncetAim.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialred);
+			objDuncetAim.get<Transform>().SetLocalPosition(-8.0f, 6.0f, 1.0f);
+			objDuncetAim.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
+			objDuncetAim.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
+		}
 		
 
 		VertexArrayObject::sptr Fullscore = ObjLoader::LoadFromFile("models/Arena1/BalloonIcon.obj");
