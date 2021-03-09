@@ -1039,7 +1039,7 @@ int main() {
 			player2w.get<Transform>().SetLocalScale(3.0f, 3.0f, 3.0f);
 		}
 		
-		GameObject objDunceAim = Arena1->CreateEntity("DunceAim");
+		/*GameObject objDunceAim = Arena1->CreateEntity("DunceAim");
 		{
 			VertexArrayObject::sptr vao = ObjLoader::LoadFromFile("models/Arena1/aimAssist.obj");
 			objDunceAim.emplace<RendererComponent>().SetMesh(vao).SetMaterial(materialred);
@@ -1055,7 +1055,7 @@ int main() {
 			objDuncetAim.get<Transform>().SetLocalPosition(-8.0f, 6.0f, 1.0f);
 			objDuncetAim.get<Transform>().SetLocalRotation(90.0f, 0.0f, 180.0f);
 			objDuncetAim.get<Transform>().SetLocalScale(1.0f, 1.0f, 1.0f);
-		}
+		}*/
 		
 
 		VertexArrayObject::sptr Fullscore = ObjLoader::LoadFromFile("models/Arena1/BalloonIcon.obj");
@@ -1598,10 +1598,12 @@ int main() {
 				//controller input
 				if (1 == controller1) {
 					int buttonCount;
+					int axesCount;
+					const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
 					const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 
 					if (ammo) {
-						if (GLFW_PRESS == buttons[0]) {
+						if (axes[5] >= 0.3) {
 							shoot = true;
 							
 						}
@@ -1682,10 +1684,12 @@ int main() {
 				//controller input
 				if (1 == controller2) {
 					int buttonCount2;
+					int axesCount2;
+					const float* axes2 = glfwGetJoystickAxes(GLFW_JOYSTICK_2, &axesCount2);
 					const unsigned char* buttons2 = glfwGetJoystickButtons(GLFW_JOYSTICK_2, &buttonCount2);
 
 					if (ammo2) {
-						if (GLFW_PRESS == buttons2[0]) {
+						if (axes2[5] >= 0.3) {
 							shoot2 = true;
 						}
 					}
