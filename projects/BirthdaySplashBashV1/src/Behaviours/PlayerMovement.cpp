@@ -102,7 +102,7 @@ void PlayerMovement::player1and2move(Transform& Player1, Transform& Player2, flo
 		if (axes2[2] <= 1 && axes2[2] >= 0.2) {
 			Player2.RotateLocal(0.0f, -225.0f * dt, 0.0f);
 		}
-		std::cout << name2 << "\n";
+		/*std::cout << name2 << "\n";
 		if (name2 == "Wireless Controller")
 		{
 			if (axes2[3] > -1)
@@ -123,7 +123,7 @@ void PlayerMovement::player1and2move(Transform& Player1, Transform& Player2, flo
 			{
 				Player2.RotateLocal(0.0f, -225.0f * dt, 0.0f);
 			}
-		}
+		}*/
 	}
 	else
 	{
@@ -211,12 +211,18 @@ void PlayerMovement::Shoot(Transform& Bullet1, Transform& Player1, float dt, boo
 	//player 1
 	if (1 == controller1) {
 		int buttonCount;
+		int axesCount;
+		const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
+		const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
 		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 
-		if (GLFW_PRESS == buttons[0] || shoot)
-		{
+		if (axes[5] >= 0.3 || shoot) {
 			Bullet1.MoveLocal(0.0f, 0.0f, 10.0f * dt);
 		}
+		/*if (GLFW_PRESS == buttons[0] || shoot)
+		{
+			Bullet1.MoveLocal(0.0f, 0.0f, 10.0f * dt);
+		}*/
 		else
 		{
 			Bullet1.SetLocalPosition(Player1.GetLocalPosition());
@@ -244,9 +250,11 @@ void PlayerMovement::Shoot2(Transform& Bullet2, Transform& Player2, float dt, bo
 	//player 1
 	if (1 == controller2) {
 		int buttonCount;
+		int axesCount2;
+		const float* axes2 = glfwGetJoystickAxes(GLFW_JOYSTICK_2, &axesCount2);
 		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_2, &buttonCount);
 
-		if (GLFW_PRESS == buttons[0] || shoot)
+		if (axes2[5] >= 0.3 || shoot)
 		{
 			Bullet2.MoveLocal(0.0f, 0.0f, 10.0f * dt);
 		}
