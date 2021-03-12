@@ -410,6 +410,13 @@ int main() {
 		GameScene::sptr Instructions = GameScene::Create("Instructions");
 		GameScene::sptr Pause = GameScene::Create("Pause");
 		GameScene::sptr WinandLose = GameScene::Create("Win/Lose");
+		Application::Instance().scenes.push_back(scene);
+		Application::Instance().scenes.push_back(Arena1);
+		Application::Instance().scenes.push_back(Arena2);
+		Application::Instance().scenes.push_back(Menu);
+		Application::Instance().scenes.push_back(Instructions);
+		Application::Instance().scenes.push_back(Pause);
+		Application::Instance().scenes.push_back(WinandLose);
 		Application::Instance().ActiveScene = Menu;
 
 		// We can create a group ahead of time to make iterating on the group faster
@@ -701,21 +708,6 @@ int main() {
 		reflectiveMat->Shader = reflectiveShader;
 		reflectiveMat->Set("s_Environment", environmentMap);
 		reflectiveMat->Set("u_EnvironmentRotation", glm::mat3(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))));
-
-		// Create an object to be our camera
-		GameObject cameraObject = scene->CreateEntity("Camera");
-		{
-			cameraObject.get<Transform>().SetLocalPosition(0, 0.1, 17).LookAt(glm::vec3(0, 0, 0));
-
-			// We'll make our camera a component of the camera object
-			Camera& camera = cameraObject.emplace<Camera>();// Camera::Create();
-			camera.SetPosition(glm::vec3(0, 3, 3));
-			camera.SetUp(glm::vec3(0, 0, 1));
-			camera.LookAt(glm::vec3(0));
-			camera.SetFovDegrees(90.0f); // Set an initial FOV
-			camera.SetOrthoHeight(3.0f);
-			BehaviourBinding::Bind<CameraControlBehaviour>(cameraObject);
-		}
 
 		#pragma region Menu Objects
 
@@ -1221,6 +1213,21 @@ int main() {
 		effects.push_back(colorCorrectioneffect);
 
 		#pragma endregion PostEffects
+
+		// Create an object to be our camera
+		GameObject cameraObject = scene->CreateEntity("Camera");
+		{
+			cameraObject.get<Transform>().SetLocalPosition(0, 0.1, 17).LookAt(glm::vec3(0, 0, 0));
+
+			// We'll make our camera a component of the camera object
+			Camera& camera = cameraObject.emplace<Camera>();// Camera::Create();
+			camera.SetPosition(glm::vec3(0, 3, 3));
+			camera.SetUp(glm::vec3(0, 0, 1));
+			camera.LookAt(glm::vec3(0));
+			camera.SetFovDegrees(90.0f); // Set an initial FOV
+			camera.SetOrthoHeight(3.0f);
+			BehaviourBinding::Bind<CameraControlBehaviour>(cameraObject);
+		}
 
 		#pragma region Skybox
 		/////////////////////////////////// SKYBOX ///////////////////////////////////////////////
@@ -1983,6 +1990,11 @@ int main() {
 			#pragma region Pause
 			if (Application::Instance().ActiveScene == Pause) {
 
+				camTransform = cameraObject.get<Transform>().SetLocalPosition(0, 0, 17).SetLocalRotation(0, 0, 180);
+				view = glm::inverse(camTransform.LocalTransform());
+				projection = cameraObject.get<Camera>().GetProjection();
+				viewProjection = projection * view;
+
 				if (glfwGetKey(BackendHandler::window, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS)
 				{
 					Application::Instance().ActiveScene = scene;//just to test change to arena1 later
@@ -2088,6 +2100,12 @@ int main() {
 
 		// Nullify scene so that we can release references
 		Application::Instance().ActiveScene = nullptr;
+
+		for (int i = 0; i < Application::Instance().scenes.size(); i++)
+		{
+			Application::Instance().scenes[i] = nullptr;
+		}
+
 		EnvironmentGenerator::CleanUpPointers();
 		BackendHandler::ShutdownImGui();
 	}	

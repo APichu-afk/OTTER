@@ -46,26 +46,30 @@ bool BackendHandler::InitAll()
 void BackendHandler::GlfwWindowResizedCallback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
-	Application::Instance().ActiveScene->Registry().view<Camera>().each([=](Camera& cam) 
+
+	for (int i = 0; i < Application::Instance().scenes.size(); i++)
 	{
-		cam.ResizeWindow(width, height);
-	});
-	Application::Instance().ActiveScene->Registry().view<Framebuffer>().each([=](Framebuffer& buf)
-	{
-		buf.Reshape(width, height);
-	});
-	Application::Instance().ActiveScene->Registry().view<PostEffect>().each([=](PostEffect& buf)
-	{
-		buf.Reshape(width, height);
-	});
-	Application::Instance().ActiveScene->Registry().view<ColorCorrectEffect>().each([=](ColorCorrectEffect& buf)
-	{
-		buf.Reshape(width, height);
-	});
-	Application::Instance().ActiveScene->Registry().view<BlurEffect>().each([=](BlurEffect& buf)
-	{
-		buf.Reshape(width, height);
-	});
+		Application::Instance().scenes[i]->Registry().view<Camera>().each([=](Camera& cam)
+			{
+				cam.ResizeWindow(width, height);
+			});
+		Application::Instance().scenes[i]->Registry().view<Framebuffer>().each([=](Framebuffer& buf)
+			{
+				buf.Reshape(width, height);
+			});
+		Application::Instance().scenes[i]->Registry().view<PostEffect>().each([=](PostEffect& buf)
+			{
+				buf.Reshape(width, height);
+			});
+		Application::Instance().scenes[i]->Registry().view<ColorCorrectEffect>().each([=](ColorCorrectEffect& buf)
+			{
+				buf.Reshape(width, height);
+			});
+		Application::Instance().scenes[i]->Registry().view<BlurEffect>().each([=](BlurEffect& buf)
+			{
+				buf.Reshape(width, height);
+			});
+	}
 }
 
 bool BackendHandler::InitGLFW()
